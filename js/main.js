@@ -1,4 +1,4 @@
-// Main Application Entry Point
+// Main Application Entry Point - ALL FIXES APPLIED
 import { TORAH_PARSHAS } from './config.js';
 import { fetchCurrentParsha, fetchParshaText, loadCommentaryData } from './api.js';
 import { state, setState } from './state.js';
@@ -12,49 +12,47 @@ import {
     updateNavigationButtons,
     populateParshaSelector,
     hideInfoPanel,
+    showInfoPanel,
     showKeywordDefinition,
     showCommentary,
-    // Comment panel functions
     openCommentsPanel,
     closeCommentsPanel,
     displayComments,
     updateCommentInputState,
-    showCommentStatus
+    showCommentStatus,
+    saveUsername,
+    getSavedUsername,
+    updateUsernameDisplay
 } from './ui.js';
 
-// Import Firebase functions
 import {
     initAuth,
     getCurrentUserId,
     submitComment,
     listenForComments,
-    stopListeningForComments
+    stopListeningForComments,
+    db
 } from './firebase.js';
 
-/**
- * Initialize the application
- */
+import { collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+let verseCommentCounts = {};
+
 async function init() {
     console.log('Initializing Torah Study Website...');
     
     try {
-        // Initialize Firebase Authentication
         initAuth((user) => {
             console.log('Firebase auth ready, user:', user.uid);
             updateCommentInputState(true);
         });
         
-        // Load commentary data
         const commentaryData = await loadCommentaryData();
         setState({ commentaryData });
-        
-        // Set all parshas
         setState({ allParshas: TORAH_PARSHAS });
         
-        // Get current week's parsha
         const currentParshaName = await fetchCurrentParsha();
         
-        // Find matching parsha
         if (currentParshaName) {
             const matchingParsha = TORAH_PARSHAS.find(p => 
                 p.name.toLowerCase() === currentParshaName.toLowerCase() ||
@@ -69,7 +67,6 @@ async function init() {
             }
         }
         
-        // Default to first parsha if no current found
         if (!state.currentParshaRef && TORAH_PARSHAS.length > 0) {
             setState({
                 currentParshaRef: TORAH_PARSHAS[0].reference,
@@ -77,14 +74,10 @@ async function init() {
             });
         }
         
-        // Populate UI
         populateParshaSelector();
         updateNavigationButtons();
-        
-        // Set up event listeners
         setupEventListeners();
         
-        // Load initial parsha
         if (state.currentParshaRef) {
             await loadParsha(state.currentParshaRef);
         }
@@ -95,11 +88,7 @@ async function init() {
     }
 }
 
-/**
- * Set up all event listeners
- */
 function setupEventListeners() {
-    // Parsha selector
     document.getElementById('parsha-selector').addEventListener('change', async (e) => {
         const selectedRef = e.target.value;
         const index = state.allParshas.findIndex(p => p.reference === selectedRef);
@@ -108,7 +97,6 @@ function setupEventListeners() {
         updateNavigationButtons();
     });
     
-    // Previous button
     document.getElementById('prev-parsha').addEventListener('click', async () => {
         if (state.currentParshaIndex > 0) {
             const newIndex = state.currentParshaIndex - 1;
@@ -120,7 +108,6 @@ function setupEventListeners() {
         }
     });
     
-    // Next button
     document.getElementById('next-parsha').addEventListener('click', async () => {
         if (state.currentParshaIndex < state.allParshas.length - 1) {
             const newIndex = state.currentParshaIndex + 1;
@@ -132,7 +119,6 @@ function setupEventListeners() {
         }
     });
     
-    // Go to weekly parsha button
     const weeklyButton = document.getElementById('go-to-weekly');
     if (weeklyButton) {
         weeklyButton.addEventListener('click', async () => {
@@ -142,38 +128,30 @@ function setupEventListeners() {
                 document.getElementById('parsha-selector').value = state.currentParshaRef;
                 await loadParsha(state.currentParshaRef);
                 updateNavigationButtons();
-                
-                // Scroll to top smoothly
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         });
     }
     
-    // Close info panel button
     document.getElementById('close-panel-button').addEventListener('click', hideInfoPanel);
     
-    // Close info panel when clicking outside
     document.getElementById('info-panel').addEventListener('click', (e) => {
         if (e.target.id === 'info-panel') {
             hideInfoPanel();
         }
     });
     
-    // Delegate verse and keyword clicks (including comment buttons)
     document.getElementById('parsha-text').addEventListener('click', handleTextClick);
     
-    // Comment panel controls
     setupCommentPanelListeners();
+    setupUsernameListener();
     
-    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
-        // Escape key closes panels
         if (e.key === 'Escape') {
             hideInfoPanel();
             closeCommentsPanel(stopListeningForComments);
         }
         
-        // Arrow keys for navigation (when not typing)
         if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT' && e.target.tagName !== 'TEXTAREA') {
             if (e.key === 'ArrowLeft' && state.currentParshaIndex > 0) {
                 document.getElementById('prev-parsha').click();
@@ -184,34 +162,58 @@ function setupEventListeners() {
     });
 }
 
-/**
- * Setup comment panel event listeners
- */
+function setupUsernameListener() {
+    const saveButton = document.getElementById('save-username-btn');
+    const usernameInput = document.getElementById('username-input');
+    
+    if (saveButton && usernameInput) {
+        saveButton.addEventListener('click', () => {
+            const username = usernameInput.value.trim();
+            
+            if (!username) {
+                showCommentStatus('Please enter a name', true);
+                return;
+            }
+            
+            if (username.length > 50) {
+                showCommentStatus('Name must be 50 characters or less', true);
+                return;
+            }
+            
+            if (saveUsername(username)) {
+                usernameInput.value = '';
+                showCommentStatus('Name saved successfully!', false);
+            } else {
+                showCommentStatus('Failed to save name', true);
+            }
+        });
+        
+        usernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                saveButton.click();
+            }
+        });
+    }
+}
+
 function setupCommentPanelListeners() {
-    // Close comment panel button
     document.getElementById('close-comment-panel').addEventListener('click', () => {
         closeCommentsPanel(stopListeningForComments);
     });
     
-    // Close comment panel when clicking overlay
     document.getElementById('comment-overlay').addEventListener('click', () => {
         closeCommentsPanel(stopListeningForComments);
     });
     
-    // Submit comment button
     document.getElementById('submit-comment-btn').addEventListener('click', handleCommentSubmit);
     
-    // Submit on Enter (Ctrl+Enter or Cmd+Enter)
     document.getElementById('comment-input').addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        if ((e.ctrlKey || e.metaCmd) && e.key === 'Enter') {
             handleCommentSubmit();
         }
     });
 }
 
-/**
- * Handle comment submission
- */
 async function handleCommentSubmit() {
     const commentInput = document.getElementById('comment-input');
     const verseRefInput = document.getElementById('current-comment-verse-ref');
@@ -220,10 +222,16 @@ async function handleCommentSubmit() {
     const text = commentInput.value.trim();
     const verseRef = verseRefInput.value;
     const userId = getCurrentUserId();
+    const username = getSavedUsername();
     
-    // Validation
     if (!userId) {
         showCommentStatus('Please wait, connecting...', true);
+        return;
+    }
+    
+    if (!username) {
+        showCommentStatus('Please set your name first', true);
+        document.getElementById('username-setup').classList.remove('hidden');
         return;
     }
     
@@ -237,29 +245,101 @@ async function handleCommentSubmit() {
         return;
     }
     
-    // Disable button while submitting
     submitButton.disabled = true;
     commentInput.disabled = true;
     showCommentStatus('Submitting...', false);
     
     try {
-        await submitComment(verseRef, text, userId);
+        await submitComment(verseRef, text, userId, username);
         commentInput.value = '';
         showCommentStatus('Comment added!', false);
-        console.log('Comment submitted successfully');
+        
+        await updateCommentCount(verseRef);
+        
     } catch (error) {
         console.error('Error submitting comment:', error);
         showCommentStatus('Error submitting comment. Please try again.', true);
     } finally {
-        // Re-enable controls
         submitButton.disabled = false;
         commentInput.disabled = false;
     }
 }
 
-/**
- * Load and display a parsha
- */
+async function loadCommentCounts(parshaRef) {
+    const { bookName, startChapter, endChapter } = parseParshaReference(parshaRef);
+    
+    try {
+        const commentsQuery = query(
+            collection(db, 'comments'),
+            where('verseRef', '>=', `${bookName} ${startChapter}:`),
+            where('verseRef', '<=', `${bookName} ${endChapter || startChapter}:\uffff`)
+        );
+        
+        const querySnapshot = await getDocs(commentsQuery);
+        const counts = {};
+        
+        querySnapshot.forEach((doc) => {
+            const verseRef = doc.data().verseRef;
+            counts[verseRef] = (counts[verseRef] || 0) + 1;
+        });
+        
+        verseCommentCounts = counts;
+        updateAllCommentBadges();
+        
+    } catch (error) {
+        console.error('Error loading comment counts:', error);
+    }
+}
+
+async function updateCommentCount(verseRef) {
+    try {
+        const commentsQuery = query(
+            collection(db, 'comments'),
+            where('verseRef', '==', verseRef)
+        );
+        
+        const querySnapshot = await getDocs(commentsQuery);
+        verseCommentCounts[verseRef] = querySnapshot.size;
+        
+        const verseContainer = document.querySelector(`[data-ref="${verseRef}"]`);
+        if (verseContainer) {
+            updateCommentBadge(verseContainer, verseRef);
+        }
+        
+    } catch (error) {
+        console.error('Error updating comment count:', error);
+    }
+}
+
+function updateCommentBadge(container, verseRef) {
+    const indicatorsSection = container.querySelector('.verse-indicators');
+    if (!indicatorsSection) return;
+    
+    const count = verseCommentCounts[verseRef] || 0;
+    let badge = indicatorsSection.querySelector('.comment-count-badge');
+    
+    if (count > 0) {
+        if (!badge) {
+            badge = document.createElement('div');
+            badge.className = 'comment-count-badge';
+            indicatorsSection.appendChild(badge);
+        }
+        badge.textContent = `${count} ${count === 1 ? 'comment' : 'comments'}`;
+        badge.style.display = 'inline-flex';
+    } else if (badge) {
+        badge.style.display = 'none';
+    }
+}
+
+function updateAllCommentBadges() {
+    document.querySelectorAll('.verse-container').forEach(container => {
+        const verseRef = container.dataset.ref;
+        if (verseRef) {
+            updateCommentBadge(container, verseRef);
+        }
+    });
+}
+
 async function loadParsha(parshaRef) {
     console.log('Loading parsha:', parshaRef);
     
@@ -273,7 +353,8 @@ async function loadParsha(parshaRef) {
         renderParsha(data, parshaRef);
         highlightCurrentParsha(parshaRef);
         
-        // Smooth scroll to top
+        await loadCommentCounts(parshaRef);
+        
         window.scrollTo({ top: 0, behavior: 'smooth' });
         
     } catch (error) {
@@ -284,45 +365,243 @@ async function loadParsha(parshaRef) {
     }
 }
 
-/**
- * Render parsha text
- */
+function parseParshaReference(parshaRef) {
+    const match = parshaRef.match(/^(\w+)\s+(\d+):(\d+)(?:-(\d+):(\d+))?$/);
+    
+    if (!match) {
+        const simpleMatch = parshaRef.match(/^(\w+)\s+(\d+):(\d+)$/);
+        if (simpleMatch) {
+            return {
+                bookName: simpleMatch[1],
+                startChapter: parseInt(simpleMatch[2]),
+                startVerse: parseInt(simpleMatch[3]),
+                endChapter: null,
+                endVerse: null
+            };
+        }
+        return { bookName: 'Torah', startChapter: 1, startVerse: 1, endChapter: null, endVerse: null };
+    }
+    
+    return {
+        bookName: match[1],
+        startChapter: parseInt(match[2]),
+        startVerse: parseInt(match[3]),
+        endChapter: match[4] ? parseInt(match[4]) : null,
+        endVerse: match[5] ? parseInt(match[5]) : null
+    };
+}
+
 function renderParsha(data, parshaRef) {
     const textContainer = document.getElementById('parsha-text');
     
-    // Update header
     updateParshaHeader(data.book || 'Torah Portion', parshaRef);
-    
-    // Clear previous content
     textContainer.innerHTML = '';
     
-    // Get text arrays
     const englishText = Array.isArray(data.text) ? data.text : [data.text];
     const hebrewText = Array.isArray(data.he) ? data.he : [data.he];
     
-    // Flatten nested arrays
-    const flatEnglish = flattenTextArray(englishText);
-    const flatHebrew = flattenTextArray(hebrewText);
+    const { bookName, startChapter, startVerse, endChapter, endVerse } = parseParshaReference(parshaRef);
     
-    // Get starting verse
-    const startVerse = getStartingVerse(parshaRef);
+    if (Array.isArray(englishText[0])) {
+        let currentChapterNumber = startChapter;
+        let isFirstChapter = true;
+        
+        englishText.forEach((chapterVerses, chapterIndex) => {
+            if (!Array.isArray(chapterVerses)) {
+                chapterVerses = [chapterVerses];
+            }
+            
+            const hebrewChapterVerses = Array.isArray(hebrewText[chapterIndex]) ? 
+                hebrewText[chapterIndex] : [hebrewText[chapterIndex] || ''];
+            
+            let startVerseNum = 1;
+            let endVerseNum = chapterVerses.length;
+            
+            if (currentChapterNumber === startChapter) {
+                startVerseNum = startVerse;
+            }
+            if (endChapter && currentChapterNumber === endChapter) {
+                endVerseNum = endVerse;
+            }
+            
+            if (!isFirstChapter) {
+                const chapterHeader = document.createElement('div');
+                chapterHeader.className = 'chapter-header';
+                chapterHeader.textContent = `${bookName} Chapter ${currentChapterNumber}`;
+                textContainer.appendChild(chapterHeader);
+            }
+            isFirstChapter = false;
+            
+            for (let verseIndex = startVerseNum - 1; verseIndex < Math.min(endVerseNum, chapterVerses.length); verseIndex++) {
+                const verseText = chapterVerses[verseIndex];
+                if (!verseText || verseText.trim() === '') continue;
+                
+                const hebrewVerseText = hebrewChapterVerses[verseIndex] || '';
+                const verseNumber = verseIndex + 1;
+                const verseRef = `${bookName} ${currentChapterNumber}:${verseNumber}`;
+                
+                const verseElement = createVerseElement(verseText, hebrewVerseText, verseRef, verseNumber);
+                textContainer.appendChild(verseElement);
+            }
+            
+            currentChapterNumber++;
+        });
+    } else {
+        const flatEnglish = flattenTextArray(englishText);
+        const flatHebrew = flattenTextArray(hebrewText);
+        
+        flatEnglish.forEach((verseText, index) => {
+            if (!verseText || verseText.trim() === '') return;
+            
+            const hebrewVerseText = flatHebrew[index] || '';
+            const verseNumber = startVerse + index;
+            const verseRef = `${bookName} ${startChapter}:${verseNumber}`;
+            
+            const verseElement = createVerseElement(verseText, hebrewVerseText, verseRef, verseNumber);
+            textContainer.appendChild(verseElement);
+        });
+    }
+}
+
+function createVerseElement(englishText, hebrewText, verseRef, verseNumber) {
+    const container = document.createElement('div');
+    container.className = 'verse-container';
+    container.dataset.ref = verseRef;
     
-    // Render each verse
-    flatEnglish.forEach((verseText, index) => {
-        if (!verseText || verseText.trim() === '') return;
-        
-        const hebrewVerseText = flatHebrew[index] || '';
-        const verseNumber = startVerse + index;
-        const verseRef = `${data.book} ${data.sections[0]}:${verseNumber}`;
-        
-        const verseElement = createVerseElement(verseText, hebrewVerseText, verseRef, verseNumber);
-        textContainer.appendChild(verseElement);
-    });
+    const hasCommentary = checkForCommentary(verseRef);
+    const hasKeywords = checkForKeywords(verseRef);
+    
+    if (hasCommentary || hasKeywords) {
+        container.classList.add('has-content');
+        if (hasCommentary) container.classList.add('has-commentary');
+        if (hasKeywords) container.classList.add('has-keywords');
+    }
+    
+    const contentWrapper = document.createElement('div');
+    contentWrapper.className = 'verse-content-wrapper';
+    
+    const verseNumSpan = document.createElement('div');
+    verseNumSpan.className = 'verse-number';
+    verseNumSpan.textContent = verseNumber;
+    contentWrapper.appendChild(verseNumSpan);
+    
+    const textContainer = document.createElement('div');
+    textContainer.className = 'verse-text-container';
+    
+    const hebrewDiv = document.createElement('div');
+    hebrewDiv.className = 'hebrew-text';
+    hebrewDiv.setAttribute('lang', 'he');
+    hebrewDiv.setAttribute('dir', 'rtl');
+    hebrewDiv.innerHTML = hebrewText;
+    
+    const englishDiv = document.createElement('div');
+    englishDiv.className = 'english-text';
+    // Apply an additional cleaning pass to catch any remaining annotations
+    const cleanedEnglish = cleanSefariaAnnotationsFromText(englishText);
+    const processedEnglish = processKeywords(cleanedEnglish, verseRef);
+    englishDiv.innerHTML = processedEnglish;
+    
+    textContainer.appendChild(hebrewDiv);
+    textContainer.appendChild(englishDiv);
+    contentWrapper.appendChild(textContainer);
+    
+    container.appendChild(contentWrapper);
+    
+    const indicatorsSection = document.createElement('div');
+    indicatorsSection.className = 'verse-indicators';
+    
+    if (hasCommentary) {
+        const commentaryIndicator = document.createElement('div');
+        commentaryIndicator.className = 'content-indicator commentary-indicator';
+        commentaryIndicator.textContent = 'Commentary Available';
+        commentaryIndicator.title = 'Click to view commentary';
+        indicatorsSection.appendChild(commentaryIndicator);
+    }
+    
+    if (hasKeywords) {
+        const keywordIndicator = document.createElement('div');
+        keywordIndicator.className = 'content-indicator keyword-indicator';
+        keywordIndicator.textContent = 'Definitions Available';
+        keywordIndicator.title = 'Click highlighted words for definitions';
+        indicatorsSection.appendChild(keywordIndicator);
+    }
+    
+    const commentBadge = document.createElement('div');
+    commentBadge.className = 'comment-count-badge';
+    commentBadge.style.display = 'none';
+    indicatorsSection.appendChild(commentBadge);
+    
+    container.appendChild(indicatorsSection);
+    
+    return container;
 }
 
 /**
- * Flatten nested text arrays
+ * Clean Sefaria annotations from text (secondary safety layer)
+ * This matches the cleaning function in api.js but is applied at render time
  */
+function cleanSefariaAnnotationsFromText(text) {
+    if (!text || typeof text !== 'string') return text;
+    
+    let cleaned = text;
+    
+    // STEP 0: Decode HTML entities first
+    const temp = document.createElement('textarea');
+    temp.innerHTML = cleaned;
+    cleaned = temp.value;
+    
+    // STEP 1: First remove "Others", "Or", "Lit." annotations (keep main text)
+    cleaned = cleaned.replace(/\s+Others\s+['"][^'"]+['"]\s*/gi, '');
+    cleaned = cleaned.replace(/\s+Or\s+['"][^'"]+['"]\s*/gi, '');
+    cleaned = cleaned.replace(/\s+Lit\.\s+['"][^'"]+['"]\s*/gi, '');
+    
+    // STEP 2: Remove complete footnote/annotation spans (but keep any cleaned text inside)
+    cleaned = cleaned.replace(/<span[^>]*class=["']footnote["'][^>]*>(.*?)<\/span>/gi, '$1');
+    
+    // STEP 3: Remove other span tags (keep content)
+    cleaned = cleaned.replace(/<span[^>]*>(.*?)<\/span>/gi, '$1');
+    
+    // STEP 4: Remove patterns with > followed by repeated text
+    cleaned = cleaned.replace(/([^>]+)\s*>\s*\1[^.]*(?:Others|Or|Lit\.)?[^.]*\./gi, '$1');
+    
+    // STEP 5: Remove text starting with asterisk followed by repeated phrase
+    cleaned = cleaned.replace(/([^*]+)\*\s*\1[^.]*\./g, '$1');
+    
+    // STEP 6: Remove standalone annotations starting with asterisk or >
+    cleaned = cleaned.replace(/[*>][^*>]+?(?=\s|$)/g, '');
+    
+    // STEP 7: Remove <i> tags and their content
+    cleaned = cleaned.replace(/<i[^>]*>.*?<\/i>/gi, '');
+    
+    // STEP 8: Remove <sup> tags
+    cleaned = cleaned.replace(/<sup[^>]*>.*?<\/sup>/gi, '');
+    
+    // STEP 9: Remove any remaining HTML tags
+    cleaned = cleaned.replace(/<[^>]+>/g, '');
+    
+    // STEP 10: Clean up stray HTML attribute text
+    cleaned = cleaned.replace(/\bclass=["'][^"']*["']/gi, '');
+    
+    // STEP 11: Clean up extra whitespace
+    cleaned = cleaned.replace(/\s+/g, ' ').trim();
+    
+    return cleaned;
+}
+
+function checkForKeywords(verseRef) {
+    if (!state.commentaryData || !state.commentaryData.parshas) return false;
+    
+    for (const parsha of state.commentaryData.parshas) {
+        if (parsha.verses) {
+            const verse = parsha.verses.find(v => v.ref === verseRef);
+            if (verse && verse.keywords && verse.keywords.length > 0) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 function flattenTextArray(arr) {
     const result = [];
     arr.forEach(item => {
@@ -335,65 +614,6 @@ function flattenTextArray(arr) {
     return result;
 }
 
-/**
- * Extract starting verse number
- */
-function getStartingVerse(reference) {
-    const match = reference.match(/:(\d+)/);
-    return match ? parseInt(match[1]) : 1;
-}
-
-/**
- * Create verse element
- */
-function createVerseElement(englishText, hebrewText, verseRef, verseNumber) {
-    const container = document.createElement('div');
-    container.className = 'verse-container';
-    container.dataset.ref = verseRef;
-    
-    // Check for commentary
-    const hasCommentary = checkForCommentary(verseRef);
-    if (hasCommentary) {
-        container.classList.add('has-commentary');
-        container.title = 'Click to view commentary';
-    }
-    
-    // English section
-    const englishDiv = document.createElement('div');
-    englishDiv.className = 'english-text';
-    
-    const verseNumSpan = document.createElement('span');
-    verseNumSpan.className = 'verse-number';
-    verseNumSpan.textContent = `${verseNumber}.`;
-    englishDiv.appendChild(verseNumSpan);
-    
-    // Process keywords
-    const processedEnglish = processKeywords(englishText, verseRef);
-    englishDiv.innerHTML += processedEnglish;
-    
-    // Add "Discuss" button
-    const discussBtn = document.createElement('button');
-    discussBtn.className = 'show-comments-btn';
-    discussBtn.dataset.verseRef = verseRef;
-    discussBtn.textContent = 'Discuss';
-    englishDiv.appendChild(discussBtn);
-    
-    // Hebrew section
-    const hebrewDiv = document.createElement('div');
-    hebrewDiv.className = 'hebrew-text';
-    hebrewDiv.setAttribute('lang', 'he');
-    hebrewDiv.setAttribute('dir', 'rtl');
-    hebrewDiv.textContent = hebrewText;
-    
-    container.appendChild(englishDiv);
-    container.appendChild(hebrewDiv);
-    
-    return container;
-}
-
-/**
- * Check if verse has commentary
- */
 function checkForCommentary(verseRef) {
     if (!state.commentaryData || !state.commentaryData.parshas) return false;
     
@@ -408,9 +628,6 @@ function checkForCommentary(verseRef) {
     return false;
 }
 
-/**
- * Process keywords in text
- */
 function processKeywords(text, verseRef) {
     if (!state.commentaryData || !state.commentaryData.parshas) return text;
     
@@ -429,7 +646,7 @@ function processKeywords(text, verseRef) {
     
     let processedText = text;
     keywords.forEach(keyword => {
-        const regex = new RegExp(`\\b(${keyword.word})\\b`, 'gi');
+        const regex = new RegExp(`\\b(${escapeRegex(keyword.word)})\\b`, 'gi');
         processedText = processedText.replace(regex, 
             `<span class="keyword" data-definition="${escapeHtml(keyword.definition)}">$1</span>`
         );
@@ -438,39 +655,75 @@ function processKeywords(text, verseRef) {
     return processedText;
 }
 
-/**
- * Handle clicks on text
- */
 function handleTextClick(e) {
-    // Discuss button click
-    if (e.target.classList.contains('show-comments-btn')) {
+    // HIGHEST PRIORITY: Keyword clicks for definitions
+    if (e.target.classList.contains('keyword')) {
         e.stopPropagation();
-        const verseRef = e.target.dataset.verseRef;
+        e.preventDefault();
+        const definition = e.target.dataset.definition;
+        const word = e.target.textContent;
+        console.log('Keyword clicked:', word);
+        showKeywordDefinition(word, definition);
+        return;
+    }
+    
+    // "Definitions Available" indicator - show ALL definitions for this verse
+    if (e.target.closest('.keyword-indicator')) {
+        e.stopPropagation();
+        const verseContainer = e.target.closest('.verse-container');
+        if (verseContainer) {
+            const verseRef = verseContainer.dataset.ref;
+            const keywords = getKeywordsForVerse(verseRef);
+            console.log('Showing all definitions for:', verseRef);
+            showAllDefinitions(verseRef, keywords);
+        }
+        return;
+    }
+    
+    // Commentary indicator clicks - show commentary modal
+    if (e.target.closest('.commentary-indicator')) {
+        e.stopPropagation();
+        const verseContainer = e.target.closest('.verse-container');
+        if (verseContainer) {
+            const verseRef = verseContainer.dataset.ref;
+            const commentaries = getCommentariesForVerse(verseRef);
+            console.log('Showing commentary for:', verseRef);
+            showCommentary(verseRef, commentaries);
+        }
+        return;
+    }
+    
+    // Comment badge clicks - open comment panel
+    if (e.target.closest('.comment-count-badge')) {
+        e.stopPropagation();
+        const verseContainer = e.target.closest('.verse-container');
+        if (verseContainer) {
+            const verseRef = verseContainer.dataset.ref;
+            console.log('Opening comments for:', verseRef);
+            openCommentsPanel(verseRef, (ref) => {
+                listenForComments(ref, displayComments);
+            });
+        }
+        return;
+    }
+    
+    // Don't open comments if clicking on indicators section itself
+    if (e.target.classList.contains('verse-indicators')) {
+        return;
+    }
+    
+    // ONLY open comment panel when clicking on the verse text or verse container
+    // But NOT if clicking on verse-indicators section
+    const verseContainer = e.target.closest('.verse-container');
+    if (verseContainer && !e.target.closest('.verse-indicators')) {
+        const verseRef = verseContainer.dataset.ref;
+        console.log('Opening comments for:', verseRef);
         openCommentsPanel(verseRef, (ref) => {
             listenForComments(ref, displayComments);
         });
-        return;
-    }
-    
-    // Keyword click
-    if (e.target.classList.contains('keyword')) {
-        const definition = e.target.dataset.definition;
-        showKeywordDefinition(e.target.textContent, definition);
-        return;
-    }
-    
-    // Verse click
-    const verseContainer = e.target.closest('.verse-container.has-commentary');
-    if (verseContainer) {
-        const verseRef = verseContainer.dataset.ref;
-        const commentaries = getCommentariesForVerse(verseRef);
-        showCommentary(verseRef, commentaries);
     }
 }
 
-/**
- * Get commentaries for a verse
- */
 function getCommentariesForVerse(verseRef) {
     if (!state.commentaryData || !state.commentaryData.parshas) return [];
     
@@ -485,14 +738,61 @@ function getCommentariesForVerse(verseRef) {
     return [];
 }
 
-/**
- * Escape HTML
- */
+function getKeywordsForVerse(verseRef) {
+    if (!state.commentaryData || !state.commentaryData.parshas) return [];
+    
+    for (const parsha of state.commentaryData.parshas) {
+        if (parsha.verses) {
+            const verse = parsha.verses.find(v => v.ref === verseRef);
+            if (verse && verse.keywords) {
+                return verse.keywords;
+            }
+        }
+    }
+    return [];
+}
+
+function showAllDefinitions(verseRef, keywords) {
+    if (!keywords || keywords.length === 0) return;
+    
+    const infoContent = document.getElementById('info-content');
+    let html = `<h4 class="text-lg font-bold mb-4 text-blue-900 border-b-2 border-blue-200 pb-2">Definitions for ${escapeHtml(verseRef)}</h4>`;
+    
+    keywords.forEach(keyword => {
+        html += `
+            <div class="definition-container mb-4">
+                <div class="definition-word">${escapeHtml(keyword.word)}</div>
+                <div class="definition-text">${formatText(keyword.definition)}</div>
+            </div>
+        `;
+    });
+    
+    infoContent.innerHTML = html;
+    showInfoPanel();
+}
+
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
 }
 
-// Initialize when DOM is ready
+function formatText(text) {
+    if (!text) return '';
+    
+    // First escape all HTML to prevent XSS
+    let escaped = escapeHtml(text);
+    
+    // Then apply safe formatting:
+    // Convert *text* to <strong>text</strong> for bold
+    // Use non-greedy match to handle multiple bold sections properly
+    escaped = escaped.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
+    
+    return escaped;
+}
+
+function escapeRegex(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 document.addEventListener('DOMContentLoaded', init);

@@ -90,6 +90,27 @@
         </div>
         
         <div class="comment-panel-body">
+            <!-- Username Setup Section -->
+            <div id="username-setup" class="username-setup hidden">
+                <p class="username-prompt">Please set your display name to participate:</p>
+                <div class="username-input-group">
+                    <input 
+                        type="text" 
+                        id="username-input" 
+                        placeholder="Enter your name (max 50 characters)"
+                        maxlength="50"
+                        class="username-input"
+                    />
+                    <button id="save-username-btn" class="save-username-btn">Save Name</button>
+                </div>
+            </div>
+            
+            <!-- Display Saved Username -->
+            <div id="username-display" class="username-display hidden">
+                <span class="username-label">Commenting as:</span>
+                <span id="current-username" class="current-username"></span>
+            </div>
+            
             <!-- Comments List -->
             <div id="comments-list" class="comments-list">
                 <div class="loading-comments">Loading comments...</div>

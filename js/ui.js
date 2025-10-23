@@ -105,7 +105,7 @@ export function showKeywordDefinition(word, definition) {
     infoContent.innerHTML = `
         <div class="definition-container">
             <div class="definition-word">${escapeHtml(word)}</div>
-            <div class="definition-text">${escapeHtml(definition)}</div>
+            <div class="definition-text">${formatText(definition)}</div>
         </div>
     `;
     showInfoPanel();
@@ -124,7 +124,7 @@ export function showCommentary(verseRef, commentaries) {
         html += `
             <div class="commentary-item">
                 <div class="commentary-source">${escapeHtml(commentary.source)}</div>
-                <div class="commentary-text">${escapeHtml(commentary.explanation)}</div>
+                <div class="commentary-text">${formatText(commentary.explanation)}</div>
             </div>
         `;
     });
@@ -163,6 +163,12 @@ export function openCommentsPanel(verseRef, onOpen) {
     // Prevent body scroll
     document.body.style.overflow = 'hidden';
     
+    // Check and display username status
+    updateUsernameDisplay();
+    
+    // Restore any persistent comment status messages
+    restoreCommentStatus();
+    
     // Call the onOpen callback to start listening for comments
     if (onOpen) {
         onOpen(verseRef);
@@ -183,10 +189,8 @@ export function closeCommentsPanel(onClose) {
     // Restore body scroll
     document.body.style.overflow = 'auto';
     
-    // Clear input
+    // Clear input but DON'T clear the status message (it should persist)
     document.getElementById('comment-input').value = '';
-    document.getElementById('comment-status').textContent = '';
-    document.getElementById('comment-status').className = 'comment-status';
     
     // Call the onClose callback to stop listening
     if (onClose) {
@@ -195,12 +199,19 @@ export function closeCommentsPanel(onClose) {
 }
 
 /**
- * Display comments in the panel
+ * Display comments in the panel with username
  */
 export function displayComments(commentsArray) {
+    console.log('displayComments called with:', commentsArray);
     const commentsList = document.getElementById('comments-list');
     
+    if (!commentsList) {
+        console.error('comments-list element not found!');
+        return;
+    }
+    
     if (!commentsArray || commentsArray.length === 0) {
+        console.log('No comments to display');
         commentsList.innerHTML = `
             <div class="no-comments">
                 <p>No comments yet.</p>
@@ -210,15 +221,16 @@ export function displayComments(commentsArray) {
         return;
     }
     
+    console.log(`Displaying ${commentsArray.length} comments`);
     let html = '';
     commentsArray.forEach(comment => {
-        const truncatedUserId = comment.userId ? comment.userId.substring(0, 8) + '...' : 'Anonymous';
+        const displayName = comment.username || 'Anonymous';
         const timestamp = formatTimestamp(comment.timestamp);
         
         html += `
             <div class="comment-item">
                 <div class="comment-meta">
-                    <span class="comment-user">${escapeHtml(truncatedUserId)}</span>
+                    <span class="comment-user">${escapeHtml(displayName)}</span>
                     <span class="comment-time">${escapeHtml(timestamp)}</span>
                 </div>
                 <div class="comment-text">${escapeHtml(comment.text)}</div>
@@ -227,6 +239,7 @@ export function displayComments(commentsArray) {
     });
     
     commentsList.innerHTML = html;
+    console.log('Comments HTML updated successfully');
 }
 
 /**
@@ -248,18 +261,101 @@ export function updateCommentInputState(isLoggedIn) {
 }
 
 /**
- * Show comment status message
+ * Update username display in comment panel
+ */
+export function updateUsernameDisplay() {
+    const usernameSetup = document.getElementById('username-setup');
+    const usernameDisplay = document.getElementById('username-display');
+    const currentUsernameSpan = document.getElementById('current-username');
+    
+    const savedUsername = getSavedUsername();
+    
+    if (savedUsername) {
+        // Show username display, hide setup
+        usernameSetup.classList.add('hidden');
+        usernameDisplay.classList.remove('hidden');
+        currentUsernameSpan.textContent = savedUsername;
+    } else {
+        // Show setup, hide display
+        usernameSetup.classList.remove('hidden');
+        usernameDisplay.classList.add('hidden');
+    }
+}
+
+/**
+ * Save username to localStorage
+ */
+export function saveUsername(username) {
+    if (username && username.trim().length > 0 && username.trim().length <= 50) {
+        localStorage.setItem('torahStudyUsername', username.trim());
+        updateUsernameDisplay();
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Get saved username from localStorage
+ */
+export function getSavedUsername() {
+    return localStorage.getItem('torahStudyUsername');
+}
+
+/**
+ * Show comment status message - PERSISTENT (stores in sessionStorage)
  */
 export function showCommentStatus(message, isError = false) {
     const statusElement = document.getElementById('comment-status');
     statusElement.textContent = message;
     statusElement.className = 'comment-status ' + (isError ? 'error' : 'success');
     
-    // Clear after 3 seconds
-    setTimeout(() => {
-        statusElement.textContent = '';
-        statusElement.className = 'comment-status';
-    }, 3000);
+    // Store success messages in sessionStorage so they persist across refreshes
+    if (!isError) {
+        sessionStorage.setItem('torahStudyCommentStatus', JSON.stringify({
+            message: message,
+            timestamp: Date.now()
+        }));
+    }
+    
+    // Only clear error messages after 5 seconds
+    if (isError) {
+        setTimeout(() => {
+            statusElement.textContent = '';
+            statusElement.className = 'comment-status';
+        }, 5000);
+    }
+}
+
+/**
+ * Clear comment status message
+ */
+export function clearCommentStatus() {
+    const statusElement = document.getElementById('comment-status');
+    statusElement.textContent = '';
+    statusElement.className = 'comment-status';
+    sessionStorage.removeItem('torahStudyCommentStatus');
+}
+
+/**
+ * Restore comment status from sessionStorage (call on panel open)
+ */
+export function restoreCommentStatus() {
+    const stored = sessionStorage.getItem('torahStudyCommentStatus');
+    if (stored) {
+        try {
+            const { message, timestamp } = JSON.parse(stored);
+            // Only show if less than 5 minutes old
+            if (Date.now() - timestamp < 5 * 60 * 1000) {
+                const statusElement = document.getElementById('comment-status');
+                statusElement.textContent = message;
+                statusElement.className = 'comment-status success';
+            } else {
+                sessionStorage.removeItem('torahStudyCommentStatus');
+            }
+        } catch (e) {
+            console.error('Error restoring comment status:', e);
+        }
+    }
 }
 
 /**
@@ -292,4 +388,24 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+/**
+ * Format text with basic markdown-style formatting
+ * Converts *text* to <strong>text</strong> for bold
+ * While still escaping dangerous HTML
+ * FIXED: Now properly removes asterisks and applies bold formatting
+ */
+function formatText(text) {
+    if (!text) return '';
+    
+    // First escape all HTML to prevent XSS
+    let escaped = escapeHtml(text);
+    
+    // Then apply safe formatting:
+    // Convert *text* to <strong>text</strong> for bold
+    // Use non-greedy match and replace the entire pattern including asterisks
+    escaped = escaped.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
+    
+    return escaped;
 }

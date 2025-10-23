@@ -1,7 +1,7 @@
 // Firebase Module - Initialize Firebase services
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -46,8 +46,8 @@ function getCurrentUserId() {
   return currentUser ? currentUser.uid : null;
 }
 
-// Submit a comment to Firestore
-async function submitComment(verseRef, text, userId) {
+// Submit a comment to Firestore with username
+async function submitComment(verseRef, text, userId, username) {
   if (!userId) {
     throw new Error('User not authenticated');
   }
@@ -56,11 +56,20 @@ async function submitComment(verseRef, text, userId) {
     throw new Error('Comment text is empty');
   }
 
+  if (!username || username.trim().length === 0) {
+    throw new Error('Username is required');
+  }
+
+  if (username.trim().length > 50) {
+    throw new Error('Username must be 50 characters or less');
+  }
+
   try {
     const commentData = {
       verseRef: verseRef,
       text: text.trim(),
       userId: userId,
+      username: username.trim(),
       timestamp: serverTimestamp()
     };
 
@@ -77,33 +86,50 @@ async function submitComment(verseRef, text, userId) {
 let currentCommentsUnsubscribe = null;
 
 function listenForComments(verseRef, callback) {
+  console.log('listenForComments called for:', verseRef);
+  
   // Stop previous listener if exists
   if (currentCommentsUnsubscribe) {
+    console.log('Stopping previous listener');
     currentCommentsUnsubscribe();
     currentCommentsUnsubscribe = null;
   }
 
   try {
+    // SIMPLIFIED QUERY - No orderBy to avoid needing an index
+    // We'll sort in JavaScript instead
     const commentsQuery = query(
       collection(db, 'comments'),
-      where('verseRef', '==', verseRef),
-      orderBy('timestamp', 'desc')
+      where('verseRef', '==', verseRef)
+      // orderBy removed temporarily - will sort in code
     );
 
+    console.log('Setting up Firebase listener...');
     currentCommentsUnsubscribe = onSnapshot(commentsQuery, 
       (querySnapshot) => {
+        console.log('Firebase snapshot received, size:', querySnapshot.size);
         const comments = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
+          console.log('Comment data:', data);
           comments.push({
             id: doc.id,
             verseRef: data.verseRef,
             text: data.text,
             userId: data.userId,
+            username: data.username || 'Anonymous',
             timestamp: data.timestamp
           });
         });
         
+        // Sort by timestamp in JavaScript (newest first)
+        comments.sort((a, b) => {
+          if (!a.timestamp) return 1;
+          if (!b.timestamp) return -1;
+          return b.timestamp.toMillis() - a.timestamp.toMillis();
+        });
+        
+        console.log('Passing', comments.length, 'comments to callback');
         callback(comments);
       },
       (error) => {
@@ -111,6 +137,7 @@ function listenForComments(verseRef, callback) {
         callback([]);
       }
     );
+    console.log('Firebase listener set up successfully');
   } catch (error) {
     console.error('Error setting up comment listener:', error);
     callback([]);
