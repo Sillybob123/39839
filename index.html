@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torah Study Circle</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white min-h-screen">
+    <!-- Header -->
+    <header class="bg-blue-900 text-white py-6 shadow-lg border-b-4 border-blue-700">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl md:text-4xl font-bold text-center tracking-wide">Torah Study Circle</h1>
+            <p class="text-center text-blue-200 mt-2 text-sm">Weekly Torah Portion Study</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md py-4 sticky top-0 z-10 border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-4">
+                <button id="go-to-weekly" class="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold shadow-md hover:bg-blue-700 transition">
+                    This Week's Parsha
+                </button>
+            </div>
+            
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                <label for="parsha-selector" class="font-semibold text-gray-700">Select Parsha:</label>
+                <select id="parsha-selector" class="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none min-w-[250px] bg-white">
+                    <option value="">Loading parshas...</option>
+                </select>
+                <div class="flex gap-2">
+                    <button id="prev-parsha" class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        Previous
+                    </button>
+                    <button id="next-parsha" class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 py-8">
+        <div id="content-area" class="bg-white rounded-lg shadow-lg p-6 md:p-8 border border-gray-200">
+            <!-- Parsha Title and Reference -->
+            <h2 id="parsha-title" class="text-2xl md:text-3xl font-bold mb-2 text-blue-900"></h2>
+            <h3 id="parsha-reference" class="text-lg italic mb-6 text-blue-700"></h3>
+            
+            <!-- Loading/Error Messages -->
+            <div id="loading-message" class="text-center py-8 text-gray-500 hidden">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-2"></div>
+                <p>Loading Torah text...</p>
+            </div>
+            <div id="error-message" class="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded relative hidden" role="alert">
+                <strong class="font-bold">Error: </strong>
+                <span id="error-text">Something went wrong.</span>
+            </div>
+
+            <!-- Text Display -->
+            <div id="parsha-text" class="space-y-4"></div>
+        </div>
+    </main>
+
+    <!-- Info Panel (Modal) -->
+    <div id="info-panel" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-2xl max-w-3xl w-full max-h-[85vh] overflow-hidden flex flex-col">
+            <div class="sticky top-0 bg-blue-700 text-white p-6 flex justify-between items-center border-b">
+                <h3 class="text-xl font-bold">Commentary & Insights</h3>
+                <button id="close-panel-button" class="text-white hover:text-gray-200 text-2xl font-bold leading-none">
+                    &times;
+                </button>
+            </div>
+            <div id="info-content" class="p-6 overflow-y-auto flex-1">
+                <!-- Commentary content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Comment Panel Overlay -->
+    <div id="comment-overlay" class="hidden"></div>
+
+    <!-- Comment Panel -->
+    <div id="comment-panel" class="comment-panel">
+        <div class="comment-panel-header">
+            <h3 id="comment-panel-title" class="comment-panel-title">Discussion</h3>
+            <button id="close-comment-panel" class="close-panel-btn">&times;</button>
+        </div>
+        
+        <div class="comment-panel-body">
+            <!-- Comments List -->
+            <div id="comments-list" class="comments-list">
+                <div class="loading-comments">Loading comments...</div>
+            </div>
+            
+            <!-- Add Comment Section -->
+            <div class="add-comment-section">
+                <textarea 
+                    id="comment-input" 
+                    placeholder="Share your insights on this verse..."
+                    rows="3"
+                    disabled
+                ></textarea>
+                <button id="submit-comment-btn" class="submit-comment-btn" disabled>
+                    Submit Comment
+                </button>
+                <div id="comment-status" class="comment-status"></div>
+            </div>
+        </div>
+        
+        <!-- Hidden input to store current verse reference -->
+        <input type="hidden" id="current-comment-verse-ref" value="">
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white py-6 mt-12 border-t-4 border-blue-700">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-sm">Torah text provided by <a href="https://www.sefaria.org" target="_blank" class="underline hover:text-blue-300">Sefaria.org</a></p>
+            <p class="text-xs text-blue-300 mt-2">May your study be meaningful</p>
+        </div>
+    </footer>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

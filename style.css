@@ -1,0 +1,274 @@
+/* Base Styles - Clean and Professional */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.7;
+    background: #ffffff;
+    color: #1e3a8a;
+}
+
+/* Hebrew Text Styling */
+[lang="he"] {
+    direction: rtl;
+    font-family: 'SBL Hebrew', 'Ezra SIL', 'Frank Ruehl CLM', 'David CLM', 'Times New Roman', serif;
+    font-size: 1.15em;
+    line-height: 2;
+    font-weight: 400;
+}
+
+/* Current Parsha Highlight - Subtle Blue */
+.current-parsha-highlight {
+    background: #eff6ff;
+    border-left: 4px solid #2563eb;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+}
+
+.current-parsha-highlight::before {
+    content: "This Week's Parsha";
+    position: absolute;
+    top: -12px;
+    left: 24px;
+    background: #2563eb;
+    color: white;
+    padding: 4px 16px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Verse Container - Clean White */
+.verse-container {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+}
+
+.verse-container:hover {
+    background: #f9fafb;
+    border-color: #93c5fd;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+}
+
+/* Verses with Commentary - Blue Accent */
+.verse-container.has-commentary {
+    cursor: pointer;
+    border-left: 3px solid #3b82f6;
+    background: #f8fafc;
+}
+
+.verse-container.has-commentary:hover {
+    background: #eff6ff;
+    border-left-color: #2563eb;
+}
+
+/* Verse Number - Blue Badge */
+.verse-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    background: #3b82f6;
+    margin-right: 0.75rem;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+/* Keyword Styling - Subtle Blue Underline */
+.keyword {
+    border-bottom: 2px dotted #60a5fa;
+    cursor: help;
+    color: #1e40af;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    padding: 0 2px;
+}
+
+.keyword:hover {
+    background: #dbeafe;
+    border-bottom-color: #2563eb;
+}
+
+/* English and Hebrew Text Blocks */
+.english-text {
+    margin-bottom: 1rem;
+    color: #1e3a8a;
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+.hebrew-text {
+    color: #1e40af;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+    text-align: right;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideUp {
+    animation: slideUp 0.3s ease-out;
+}
+
+/* Commentary Styling - Clean Blue Cards */
+.commentary-item {
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #3b82f6;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.1);
+}
+
+.commentary-item:hover {
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);
+}
+
+.commentary-source {
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 0.75rem;
+    font-size: 1.1em;
+}
+
+.commentary-text {
+    color: #1e3a8a;
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+/* Definition Styling - Light Blue Background */
+.definition-container {
+    padding: 2rem;
+    background: #eff6ff;
+    border-radius: 8px;
+    border-left: 3px solid #3b82f6;
+}
+
+.definition-word {
+    font-weight: 700;
+    color: #1e40af;
+    font-size: 1.3em;
+    margin-bottom: 0.75rem;
+}
+
+.definition-text {
+    color: #1e3a8a;
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .verse-container {
+        padding: 1rem;
+    }
+    
+    [lang="he"] {
+        font-size: 1em;
+        line-height: 1.8;
+    }
+    
+    .verse-number {
+        min-width: 2rem;
+        height: 2rem;
+        font-size: 0.8rem;
+    }
+
+    .current-parsha-highlight::before {
+        font-size: 0.65rem;
+        padding: 3px 12px;
+    }
+}
+
+/* Scrollbar Styling - Blue */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #93c5fd;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #60a5fa;
+}
+
+/* Print Styles */
+@media print {
+    header, nav, footer, #info-panel, #go-to-weekly {
+        display: none !important;
+    }
+    
+    .verse-container {
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #e5e7eb;
+    }
+
+    body {
+        background: white;
+    }
+}
+
+/* Accessibility Focus Styles - Blue */
+*:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* Loading Animation */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Pulse Animation for Badge */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
