@@ -8,8 +8,99 @@
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     line-height: 1.7;
-    background: #ffffff;
+    background: #f9fafb;
     color: #1e3a8a;
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Header Enhancements */
+header {
+    position: relative;
+    overflow: visible;
+}
+
+header .container {
+    position: relative;
+    z-index: 1;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(96, 165, 250, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+header::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(96, 165, 250, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Navigation Enhancements */
+nav {
+    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.98);
+}
+
+/* Select Dropdown Enhancement */
+select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234b5563'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.25rem;
+    padding-right: 2.5rem;
+}
+
+select:hover {
+    border-color: #60a5fa;
+}
+
+select:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Button Enhancements */
+button {
+    cursor: pointer;
+    user-select: none;
+}
+
+button:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+/* Icon Buttons in Header */
+header button svg,
+header a svg {
+    flex-shrink: 0;
+}
+
+/* Responsive Button Text */
+@media (max-width: 640px) {
+    header button,
+    header a {
+        padding: 0.625rem 1rem;
+    }
 }
 
 /* Hebrew Text Styling - 4px LARGER than English */
@@ -66,6 +157,8 @@ body {
     background: #eff6ff;
     border-left: 4px solid #2563eb;
     box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+    position: relative;
+    padding-top: 3rem;
 }
 
 .current-parsha-highlight::before {

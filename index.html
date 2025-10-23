@@ -3,39 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Torah Study Circle</title>
+    <title>A Letter in the Scroll</title>
+    <link rel="icon" type="image/png" href="Icon.png">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-white min-h-screen">
-    <!-- Header -->
-    <header class="bg-blue-900 text-white py-6 shadow-lg border-b-4 border-blue-700">
-        <div class="container mx-auto px-4">
-            <h1 class="text-3xl md:text-4xl font-bold text-center tracking-wide">Torah Study Circle</h1>
-            <p class="text-center text-blue-200 mt-2 text-sm">Weekly Torah Portion Study</p>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Improved Header with Better Layout -->
+    <header class="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white shadow-2xl border-b-4 border-blue-600">
+        <div class="container mx-auto px-6 py-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <!-- Logo/Title Section -->
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-4 mb-2">
+                        <img src="Icon.png" alt="A Letter in the Scroll Logo" class="h-12 w-12 sm:h-16 sm:w-16 rounded-lg shadow-lg">
+                        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide leading-tight">A Letter in the Scroll</h1>
+                    </div>
+                    <p class="text-blue-200 text-sm md:text-base leading-relaxed">Interactive Weekly Portion Study & Discussion</p>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="flex flex-wrap sm:flex-nowrap gap-3 flex-shrink-0">
+                    <button id="go-to-weekly" class="px-5 py-3 bg-white text-blue-900 rounded-lg font-semibold shadow-lg hover:bg-blue-50 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="hidden sm:inline">This Week's Parsha</span>
+                        <span class="sm:hidden">This Week</span>
+                    </button>
+                    <a href="about.html" class="px-5 py-3 bg-blue-700 text-white rounded-lg font-semibold shadow-lg hover:bg-blue-600 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="hidden sm:inline">About</span>
+                        <span class="sm:hidden">Info</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- Navigation -->
-    <nav class="bg-white shadow-md py-4 sticky top-0 z-10 border-b border-gray-200">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-4">
-                <button id="go-to-weekly" class="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold shadow-md hover:bg-blue-700 transition">
-                    This Week's Parsha
-                </button>
-            </div>
-            
-            <div class="flex flex-col md:flex-row items-center justify-center gap-4">
-                <label for="parsha-selector" class="font-semibold text-gray-700">Select Parsha:</label>
-                <select id="parsha-selector" class="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none min-w-[250px] bg-white">
-                    <option value="">Loading parshas...</option>
-                </select>
-                <div class="flex gap-2">
-                    <button id="prev-parsha" class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed">
+    <!-- Improved Navigation Bar -->
+    <nav class="bg-white shadow-md sticky top-0 z-10 border-b-2 border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <!-- Desktop Layout -->
+            <div class="hidden md:flex items-center justify-between gap-4">
+                <!-- Parsha Selector -->
+                <div class="flex items-center gap-3 flex-1 max-w-xl">
+                    <label for="parsha-selector" class="font-semibold text-gray-700 whitespace-nowrap text-sm">Torah Portion:</label>
+                    <select id="parsha-selector" class="flex-1 px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-white text-gray-900 font-medium shadow-sm hover:border-blue-400 transition-colors">
+                        <option value="">Loading portions...</option>
+                    </select>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="flex items-center gap-2">
+                    <button id="prev-parsha" class="group px-4 py-2.5 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 font-medium shadow-sm flex items-center gap-2">
+                        <svg class="w-4 h-4 group-hover:translate-x-[-2px] transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
                         Previous
                     </button>
-                    <button id="next-parsha" class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    <button id="next-parsha" class="group px-4 py-2.5 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 font-medium shadow-sm flex items-center gap-2">
                         Next
+                        <svg class="w-4 h-4 group-hover:translate-x-[2px] transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Layout -->
+            <div class="md:hidden space-y-3">
+                <!-- Parsha Selector -->
+                <div class="flex flex-col gap-2">
+                    <label for="parsha-selector-mobile" class="font-semibold text-gray-700 text-sm">Torah Portion:</label>
+                    <select id="parsha-selector" class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-white text-gray-900 font-medium shadow-sm">
+                        <option value="">Loading portions...</option>
+                    </select>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="flex gap-2">
+                    <button id="prev-parsha" class="flex-1 px-4 py-2.5 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-all disabled:opacity-40 disabled:cursor-not-allowed font-medium shadow-sm text-sm flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Previous
+                    </button>
+                    <button id="next-parsha" class="flex-1 px-4 py-2.5 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-all disabled:opacity-40 disabled:cursor-not-allowed font-medium shadow-sm text-sm flex items-center justify-center gap-2">
+                        Next
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
                     </button>
                 </div>
             </div>
