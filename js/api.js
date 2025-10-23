@@ -20,7 +20,6 @@ export async function fetchCurrentParsha() {
         }
         return null;
     } catch (error) {
-        console.warn('Could not fetch current parsha from calendar:', error);
         return null;
     }
 }
@@ -33,15 +32,12 @@ export async function fetchParshaText(parshaRef) {
         // Use v3 API endpoint with text_only format to strip all annotations
         const apiUrl = `${API_CONFIG.SEFARIA_BASE}/v3/texts/${encodeURIComponent(parshaRef)}?version=english&version=hebrew&return_format=text_only`;
         
-        console.log('Fetching from API:', apiUrl);
-        
         const response = await fetch(apiUrl);
         if (!response.ok) {
             throw new Error(`API request failed: ${response.status}`);
         }
         
         const data = await response.json();
-        console.log('API Response:', data);
         
         // Transform v3 response to expected format
         return transformV3Response(data);
@@ -57,8 +53,6 @@ export async function fetchParshaText(parshaRef) {
  */
 async function fetchParshaTextV1(parshaRef) {
     const apiUrl = `${API_CONFIG.SEFARIA_BASE}/texts/${encodeURIComponent(parshaRef)}?context=0&commentary=0`;
-    
-    console.log('Falling back to v1 API:', apiUrl);
     
     const response = await fetch(apiUrl);
     if (!response.ok) {
@@ -133,12 +127,6 @@ function transformV3Response(v3Data) {
     
     // Clean the English text of all Sefaria annotations
     const englishText = cleanTextArray(rawEnglishText);
-    
-    console.log('Transformed data:', {
-        book: v3Data.indexTitle,
-        textLength: englishText.length,
-        hebrewLength: hebrewText.length
-    });
     
     return {
         book: v3Data.indexTitle || v3Data.title || 'Torah',

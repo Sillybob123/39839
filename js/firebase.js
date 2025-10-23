@@ -26,14 +26,10 @@ function initAuth(onAuthReady) {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       currentUser = user;
-      console.log('User authenticated:', user.uid);
       if (onAuthReady) onAuthReady(user);
     } else {
       // Sign in anonymously if not authenticated
       signInAnonymously(auth)
-        .then(() => {
-          console.log('Anonymous sign-in successful');
-        })
         .catch((error) => {
           console.error('Anonymous sign-in error:', error);
         });
@@ -74,7 +70,6 @@ async function submitComment(verseRef, text, userId, username) {
     };
 
     const docRef = await addDoc(collection(db, 'comments'), commentData);
-    console.log('Comment added with ID:', docRef.id);
     return docRef.id;
   } catch (error) {
     console.error('Error adding comment:', error);
@@ -86,11 +81,8 @@ async function submitComment(verseRef, text, userId, username) {
 let currentCommentsUnsubscribe = null;
 
 function listenForComments(verseRef, callback) {
-  console.log('listenForComments called for:', verseRef);
-  
   // Stop previous listener if exists
   if (currentCommentsUnsubscribe) {
-    console.log('Stopping previous listener');
     currentCommentsUnsubscribe();
     currentCommentsUnsubscribe = null;
   }
@@ -104,14 +96,11 @@ function listenForComments(verseRef, callback) {
       // orderBy removed temporarily - will sort in code
     );
 
-    console.log('Setting up Firebase listener...');
     currentCommentsUnsubscribe = onSnapshot(commentsQuery, 
       (querySnapshot) => {
-        console.log('Firebase snapshot received, size:', querySnapshot.size);
         const comments = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          console.log('Comment data:', data);
           comments.push({
             id: doc.id,
             verseRef: data.verseRef,
@@ -129,7 +118,6 @@ function listenForComments(verseRef, callback) {
           return b.timestamp.toMillis() - a.timestamp.toMillis();
         });
         
-        console.log('Passing', comments.length, 'comments to callback');
         callback(comments);
       },
       (error) => {
@@ -137,7 +125,6 @@ function listenForComments(verseRef, callback) {
         callback([]);
       }
     );
-    console.log('Firebase listener set up successfully');
   } catch (error) {
     console.error('Error setting up comment listener:', error);
     callback([]);
@@ -149,7 +136,6 @@ function stopListeningForComments() {
   if (currentCommentsUnsubscribe) {
     currentCommentsUnsubscribe();
     currentCommentsUnsubscribe = null;
-    console.log('Stopped listening for comments');
   }
 }
 

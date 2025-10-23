@@ -202,7 +202,6 @@ export function closeCommentsPanel(onClose) {
  * Display comments in the panel with username
  */
 export function displayComments(commentsArray) {
-    console.log('displayComments called with:', commentsArray);
     const commentsList = document.getElementById('comments-list');
     
     if (!commentsList) {
@@ -211,7 +210,6 @@ export function displayComments(commentsArray) {
     }
     
     if (!commentsArray || commentsArray.length === 0) {
-        console.log('No comments to display');
         commentsList.innerHTML = `
             <div class="no-comments">
                 <p>No comments yet.</p>
@@ -221,7 +219,6 @@ export function displayComments(commentsArray) {
         return;
     }
     
-    console.log(`Displaying ${commentsArray.length} comments`);
     let html = '';
     commentsArray.forEach(comment => {
         const displayName = comment.username || 'Anonymous';
@@ -239,7 +236,6 @@ export function displayComments(commentsArray) {
     });
     
     commentsList.innerHTML = html;
-    console.log('Comments HTML updated successfully');
 }
 
 /**
