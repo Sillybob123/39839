@@ -481,15 +481,10 @@ function renderParsha(data, parshaRef) {
             const hebrewChapterVerses = Array.isArray(hebrewText[chapterIndex]) ? 
                 hebrewText[chapterIndex] : [hebrewText[chapterIndex] || ''];
             
-            let startVerseNum = 1;
-            let endVerseNum = chapterVerses.length;
-            
-            if (currentChapterNumber === startChapter) {
-                startVerseNum = startVerse;
-            }
-            if (endChapter && currentChapterNumber === endChapter) {
-                endVerseNum = endVerse;
-            }
+            const isStartChapter = currentChapterNumber === startChapter;
+            const isEndChapter = endChapter ? currentChapterNumber === endChapter : false;
+            const chapterStartVerse = isStartChapter ? startVerse : 1;
+            const chapterEndVerse = isEndChapter ? endVerse : null;
             
             if (!isFirstChapter) {
                 const chapterHeader = document.createElement('div');
@@ -499,12 +494,17 @@ function renderParsha(data, parshaRef) {
             }
             isFirstChapter = false;
             
-            for (let verseIndex = startVerseNum - 1; verseIndex < Math.min(endVerseNum, chapterVerses.length); verseIndex++) {
-                const verseText = chapterVerses[verseIndex];
+            for (let localIndex = 0; localIndex < chapterVerses.length; localIndex++) {
+                const verseText = chapterVerses[localIndex];
                 if (!verseText || verseText.trim() === '') continue;
                 
-                const hebrewVerseText = hebrewChapterVerses[verseIndex] || '';
-                const verseNumber = verseIndex + 1;
+                const verseNumber = chapterStartVerse + localIndex;
+                
+                if (chapterEndVerse && verseNumber > chapterEndVerse) {
+                    break;
+                }
+                
+                const hebrewVerseText = hebrewChapterVerses[localIndex] || '';
                 const verseRef = `${bookName} ${currentChapterNumber}:${verseNumber}`;
                 
                 const verseElement = createVerseElement(verseText, hebrewVerseText, verseRef, verseNumber);

@@ -257,40 +257,57 @@ function renderParsha(data, parshaRef) {
     const englishText = Array.isArray(data.text) ? data.text : [data.text];
     const hebrewText = Array.isArray(data.he) ? data.he : [data.he];
     
-    // Handle nested arrays (chapters)
-    const flatEnglish = flattenTextArray(englishText);
-    const flatHebrew = flattenTextArray(hebrewText);
+    // Check if we have multi-chapter structure (nested arrays)
+    const isMultiChapter = Array.isArray(englishText[0]);
     
-    // Get starting verse number from reference
-    const startVerse = getStartingVerse(parshaRef);
-    
-    // Render each verse
-    flatEnglish.forEach((verseText, index) => {
-        if (!verseText || verseText.trim() === '') return;
+    if (isMultiChapter) {
+        // Parse the reference to get starting chapter and verse
+        const refMatch = parshaRef.match(/(\d+):(\d+)/);
+        let currentChapter = refMatch ? parseInt(refMatch[1]) : data.sections[0];
+        let currentVerse = refMatch ? parseInt(refMatch[2]) : 1;
         
-        const hebrewVerseText = flatHebrew[index] || '';
-        const verseNumber = startVerse + index;
-        const verseRef = `${data.book} ${data.sections[0]}:${verseNumber}`;
+        // Iterate through each chapter
+        englishText.forEach((chapterVerses, chapterIndex) => {
+            const hebrewChapterVerses = hebrewText[chapterIndex] || [];
+            
+            // Render each verse in the chapter
+            chapterVerses.forEach((verseText, verseIndex) => {
+                if (!verseText || verseText.trim() === '') {
+                    currentVerse++;
+                    return;
+                }
+                
+                const hebrewVerseText = hebrewChapterVerses[verseIndex] || '';
+                const verseRef = `${data.book} ${currentChapter}:${currentVerse}`;
+                
+                // Create verse container
+                const verseContainer = createVerseElement(verseText, hebrewVerseText, verseRef, currentVerse);
+                textContainer.appendChild(verseContainer);
+                
+                currentVerse++;
+            });
+            
+            // Move to next chapter
+            currentChapter++;
+            currentVerse = 1;
+        });
+    } else {
+        // Single chapter - use the original simple approach
+        const startVerse = getStartingVerse(parshaRef);
+        const chapter = data.sections[0];
         
-        // Create verse container
-        const verseContainer = createVerseElement(verseText, hebrewVerseText, verseRef, verseNumber);
-        textContainer.appendChild(verseContainer);
-    });
-}
-
-/**
- * Flatten nested text arrays (for multi-chapter portions)
- */
-function flattenTextArray(arr) {
-    const result = [];
-    arr.forEach(item => {
-        if (Array.isArray(item)) {
-            result.push(...item);
-        } else {
-            result.push(item);
-        }
-    });
-    return result;
+        englishText.forEach((verseText, index) => {
+            if (!verseText || verseText.trim() === '') return;
+            
+            const hebrewVerseText = hebrewText[index] || '';
+            const verseNumber = startVerse + index;
+            const verseRef = `${data.book} ${chapter}:${verseNumber}`;
+            
+            // Create verse container
+            const verseContainer = createVerseElement(verseText, hebrewVerseText, verseRef, verseNumber);
+            textContainer.appendChild(verseContainer);
+        });
+    }
 }
 
 /**
