@@ -1,4 +1,4 @@
-// Main Application Entry Point - QUERY FIX FOR COMMENT BADGES
+// Main Application Entry Point - QUERY FIX FOR COMMENT BADGES + GENERAL PARSHA CHAT
 import { TORAH_PARSHAS } from './config.js';
 import { fetchCurrentParsha, fetchParshaText, loadCommentaryData } from './api.js';
 import { state, setState } from './state.js';
@@ -136,6 +136,32 @@ function setupEventListeners() {
         });
     }
     
+    // General Parsha Chat Button (Desktop)
+    const parshaChatButton = document.getElementById('general-parsha-chat');
+    if (parshaChatButton) {
+        parshaChatButton.addEventListener('click', () => {
+            const parshaRef = state.currentParshaRef || 'Genesis 1:1';
+            const parshaName = state.allParshas[state.currentParshaIndex]?.name || 'Torah Portion';
+            const generalChatRef = `PARSHA:${parshaRef}`;
+            openCommentsPanel(generalChatRef, (ref) => {
+                listenForComments(ref, displayComments);
+            }, parshaName);
+        });
+    }
+
+    // General Parsha Chat Button (Mobile)
+    const parshaChatButtonMobile = document.getElementById('general-parsha-chat-mobile');
+    if (parshaChatButtonMobile) {
+        parshaChatButtonMobile.addEventListener('click', () => {
+            const parshaRef = state.currentParshaRef || 'Genesis 1:1';
+            const parshaName = state.allParshas[state.currentParshaIndex]?.name || 'Torah Portion';
+            const generalChatRef = `PARSHA:${parshaRef}`;
+            openCommentsPanel(generalChatRef, (ref) => {
+                listenForComments(ref, displayComments);
+            }, parshaName);
+        });
+    }
+    
     document.getElementById('close-panel-button').addEventListener('click', hideInfoPanel);
     
     document.getElementById('info-panel').addEventListener('click', (e) => {
@@ -221,44 +247,44 @@ async function handleCommentSubmit() {
     const commentInput = document.getElementById('comment-input');
     const verseRefInput = document.getElementById('current-comment-verse-ref');
     const submitButton = document.getElementById('submit-comment-btn');
-    
+
     const text = commentInput.value.trim();
     const verseRef = verseRefInput.value;
     const userId = getCurrentUserId();
     const username = getSavedUsername();
-    
+
     if (!userId) {
         showCommentStatus('Please wait, connecting...', true);
         return;
     }
-    
+
     if (!username) {
         showCommentStatus('Please set your name first', true);
         document.getElementById('username-setup').classList.remove('hidden');
         return;
     }
-    
+
     if (!text) {
         showCommentStatus('Please enter a comment', true);
         return;
     }
-    
+
     if (!verseRef) {
         showCommentStatus('Error: No verse selected', true);
         return;
     }
-    
+
     submitButton.disabled = true;
     commentInput.disabled = true;
     showCommentStatus('Submitting...', false);
-    
+
     try {
         await submitComment(verseRef, text, userId, username);
         commentInput.value = '';
         showCommentStatus('Comment added!', false);
-        
+
         await updateCommentCount(verseRef);
-        
+
     } catch (error) {
         console.error('Error submitting comment:', error);
         showCommentStatus('Error submitting comment. Please try again.', true);
@@ -729,11 +755,11 @@ function handleTextClick(e) {
         }
         return;
     }
-    
+
     if (e.target.classList.contains('verse-indicators')) {
         return;
     }
-    
+
     const verseContainer = e.target.closest('.verse-container');
     if (verseContainer && !e.target.closest('.verse-indicators')) {
         const verseRef = verseContainer.dataset.ref;

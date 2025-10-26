@@ -138,9 +138,9 @@ export function showCommentary(verseRef, commentaries) {
 // ========================================
 
 /**
- * Open comments panel for a specific verse
+ * Open comments panel for a specific verse or general parsha chat
  */
-export function openCommentsPanel(verseRef, onOpen) {
+export function openCommentsPanel(verseRef, onOpen, customTitle = null) {
     const panel = document.getElementById('comment-panel');
     const overlay = document.getElementById('comment-overlay');
     const titleElement = document.getElementById('comment-panel-title');
@@ -150,8 +150,20 @@ export function openCommentsPanel(verseRef, onOpen) {
     // Store verse reference
     verseRefInput.value = verseRef;
     
-    // Update title
-    titleElement.textContent = `Discussion: ${verseRef}`;
+    // Update title - use custom title for general chat, or verse reference otherwise
+    if (customTitle) {
+        titleElement.textContent = `General Discussion: ${customTitle}`;
+    } else {
+        titleElement.textContent = `Discussion: ${verseRef}`;
+    }
+    
+    // Update placeholder text based on type of chat
+    const commentInput = document.getElementById('comment-input');
+    if (verseRef.startsWith('PARSHA:')) {
+        commentInput.placeholder = 'Share your thoughts about this parsha...';
+    } else {
+        commentInput.placeholder = 'Share your insights on this verse...';
+    }
     
     // Show loading state
     commentsList.innerHTML = '<div class="loading-comments">Loading comments...</div>';
@@ -203,12 +215,12 @@ export function closeCommentsPanel(onClose) {
  */
 export function displayComments(commentsArray) {
     const commentsList = document.getElementById('comments-list');
-    
+
     if (!commentsList) {
         console.error('comments-list element not found!');
         return;
     }
-    
+
     if (!commentsArray || commentsArray.length === 0) {
         commentsList.innerHTML = `
             <div class="no-comments">
@@ -218,12 +230,12 @@ export function displayComments(commentsArray) {
         `;
         return;
     }
-    
+
     let html = '';
     commentsArray.forEach(comment => {
         const displayName = comment.username || 'Anonymous';
         const timestamp = formatTimestamp(comment.timestamp);
-        
+
         html += `
             <div class="comment-item">
                 <div class="comment-meta">
@@ -234,7 +246,7 @@ export function displayComments(commentsArray) {
             </div>
         `;
     });
-    
+
     commentsList.innerHTML = html;
 }
 
