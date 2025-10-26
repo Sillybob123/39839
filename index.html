@@ -15,10 +15,12 @@
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                 <!-- Logo/Title Section -->
                 <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-4 mb-2">
-                        <img src="Icon.png" alt="A Letter in the Scroll Logo" class="h-12 w-12 sm:h-16 sm:w-16 rounded-lg shadow-lg">
-                        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide leading-tight">A Letter in the Scroll</h1>
-                    </div>
+                    <button id="home-branding" type="button" aria-label="Return to this week's parsha" class="flex items-center gap-4 mb-2 w-full bg-transparent p-0 text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-300 rounded-lg transition group">
+                        <img src="Icon.png" alt="A Letter in the Scroll Logo" class="h-12 w-12 sm:h-16 sm:w-16 rounded-lg shadow-lg transition-transform duration-200 group-hover:scale-105">
+                        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide leading-tight group-hover:text-blue-100">
+                            A Letter in the Scroll
+                        </h1>
+                    </button>
                     <p class="text-blue-200 text-sm md:text-base leading-relaxed">Interactive Weekly Portion Study & Discussion</p>
                 </div>
                 
@@ -65,12 +67,6 @@
                 
                 <!-- Navigation Buttons -->
                 <div class="flex items-center gap-2">
-                    <a href="prayers.html" class="px-4 py-2.5 bg-white border-2 border-blue-200 text-blue-900 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-all font-medium shadow-sm flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h6m-6 4h10m2 5H5a2 2 0 01-2-2V5a2 2 0 012-2h9l5 5v14a2 2 0 01-2 2z"></path>
-                        </svg>
-                        Important Prayers/Readings
-                    </a>
                     <button id="general-parsha-chat" class="px-4 py-2.5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all font-medium shadow-md hover:shadow-lg flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
@@ -101,14 +97,6 @@
                         <option value="">Loading portions...</option>
                     </select>
                 </div>
-                
-                <!-- Important Prayers Link (Mobile) -->
-                <a href="prayers.html" class="w-full px-4 py-2.5 bg-white border-2 border-blue-200 text-blue-900 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-all font-medium shadow-sm flex items-center justify-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h6m-6 4h10m2 5H5a2 2 0 01-2-2V5a2 2 0 012-2h9l5 5v14a2 2 0 01-2 2z"></path>
-                    </svg>
-                    Important Prayers/Readings
-                </a>
                 
                 <!-- General Chat Button (Mobile) -->
                 <button id="general-parsha-chat-mobile" class="w-full px-4 py-2.5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all font-medium shadow-md hover:shadow-lg flex items-center justify-center gap-2">

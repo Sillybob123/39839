@@ -3,6 +3,8 @@ let commentaryData = null;
 let currentParshaRef = null;
 let allParshas = [];
 let currentParshaIndex = -1;
+let weeklyParshaRef = null;
+let weeklyParshaIndex = -1;
 
 // API configuration
 const SEFARIA_API_BASE = 'https://www.sefaria.org/api';
@@ -109,6 +111,9 @@ async function loadParshasList() {
             currentParshaRef = allParshas[0].reference;
             currentParshaIndex = 0;
         }
+
+        weeklyParshaRef = currentParshaRef;
+        weeklyParshaIndex = currentParshaIndex;
         
         // Populate the dropdown
         populateParshaSelector();
@@ -124,6 +129,7 @@ async function loadParshasList() {
  */
 function populateParshaSelector() {
     const selector = document.getElementById('parsha-selector');
+    if (!selector) return;
     selector.innerHTML = '';
     
     allParshas.forEach((parsha, index) => {
@@ -152,6 +158,17 @@ function setupEventListeners() {
         loadParsha(selectedRef);
         updateNavigationButtons();
     });
+
+    // Weekly parsha buttons
+    const goToWeeklyButton = document.getElementById('go-to-weekly');
+    if (goToWeeklyButton) {
+        goToWeeklyButton.addEventListener('click', returnToWeeklyParsha);
+    }
+
+    const homeBrandingButton = document.getElementById('home-branding');
+    if (homeBrandingButton) {
+        homeBrandingButton.addEventListener('click', returnToWeeklyParsha);
+    }
     
     // Previous button
     document.getElementById('prev-parsha').addEventListener('click', () => {
@@ -208,6 +225,7 @@ function updateNavigationButtons() {
 async function loadParsha(parshaRef) {
     console.log('Loading parsha:', parshaRef);
     
+    currentParshaRef = parshaRef;
     // Show loading state
     showLoading();
     hideError();
@@ -484,11 +502,35 @@ function showCommentary(verseRef) {
  */
 function highlightCurrentParsha(parshaRef) {
     const contentArea = document.getElementById('content-area');
-    if (parshaRef === currentParshaRef) {
+    if (weeklyParshaRef && parshaRef === weeklyParshaRef) {
         contentArea.classList.add('current-parsha-highlight');
     } else {
         contentArea.classList.remove('current-parsha-highlight');
     }
+}
+
+/**
+ * Return to the weekly (landing) parsha view
+ */
+function returnToWeeklyParsha() {
+    if (!weeklyParshaRef) {
+        console.warn('Weekly parsha is not available yet.');
+        return;
+    }
+
+    const selector = document.getElementById('parsha-selector');
+    if (selector) {
+        selector.value = weeklyParshaRef;
+    }
+
+    if (weeklyParshaIndex >= 0) {
+        currentParshaIndex = weeklyParshaIndex;
+    } else {
+        currentParshaIndex = allParshas.findIndex(p => p.reference === weeklyParshaRef);
+    }
+
+    loadParsha(weeklyParshaRef);
+    updateNavigationButtons();
 }
 
 /**
