@@ -1,7 +1,7 @@
 // Firebase Module - Initialize Firebase services
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, getDocs, deleteDoc, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -139,6 +139,150 @@ function stopListeningForComments() {
   }
 }
 
+// ========================================
+// REACTION FUNCTIONS (Emphasize & Heart)
+// ========================================
+
+// Submit or toggle a reaction (emphasize or heart)
+async function submitReaction(verseRef, reactionType, userId) {
+  if (!userId) {
+    throw new Error('User not authenticated');
+  }
+
+  if (!['emphasize', 'heart'].includes(reactionType)) {
+    throw new Error('Invalid reaction type');
+  }
+
+  try {
+    const reactionKey = `${encodeURIComponent(verseRef)}__${userId}__${reactionType}`;
+    const reactionDocRef = doc(db, 'reactions', reactionKey);
+
+    const existingDoc = await getDoc(reactionDocRef);
+
+    if (existingDoc.exists()) {
+      await deleteDoc(reactionDocRef);
+      return { action: 'removed', reactionType };
+    }
+
+    const reactionData = {
+      verseRef: verseRef,
+      userId: userId,
+      reactionType: reactionType,
+      timestamp: serverTimestamp()
+    };
+
+    await setDoc(reactionDocRef, reactionData);
+    return { action: 'added', reactionType, id: reactionKey };
+  } catch (error) {
+    console.error('Error submitting reaction:', error);
+    throw error;
+  }
+}
+
+// Get reaction counts for multiple verses
+async function getReactionCounts(verseRefs) {
+  const counts = {};
+
+  // Initialize counts for all verses
+  verseRefs.forEach(ref => {
+    counts[ref] = { emphasize: 0, heart: 0 };
+  });
+
+  try {
+    // Query all reactions for these verses
+    const reactionsQuery = query(
+      collection(db, 'reactions'),
+      where('verseRef', 'in', verseRefs.slice(0, 30)) // Firestore 'in' limit is 30
+    );
+
+    const querySnapshot = await getDocs(reactionsQuery);
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const verseRef = data.verseRef;
+      const reactionType = data.reactionType;
+
+      if (counts[verseRef]) {
+        counts[verseRef][reactionType] = (counts[verseRef][reactionType] || 0) + 1;
+      }
+    });
+
+    return counts;
+  } catch (error) {
+    console.error('Error getting reaction counts:', error);
+    return counts;
+  }
+}
+
+// Get user's reactions for specific verses
+async function getUserReactions(userId, verseRefs) {
+  const userReactions = {};
+
+  if (!userId || !verseRefs || verseRefs.length === 0) {
+    return userReactions;
+  }
+
+  try {
+    const reactionsQuery = query(
+      collection(db, 'reactions'),
+      where('userId', '==', userId),
+      where('verseRef', 'in', verseRefs.slice(0, 30))
+    );
+
+    const querySnapshot = await getDocs(reactionsQuery);
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const verseRef = data.verseRef;
+      const reactionType = data.reactionType;
+
+      if (!userReactions[verseRef]) {
+        userReactions[verseRef] = [];
+      }
+      userReactions[verseRef].push(reactionType);
+    });
+
+    return userReactions;
+  } catch (error) {
+    console.error('Error getting user reactions:', error);
+    return userReactions;
+  }
+}
+
+// Get reaction counts for a specific book range (for parsha loading)
+async function getReactionCountsForBook(bookName) {
+  const counts = {};
+
+  try {
+    const startRef = `${bookName} `;
+    const endRef = `${bookName}~`;
+
+    const reactionsQuery = query(
+      collection(db, 'reactions'),
+      where('verseRef', '>=', startRef),
+      where('verseRef', '<=', endRef)
+    );
+
+    const querySnapshot = await getDocs(reactionsQuery);
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const verseRef = data.verseRef;
+      const reactionType = data.reactionType;
+
+      if (!counts[verseRef]) {
+        counts[verseRef] = { emphasize: 0, heart: 0 };
+      }
+      counts[verseRef][reactionType] = (counts[verseRef][reactionType] || 0) + 1;
+    });
+
+    return counts;
+  } catch (error) {
+    console.error('Error getting reaction counts for book:', error);
+    return counts;
+  }
+}
+
 export {
   auth,
   db,
@@ -146,5 +290,9 @@ export {
   getCurrentUserId,
   submitComment,
   listenForComments,
-  stopListeningForComments
+  stopListeningForComments,
+  submitReaction,
+  getReactionCounts,
+  getUserReactions,
+  getReactionCountsForBook
 };

@@ -31,12 +31,17 @@ import {
     submitComment,
     listenForComments,
     stopListeningForComments,
-    db
+    db,
+    submitReaction,
+    getUserReactions,
+    getReactionCountsForBook
 } from './firebase.js';
 
 import { collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 let verseCommentCounts = {};
+let verseReactionCounts = {};
+let userReactions = {};
 let isAuthReady = false;
 
 async function init() {
@@ -377,17 +382,149 @@ async function updateCommentCount(verseRef) {
             collection(db, 'comments'),
             where('verseRef', '==', verseRef)
         );
-        
+
         const querySnapshot = await getDocs(commentsQuery);
         verseCommentCounts[verseRef] = querySnapshot.size;
-        
+
         const verseContainer = document.querySelector(`[data-ref="${verseRef}"]`);
         if (verseContainer) {
             updateCommentBadge(verseContainer, verseRef);
         }
-        
+
     } catch (error) {
         console.error('Error updating comment count:', error);
+    }
+}
+
+// ========================================
+// REACTION FUNCTIONS
+// ========================================
+
+async function loadReactionCounts(parshaRef) {
+    if (!isAuthReady) {
+        return;
+    }
+
+    const { bookName } = parseParshaReference(parshaRef);
+
+    try {
+        // Load all reaction counts for this book
+        verseReactionCounts = await getReactionCountsForBook(bookName);
+
+        // Load current user's reactions
+        const userId = getCurrentUserId();
+        if (userId) {
+            const allVerseRefs = Object.keys(verseReactionCounts);
+
+            // Process in batches of 30 (Firestore 'in' query limit)
+            for (let i = 0; i < allVerseRefs.length; i += 30) {
+                const batch = allVerseRefs.slice(i, i + 30);
+                const batchUserReactions = await getUserReactions(userId, batch);
+                userReactions = { ...userReactions, ...batchUserReactions };
+            }
+        }
+
+        // Update all verse UI with reactions
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                updateAllReactionUI();
+            });
+        });
+
+    } catch (error) {
+        console.error('Error loading reaction counts:', error);
+    }
+}
+
+async function handleReactionClick(verseRef, reactionType) {
+    const userId = getCurrentUserId();
+
+    if (!userId) {
+        alert('Please wait, connecting...');
+        return;
+    }
+
+    try {
+        const result = await submitReaction(verseRef, reactionType, userId);
+
+        // Update local state
+        if (!verseReactionCounts[verseRef]) {
+            verseReactionCounts[verseRef] = { emphasize: 0, heart: 0 };
+        }
+
+        if (!userReactions[verseRef]) {
+            userReactions[verseRef] = [];
+        }
+
+        if (result.action === 'added') {
+            verseReactionCounts[verseRef][reactionType]++;
+            userReactions[verseRef].push(reactionType);
+        } else {
+            verseReactionCounts[verseRef][reactionType] = Math.max(0, verseReactionCounts[verseRef][reactionType] - 1);
+            userReactions[verseRef] = userReactions[verseRef].filter(r => r !== reactionType);
+        }
+
+        // Update UI for this verse
+        const verseContainer = document.querySelector(`[data-ref="${verseRef}"]`);
+        if (verseContainer) {
+            updateVerseReactionUI(verseContainer, verseRef);
+        }
+
+    } catch (error) {
+        console.error('Error submitting reaction:', error);
+        alert('Error submitting reaction. Please try again.');
+    }
+}
+
+function updateAllReactionUI() {
+    const containers = document.querySelectorAll('.verse-container');
+
+    containers.forEach(container => {
+        const verseRef = container.dataset.ref;
+        if (verseRef) {
+            updateVerseReactionUI(container, verseRef);
+        }
+    });
+}
+
+function updateVerseReactionUI(container, verseRef) {
+    if (!container) return;
+
+    const counts = verseReactionCounts[verseRef] || { emphasize: 0, heart: 0 };
+    const userReacted = userReactions[verseRef] || [];
+
+    // Update data attributes for CSS styling
+    container.setAttribute('data-emphasize', counts.emphasize);
+    container.setAttribute('data-heart', counts.heart);
+
+    // Update button states and counts
+    const emphasizeBtn = container.querySelector('.emphasize-btn');
+    const heartBtn = container.querySelector('.heart-btn');
+
+    if (emphasizeBtn) {
+        const countSpan = emphasizeBtn.querySelector('.reaction-count');
+        if (countSpan) {
+            countSpan.textContent = counts.emphasize || '';
+        }
+
+        if (userReacted.includes('emphasize')) {
+            emphasizeBtn.classList.add('active');
+        } else {
+            emphasizeBtn.classList.remove('active');
+        }
+    }
+
+    if (heartBtn) {
+        const countSpan = heartBtn.querySelector('.reaction-count');
+        if (countSpan) {
+            countSpan.textContent = counts.heart || '';
+        }
+
+        if (userReacted.includes('heart')) {
+            heartBtn.classList.add('active');
+        } else {
+            heartBtn.classList.remove('active');
+        }
     }
 }
 
@@ -439,17 +576,21 @@ function updateAllCommentBadges() {
 async function loadParsha(parshaRef) {
     showLoading();
     hideError();
-    
+
     try {
         const data = await fetchParshaText(parshaRef);
-        
+
         renderParsha(data, parshaRef);
         highlightCurrentParsha(parshaRef);
-        
-        await loadCommentCounts(parshaRef);
-        
+
+        // Load both comments and reactions
+        await Promise.all([
+            loadCommentCounts(parshaRef),
+            loadReactionCounts(parshaRef)
+        ]);
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        
+
     } catch (error) {
         console.error('❌ Error loading parsha:', error);
         showError('Failed to load the Torah text. Please try again later.');
@@ -624,9 +765,43 @@ function createVerseElement(englishText, hebrewText, verseRef, verseNumber) {
     commentBadge.style.display = 'none';
     commentBadge.dataset.verseRef = verseRef;
     indicatorsSection.appendChild(commentBadge);
-    
+
     container.appendChild(indicatorsSection);
-    
+
+    // Add reaction buttons section
+    const reactionsSection = document.createElement('div');
+    reactionsSection.className = 'verse-reactions';
+
+    // Emphasize button
+    const emphasizeBtn = document.createElement('button');
+    emphasizeBtn.className = 'reaction-btn emphasize-btn';
+    emphasizeBtn.setAttribute('aria-label', 'Emphasize this verse');
+    emphasizeBtn.innerHTML = `
+        <span class="reaction-icon emphasize-icon"></span>
+        <span class="reaction-count"></span>
+    `;
+    emphasizeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        handleReactionClick(verseRef, 'emphasize');
+    });
+
+    // Heart button
+    const heartBtn = document.createElement('button');
+    heartBtn.className = 'reaction-btn heart-btn';
+    heartBtn.setAttribute('aria-label', 'Heart this verse');
+    heartBtn.innerHTML = `
+        <span class="reaction-icon heart-icon"></span>
+        <span class="reaction-count"></span>
+    `;
+    heartBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        handleReactionClick(verseRef, 'heart');
+    });
+
+    reactionsSection.appendChild(emphasizeBtn);
+    reactionsSection.appendChild(heartBtn);
+    container.appendChild(reactionsSection);
+
     return container;
 }
 
