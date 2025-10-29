@@ -44,6 +44,11 @@ export const EMPHASIS_TYPES = {
 
 // Initialize emphasis for a verse
 export function initializeEmphasis(verseRef, container) {
+    // TEMPORARILY DISABLED to ensure site stability
+    // Will be re-enabled once testing is complete
+    return;
+
+    /* DISABLED CODE
     if (!verseRef || !container) return;
 
     // Create emphasis button section
@@ -59,6 +64,7 @@ export function initializeEmphasis(verseRef, container) {
     listenForEmphasis(verseRef, (emphasisData) => {
         updateEmphasisDisplay(verseRef, emphasisData, emphasisSection);
     });
+    */
 }
 
 // Create emphasis section UI

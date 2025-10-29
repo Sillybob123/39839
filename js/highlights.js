@@ -17,6 +17,11 @@ let activeHighlights = {};
 
 // Initialize highlighting for a verse
 export function initializeHighlighting(verseRef, englishTextElement, hebrewTextElement) {
+    // TEMPORARILY DISABLED to prevent breaking existing functionality
+    // Will be re-enabled once properly integrated with keyword highlighting
+    return;
+
+    /* DISABLED CODE
     if (!verseRef || !englishTextElement) return;
 
     // Listen for highlights on this verse
@@ -30,6 +35,7 @@ export function initializeHighlighting(verseRef, englishTextElement, hebrewTextE
     if (verseContainer) {
         verseContainer.addEventListener('mouseup', (e) => handleTextSelection(e, verseRef, englishTextElement));
     }
+    */
 }
 
 // Handle text selection
@@ -181,6 +187,11 @@ function listenForHighlights(verseRef, callback) {
 
 // Apply highlights to verse text
 function applyHighlightsToVerse(textElement, highlights, verseRef) {
+    // TEMPORARILY DISABLED - This function was interfering with keyword highlighting
+    // Will be re-enabled in a future update with proper keyword preservation
+    return;
+
+    /* DISABLED CODE
     if (!textElement || highlights.length === 0) return;
 
     const currentUserId = getCurrentUserId();
@@ -236,6 +247,7 @@ function applyHighlightsToVerse(textElement, highlights, verseRef) {
             }
         });
     });
+    */
 }
 
 // Remove highlight
