@@ -1,5 +1,6 @@
-// Emphasis Module - Verse Emphasis/Like Feature
+// Emphasis Module - Verse Emphasis/Like Feature (Professional styling)
 import { db, getCurrentUserId } from './firebase.js';
+import { getSavedUsername } from './ui.js';
 import {
     collection,
     addDoc,
@@ -12,111 +13,91 @@ import {
     getDocs
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-let emphasisListeners = {};
-
-// Emphasis types (professional, no emojis)
 export const EMPHASIS_TYPES = {
-    star: {
-        name: 'star',
+    important: {
+        name: 'important',
         label: 'Important',
-        icon: '★',
         description: 'Mark as especially important'
     },
     bookmark: {
         name: 'bookmark',
         label: 'Bookmark',
-        icon: '🔖',
-        description: 'Bookmark for later study'
+        description: 'Save for later study'
     },
-    heart: {
-        name: 'heart',
+    inspiring: {
+        name: 'inspiring',
         label: 'Inspiring',
-        icon: '♥',
         description: 'Found this inspiring'
     },
     question: {
         name: 'question',
         label: 'Question',
-        icon: '?',
-        description: 'Have a question about this'
+        description: 'Have a question here'
     }
 };
 
-// Initialize emphasis for a verse
-export function initializeEmphasis(verseRef, container) {
-    // TEMPORARILY DISABLED to ensure site stability
-    // Will be re-enabled once testing is complete
-    return;
+const emphasisListeners = new Map();
+const emphasisState = new Map();
 
-    /* DISABLED CODE
-    if (!verseRef || !container) return;
+export function initializeEmphasis(verseRef, verseContainer) {
+    if (!verseRef || !verseContainer) return;
 
-    // Create emphasis button section
-    const emphasisSection = createEmphasisSection(verseRef);
-
-    // Insert after verse indicators
-    const indicators = container.querySelector('.verse-indicators');
-    if (indicators) {
-        indicators.appendChild(emphasisSection);
-    }
-
-    // Listen for emphasis changes
-    listenForEmphasis(verseRef, (emphasisData) => {
-        updateEmphasisDisplay(verseRef, emphasisData, emphasisSection);
-    });
-    */
+    const section = ensureEmphasisSection(verseContainer, verseRef);
+    startEmphasisListener(verseRef, section);
 }
 
-// Create emphasis section UI
-function createEmphasisSection(verseRef) {
-    const section = document.createElement('div');
-    section.className = 'emphasis-section';
-    section.setAttribute('data-verse-ref', verseRef);
+function ensureEmphasisSection(verseContainer, verseRef) {
+    let section = verseContainer.querySelector('.emphasis-section');
+    if (!section) {
+        section = document.createElement('div');
+        section.className = 'emphasis-section';
+        section.dataset.verseRef = verseRef;
+        verseContainer.appendChild(section);
+    }
 
-    // Create emphasis buttons container
-    const buttonsContainer = document.createElement('div');
-    buttonsContainer.className = 'emphasis-buttons';
+    if (!verseContainer.querySelector('.emphasis-status')) {
+        const status = document.createElement('div');
+        status.className = 'emphasis-status';
+        verseContainer.appendChild(status);
+    }
 
-    Object.values(EMPHASIS_TYPES).forEach(type => {
-        const button = document.createElement('button');
-        button.className = `emphasis-btn emphasis-${type.name}`;
-        button.setAttribute('data-emphasis-type', type.name);
-        button.setAttribute('data-verse-ref', verseRef);
-        button.title = type.description;
-
-        const icon = document.createElement('span');
-        icon.className = 'emphasis-icon';
-        icon.textContent = type.icon;
-
-        const count = document.createElement('span');
-        count.className = 'emphasis-count';
-        count.textContent = '0';
-
-        button.appendChild(icon);
-        button.appendChild(count);
-
-        button.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            await toggleEmphasis(verseRef, type.name, button);
+    if (section.childElementCount === 0) {
+        Object.values(EMPHASIS_TYPES).forEach(type => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'emphasis-btn';
+            button.dataset.emphasisType = type.name;
+            button.dataset.verseRef = verseRef;
+            button.title = type.description;
+            button.innerHTML = `
+                <span class="emphasis-label">${type.label}</span>
+                <span class="emphasis-count">0</span>
+            `;
+            button.addEventListener('click', async (event) => {
+                event.stopPropagation();
+                await toggleEmphasis(verseRef, type.name, button);
+            });
+            section.appendChild(button);
         });
+    }
 
-        buttonsContainer.appendChild(button);
-    });
-
-    section.appendChild(buttonsContainer);
     return section;
 }
 
-// Toggle emphasis on/off
 async function toggleEmphasis(verseRef, emphasisType, button) {
     const userId = getCurrentUserId();
     if (!userId) {
-        alert('Please wait for authentication to complete');
+        showEmphasisStatus(button.closest('.verse-container'), 'Connecting to the study service. Please try again shortly.', true);
+        return;
+    }
+
+    const username = getSavedUsername();
+    if (!username) {
+        showEmphasisStatus(button.closest('.verse-container'), 'Please set your display name (open the discussion panel) before emphasizing verses.', true);
         return;
     }
 
     try {
-        // Check if user already emphasized this verse with this type
         const emphasisQuery = query(
             collection(db, 'emphasized_verses'),
             where('verseRef', '==', verseRef),
@@ -127,29 +108,34 @@ async function toggleEmphasis(verseRef, emphasisType, button) {
         const snapshot = await getDocs(emphasisQuery);
 
         if (snapshot.empty) {
-            // Add emphasis
             await addDoc(collection(db, 'emphasized_verses'), {
-                verseRef: verseRef,
-                userId: userId,
-                emphasisType: emphasisType,
+                verseRef,
+                userId,
+                username,
+                emphasisType,
                 timestamp: serverTimestamp()
             });
-            button.classList.add('emphasis-active');
+            showEmphasisStatus(button.closest('.verse-container'), `${EMPHASIS_TYPES[emphasisType].label} added.`, false);
         } else {
-            // Remove emphasis
-            snapshot.forEach(async (docSnapshot) => {
-                await deleteDoc(doc(db, 'emphasized_verses', docSnapshot.id));
+            const removals = [];
+            snapshot.forEach((docSnapshot) => {
+                removals.push(deleteDoc(doc(db, 'emphasized_verses', docSnapshot.id)));
             });
-            button.classList.remove('emphasis-active');
+            await Promise.all(removals);
+            showEmphasisStatus(button.closest('.verse-container'), `${EMPHASIS_TYPES[emphasisType].label} removed.`, false);
         }
     } catch (error) {
         console.error('Error toggling emphasis:', error);
-        alert('Failed to update emphasis. Please try again.');
+        showEmphasisStatus(button.closest('.verse-container'), 'Unable to update emphasis. Please try again.', true);
     }
 }
 
-// Listen for emphasis changes
-function listenForEmphasis(verseRef, callback) {
+function startEmphasisListener(verseRef, section) {
+    if (emphasisListeners.has(verseRef)) {
+        const dispose = emphasisListeners.get(verseRef);
+        dispose();
+    }
+
     try {
         const emphasisQuery = query(
             collection(db, 'emphasized_verses'),
@@ -158,120 +144,105 @@ function listenForEmphasis(verseRef, callback) {
 
         const unsubscribe = onSnapshot(emphasisQuery,
             (querySnapshot) => {
-                const emphasisData = {
-                    star: { count: 0, users: [] },
-                    bookmark: { count: 0, users: [] },
-                    heart: { count: 0, users: [] },
-                    question: { count: 0, users: [] }
-                };
+                const data = createEmptyEmphasisData();
 
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const type = data.emphasisType;
-                    if (emphasisData[type]) {
-                        emphasisData[type].count++;
-                        emphasisData[type].users.push(data.userId);
-                    }
+                querySnapshot.forEach((docSnapshot) => {
+                    const entry = docSnapshot.data();
+                    const type = entry.emphasisType;
+                    if (!data[type]) return;
+
+                    data[type].count += 1;
+                    data[type].users.push({
+                        userId: entry.userId,
+                        username: entry.username || 'Anonymous'
+                    });
                 });
 
-                callback(emphasisData);
+                emphasisState.set(verseRef, data);
+                updateEmphasisDisplay(section, data);
             },
             (error) => {
-                console.error('Error listening to emphasis:', error);
-                callback({});
+                console.error('Error listening to emphasis updates:', error);
+                updateEmphasisDisplay(section, createEmptyEmphasisData());
             }
         );
 
-        emphasisListeners[verseRef] = unsubscribe;
-        return unsubscribe;
+        emphasisListeners.set(verseRef, unsubscribe);
     } catch (error) {
-        console.error('Error setting up emphasis listener:', error);
-        callback({});
+        console.error('Error creating emphasis listener:', error);
     }
 }
 
-// Update emphasis display
-function updateEmphasisDisplay(verseRef, emphasisData, emphasisSection) {
+function createEmptyEmphasisData() {
+    const base = {};
+    Object.values(EMPHASIS_TYPES).forEach(type => {
+        base[type.name] = { count: 0, users: [] };
+    });
+    return base;
+}
+
+function updateEmphasisDisplay(section, emphasisData) {
+    if (!section) return;
+
     const currentUserId = getCurrentUserId();
 
-    Object.keys(emphasisData).forEach(type => {
-        const button = emphasisSection.querySelector(`[data-emphasis-type="${type}"]`);
+    Object.entries(EMPHASIS_TYPES).forEach(([typeKey, typeInfo]) => {
+        const button = section.querySelector(`[data-emphasis-type="${typeInfo.name}"]`);
         if (!button) return;
 
-        const countSpan = button.querySelector('.emphasis-count');
-        const data = emphasisData[type];
-
-        if (countSpan) {
-            countSpan.textContent = data.count.toString();
+        const dataForType = emphasisData[typeInfo.name] || { count: 0, users: [] };
+        const countElement = button.querySelector('.emphasis-count');
+        if (countElement) {
+            countElement.textContent = dataForType.count;
         }
 
-        // Highlight if current user emphasized
-        if (data.users.includes(currentUserId)) {
-            button.classList.add('emphasis-active');
-        } else {
-            button.classList.remove('emphasis-active');
-        }
+        const isActive = dataForType.users.some(user => user.userId === currentUserId);
+        button.classList.toggle('emphasis-active', isActive);
 
-        // Show/hide based on count
-        if (data.count > 0) {
-            button.style.display = 'inline-flex';
-        } else {
-            button.style.display = 'inline-flex'; // Keep visible for user to click
-            button.style.opacity = '0.5'; // Make it slightly faded when count is 0
-        }
+        button.title = buildTooltip(typeInfo, dataForType.users);
     });
 }
 
-// Get emphasis counts for a verse
-export async function getEmphasisCounts(verseRef) {
-    try {
-        const emphasisQuery = query(
-            collection(db, 'emphasized_verses'),
-            where('verseRef', '==', verseRef)
-        );
-        const snapshot = await getDocs(emphasisQuery);
+function buildTooltip(typeInfo, users) {
+    if (!users || users.length === 0) {
+        return typeInfo.description;
+    }
 
-        const counts = {
-            star: 0,
-            bookmark: 0,
-            heart: 0,
-            question: 0,
-            total: snapshot.size
-        };
+    const names = users
+        .map(user => user.username || 'Anonymous')
+        .slice(0, 5);
 
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            if (counts[data.emphasisType] !== undefined) {
-                counts[data.emphasisType]++;
-            }
-        });
+    const remaining = users.length - names.length;
 
-        return counts;
-    } catch (error) {
-        console.error('Error getting emphasis counts:', error);
-        return { star: 0, bookmark: 0, heart: 0, question: 0, total: 0 };
+    let tooltip = `${typeInfo.description}. Marked by ${names.join(', ')}`;
+    if (remaining > 0) {
+        tooltip += `, and ${remaining} more`;
+    }
+
+    return tooltip;
+}
+
+function showEmphasisStatus(verseContainer, message, isError) {
+    if (!verseContainer) return;
+    const status = verseContainer.querySelector('.emphasis-status');
+    if (!status) return;
+
+    status.textContent = message;
+    status.classList.toggle('error', Boolean(isError));
+    status.classList.toggle('success', !isError);
+
+    const timeout = isError ? 5000 : 3000;
+    setTimeout(() => {
+        status.textContent = '';
+        status.classList.remove('error', 'success');
+    }, timeout);
+}
+
+// Optional: expose cleanup
+export function disposeEmphasisListener(verseRef) {
+    if (emphasisListeners.has(verseRef)) {
+        const dispose = emphasisListeners.get(verseRef);
+        dispose();
+        emphasisListeners.delete(verseRef);
     }
 }
-
-// Stop listening for emphasis
-export function stopListeningForEmphasis(verseRef) {
-    if (verseRef && emphasisListeners[verseRef]) {
-        emphasisListeners[verseRef]();
-        delete emphasisListeners[verseRef];
-    }
-}
-
-// Stop all emphasis listeners
-export function stopAllEmphasisListeners() {
-    Object.keys(emphasisListeners).forEach(verseRef => {
-        emphasisListeners[verseRef]();
-    });
-    emphasisListeners = {};
-}
-
-export {
-    initializeEmphasis,
-    getEmphasisCounts,
-    stopListeningForEmphasis,
-    stopAllEmphasisListeners
-};

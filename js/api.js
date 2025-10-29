@@ -30,7 +30,12 @@ export async function fetchCurrentParsha() {
 export async function fetchParshaText(parshaRef) {
     try {
         // Use v3 API endpoint with text_only format to strip all annotations
-        const apiUrl = `${API_CONFIG.SEFARIA_BASE}/v3/texts/${encodeURIComponent(parshaRef)}?version=english&version=hebrew&return_format=text_only`;
+        const versionParams = [
+            `version=${encodeURIComponent(API_CONFIG.ENGLISH_VERSION)}`,
+            `version=${encodeURIComponent(API_CONFIG.HEBREW_VERSION)}`
+        ].join('&');
+        
+        const apiUrl = `${API_CONFIG.SEFARIA_BASE}/v3/texts/${encodeURIComponent(parshaRef)}?${versionParams}&return_format=text_only`;
         
         const response = await fetch(apiUrl);
         if (!response.ok) {

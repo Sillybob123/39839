@@ -462,28 +462,24 @@ async function loadParsha(parshaRef) {
 }
 
 function parseParshaReference(parshaRef) {
-    const match = parshaRef.match(/^(\w+)\s+(\d+):(\d+)(?:-(\d+):(\d+))?$/);
-    
-    if (!match) {
-        const simpleMatch = parshaRef.match(/^(\w+)\s+(\d+):(\d+)$/);
-        if (simpleMatch) {
-            return {
-                bookName: simpleMatch[1],
-                startChapter: parseInt(simpleMatch[2]),
-                startVerse: parseInt(simpleMatch[3]),
-                endChapter: null,
-                endVerse: null
-            };
-        }
+    if (!parshaRef || typeof parshaRef !== 'string') {
         return { bookName: 'Torah', startChapter: 1, startVerse: 1, endChapter: null, endVerse: null };
     }
+
+    const match = parshaRef.match(/^([\w\s']+?)\s+(\d+):(\d+)(?:-(\d+):(\d+))?$/);
+    
+    if (!match) {
+        return { bookName: parshaRef.trim(), startChapter: 1, startVerse: 1, endChapter: null, endVerse: null };
+    }
+    
+    const [, bookNameRaw, startChapterRaw, startVerseRaw, endChapterRaw, endVerseRaw] = match;
     
     return {
-        bookName: match[1],
-        startChapter: parseInt(match[2]),
-        startVerse: parseInt(match[3]),
-        endChapter: match[4] ? parseInt(match[4]) : null,
-        endVerse: match[5] ? parseInt(match[5]) : null
+        bookName: bookNameRaw.trim(),
+        startChapter: parseInt(startChapterRaw, 10),
+        startVerse: parseInt(startVerseRaw, 10),
+        endChapter: endChapterRaw ? parseInt(endChapterRaw, 10) : null,
+        endVerse: endVerseRaw ? parseInt(endVerseRaw, 10) : null
     };
 }
 
@@ -526,17 +522,21 @@ function renderParsha(data, parshaRef) {
             for (let localIndex = 0; localIndex < chapterVerses.length; localIndex++) {
                 const verseText = chapterVerses[localIndex];
                 if (!verseText || verseText.trim() === '') continue;
+
+                const actualVerseNumber = localIndex + 1;
+
+                if (actualVerseNumber < chapterStartVerse) {
+                    continue;
+                }
                 
-                const verseNumber = chapterStartVerse + localIndex;
-                
-                if (chapterEndVerse && verseNumber > chapterEndVerse) {
+                if (chapterEndVerse && actualVerseNumber > chapterEndVerse) {
                     break;
                 }
                 
                 const hebrewVerseText = hebrewChapterVerses[localIndex] || '';
-                const verseRef = `${bookName} ${currentChapterNumber}:${verseNumber}`;
+                const verseRef = `${bookName} ${currentChapterNumber}:${actualVerseNumber}`;
                 
-                const verseElement = createVerseElement(verseText, hebrewVerseText, verseRef, verseNumber);
+                const verseElement = createVerseElement(verseText, hebrewVerseText, verseRef, actualVerseNumber);
                 textContainer.appendChild(verseElement);
             }
             
@@ -549,8 +549,17 @@ function renderParsha(data, parshaRef) {
         flatEnglish.forEach((verseText, index) => {
             if (!verseText || verseText.trim() === '') return;
             
+            const verseNumber = index + 1;
+            
+            if (verseNumber < startVerse) {
+                return;
+            }
+            
+            if (endVerse && verseNumber > endVerse) {
+                return;
+            }
+            
             const hebrewVerseText = flatHebrew[index] || '';
-            const verseNumber = startVerse + index;
             const verseRef = `${bookName} ${startChapter}:${verseNumber}`;
             
             const verseElement = createVerseElement(verseText, hebrewVerseText, verseRef, verseNumber);
@@ -588,7 +597,7 @@ function createVerseElement(englishText, hebrewText, verseRef, verseNumber) {
     hebrewDiv.className = 'hebrew-text';
     hebrewDiv.setAttribute('lang', 'he');
     hebrewDiv.setAttribute('dir', 'rtl');
-    hebrewDiv.innerHTML = hebrewText;
+    hebrewDiv.textContent = hebrewText;
     
     const englishDiv = document.createElement('div');
     englishDiv.className = 'english-text';
@@ -631,7 +640,7 @@ function createVerseElement(englishText, hebrewText, verseRef, verseNumber) {
     container.appendChild(indicatorsSection);
 
     // Initialize highlighting feature for this verse
-    initializeHighlighting(verseRef, englishDiv, hebrewDiv);
+    initializeHighlighting(verseRef, container, englishDiv);
 
     // Initialize emphasis feature for this verse
     initializeEmphasis(verseRef, container);

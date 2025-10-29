@@ -328,6 +328,18 @@ header a svg {
     box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
 }
 
+.highlight-indicator {
+    background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+    color: #4c1d95;
+    border: 1px solid #c4b5fd;
+}
+
+.highlight-indicator:hover {
+    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(124, 58, 237, 0.3);
+}
+
 /* NO EMOJI ICONS */
 .indicator-icon {
     display: none;
@@ -357,6 +369,205 @@ header a svg {
 /* NO EMOJI before comment badge */
 .comment-count-badge::before {
     content: '';
+}
+
+/* Highlight Summary */
+.highlight-summary {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid #c4b5fd;
+    border-radius: 8px;
+    background: #f5f3ff;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.highlight-summary.hidden {
+    display: none;
+}
+
+.highlight-entry {
+    padding: 0.75rem;
+    border-radius: 6px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 2px rgba(99, 102, 241, 0.08);
+}
+
+.highlight-quote {
+    font-style: italic;
+    color: #312e81;
+    margin-bottom: 0.5rem;
+}
+
+.highlight-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #4338ca;
+}
+
+.highlight-user {
+    font-weight: 600;
+}
+
+.remove-highlight-btn {
+    background: transparent;
+    border: 1px solid #cbd5f5;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    color: #4338ca;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.remove-highlight-btn:hover {
+    background: #e0e7ff;
+}
+
+.highlight-status {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4338ca;
+}
+
+.highlight-status.error {
+    color: #b91c1c;
+}
+
+.highlight-status.success {
+    color: #047857;
+}
+
+/* Applied highlight colors */
+.user-highlight {
+    padding: 0 2px;
+    border-radius: 4px;
+}
+
+.highlight-color-gold {
+    background: #fef08a;
+}
+
+.highlight-color-sage {
+    background: #bbf7d0;
+}
+
+.highlight-color-sky {
+    background: #bfdbfe;
+}
+
+/* Highlight menu */
+.highlight-menu {
+    position: absolute;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.18);
+    min-width: 220px;
+}
+
+.highlight-menu-btn {
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: left;
+    transition: all 0.2s ease;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.highlight-menu-btn:hover {
+    border-color: #6366f1;
+    background: #e0e7ff;
+    color: #312e81;
+}
+
+.highlight-menu-btn.highlight-cancel {
+    background: #fff7ed;
+    color: #9a3412;
+}
+
+.highlight-menu-btn.highlight-cancel:hover {
+    border-color: #f97316;
+    background: #ffedd5;
+    color: #7c2d12;
+}
+
+/* Emphasis Section */
+.emphasis-section {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.emphasis-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: 9999px;
+    border: 1px solid #cbd5f5;
+    background: #f8fafc;
+    color: #1e3a8a;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.emphasis-btn:hover {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+}
+
+.emphasis-btn .emphasis-count {
+    min-width: 1.5rem;
+    text-align: center;
+    background: #e0e7ff;
+    color: #312e81;
+    border-radius: 9999px;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.emphasis-active {
+    background: #e0e7ff;
+    border-color: #6366f1;
+    color: #312e81;
+    box-shadow: 0 2px 6px rgba(99, 102, 241, 0.25);
+}
+
+.emphasis-active .emphasis-count {
+    background: #6366f1;
+    color: #eef2ff;
+}
+
+.emphasis-status {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4338ca;
+}
+
+.emphasis-status.error {
+    color: #b91c1c;
+}
+
+.emphasis-status.success {
+    color: #047857;
 }
 
 /* Remove old Discuss button */

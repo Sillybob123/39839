@@ -1,5 +1,6 @@
-// Highlights Module - User Quote Highlighting Feature
+// Highlights Module - User Quote Highlighting Feature (Professional, no emojis)
 import { db, getCurrentUserId } from './firebase.js';
+import { getSavedUsername } from './ui.js';
 import {
     collection,
     addDoc,
@@ -8,153 +9,71 @@ import {
     onSnapshot,
     deleteDoc,
     doc,
-    serverTimestamp,
-    getDocs
+    serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-let currentHighlightsUnsubscribe = null;
-let activeHighlights = {};
+const HIGHLIGHT_COLORS = [
+    { id: 'gold', label: 'Golden', className: 'highlight-color-gold' },
+    { id: 'sage', label: 'Sage', className: 'highlight-color-sage' },
+    { id: 'sky', label: 'Sky', className: 'highlight-color-sky' }
+];
 
-// Initialize highlighting for a verse
-export function initializeHighlighting(verseRef, englishTextElement, hebrewTextElement) {
-    // TEMPORARILY DISABLED to prevent breaking existing functionality
-    // Will be re-enabled once properly integrated with keyword highlighting
-    return;
+const highlightListeners = new Map();
+const highlightState = new Map();
+const activeMenus = new Map();
 
-    /* DISABLED CODE
-    if (!verseRef || !englishTextElement) return;
+export function initializeHighlighting(verseRef, verseContainer, englishTextElement) {
+    if (!verseRef || !verseContainer || !englishTextElement) return;
 
-    // Listen for highlights on this verse
-    listenForHighlights(verseRef, (highlights) => {
-        applyHighlightsToVerse(englishTextElement, highlights, verseRef);
-        activeHighlights[verseRef] = highlights;
-    });
-
-    // Set up text selection handler
-    const verseContainer = englishTextElement.closest('.verse-container');
-    if (verseContainer) {
-        verseContainer.addEventListener('mouseup', (e) => handleTextSelection(e, verseRef, englishTextElement));
-    }
-    */
+    ensureHighlightUI(verseContainer);
+    setupSelectionHandlers(verseRef, verseContainer, englishTextElement);
+    startHighlightListener(verseRef, verseContainer, englishTextElement);
 }
 
-// Handle text selection
-function handleTextSelection(event, verseRef, textElement) {
-    const selection = window.getSelection();
-    const selectedText = selection.toString().trim();
-
-    if (!selectedText || selectedText.length === 0) return;
-
-    // Check if selection is within the verse text
-    if (!textElement.contains(selection.anchorNode) || !textElement.contains(selection.focusNode)) {
-        return;
+function ensureHighlightUI(verseContainer) {
+    let indicatorsSection = verseContainer.querySelector('.verse-indicators');
+    if (!indicatorsSection) {
+        indicatorsSection = document.createElement('div');
+        indicatorsSection.className = 'verse-indicators';
+        verseContainer.appendChild(indicatorsSection);
     }
 
-    // Show highlight menu
-    showHighlightMenu(event, verseRef, selectedText, selection);
-}
+    if (!verseContainer.querySelector('.highlight-indicator')) {
+        const indicator = document.createElement('button');
+        indicator.type = 'button';
+        indicator.className = 'content-indicator highlight-indicator';
+        indicator.textContent = 'Highlights';
+        indicator.dataset.state = 'closed';
+        indicator.addEventListener('click', () => toggleHighlightSummary(verseContainer));
 
-// Show highlight menu popup
-function showHighlightMenu(event, verseRef, selectedText, selection) {
-    // Remove existing menu if any
-    const existingMenu = document.getElementById('highlight-menu');
-    if (existingMenu) existingMenu.remove();
-
-    const menu = document.createElement('div');
-    menu.id = 'highlight-menu';
-    menu.className = 'highlight-menu';
-
-    const colors = [
-        { name: 'yellow', label: 'Highlight Yellow' },
-        { name: 'green', label: 'Highlight Green' },
-        { name: 'blue', label: 'Highlight Blue' },
-        { name: 'red', label: 'Highlight Red' }
-    ];
-
-    colors.forEach(color => {
-        const button = document.createElement('button');
-        button.className = `highlight-menu-btn highlight-${color.name}`;
-        button.textContent = color.label;
-        button.onclick = async () => {
-            await saveHighlight(verseRef, selectedText, color.name, selection);
-            menu.remove();
-            window.getSelection().removeAllRanges();
-        };
-        menu.appendChild(button);
-    });
-
-    // Add cancel button
-    const cancelBtn = document.createElement('button');
-    cancelBtn.className = 'highlight-menu-btn highlight-cancel';
-    cancelBtn.textContent = 'Cancel';
-    cancelBtn.onclick = () => {
-        menu.remove();
-        window.getSelection().removeAllRanges();
-    };
-    menu.appendChild(cancelBtn);
-
-    document.body.appendChild(menu);
-
-    // Position the menu near the selection
-    const rect = selection.getRangeAt(0).getBoundingClientRect();
-    menu.style.position = 'fixed';
-    menu.style.top = `${rect.bottom + window.scrollY + 5}px`;
-    menu.style.left = `${rect.left + window.scrollX}px`;
-    menu.style.zIndex = '9999';
-
-    // Close menu on outside click
-    setTimeout(() => {
-        document.addEventListener('click', function closeMenu(e) {
-            if (!menu.contains(e.target)) {
-                menu.remove();
-                document.removeEventListener('click', closeMenu);
-            }
-        });
-    }, 100);
-}
-
-// Save highlight to Firebase
-async function saveHighlight(verseRef, selectedText, color, selection) {
-    const userId = getCurrentUserId();
-    if (!userId) {
-        alert('Please wait for authentication to complete');
-        return;
+        indicatorsSection.insertBefore(indicator, indicatorsSection.firstChild);
     }
 
-    try {
-        const range = selection.getRangeAt(0);
-        const textContent = range.startContainer.parentElement.closest('.english-text').textContent;
+    if (!verseContainer.querySelector('.highlight-summary')) {
+        const summary = document.createElement('div');
+        summary.className = 'highlight-summary hidden';
+        verseContainer.appendChild(summary);
+    }
 
-        const highlightData = {
-            verseRef: verseRef,
-            userId: userId,
-            selectedText: selectedText,
-            color: color,
-            startOffset: getTextOffset(textContent, range.startOffset, range.startContainer),
-            endOffset: getTextOffset(textContent, range.endOffset, range.endContainer),
-            timestamp: serverTimestamp()
-        };
-
-        await addDoc(collection(db, 'highlights'), highlightData);
-    } catch (error) {
-        console.error('Error saving highlight:', error);
-        alert('Failed to save highlight. Please try again.');
+    if (!verseContainer.querySelector('.highlight-status')) {
+        const status = document.createElement('div');
+        status.className = 'highlight-status';
+        verseContainer.appendChild(status);
     }
 }
 
-// Get text offset within the verse
-function getTextOffset(fullText, offset, node) {
-    const parent = node.parentElement.closest('.english-text');
-    if (!parent) return offset;
-
-    const range = document.createRange();
-    range.selectNodeContents(parent);
-    range.setEnd(node, offset);
-    return range.toString().length;
+function setupSelectionHandlers(verseRef, verseContainer, englishTextElement) {
+    const handler = (event) => handleTextSelection(event, verseRef, verseContainer, englishTextElement);
+    englishTextElement.addEventListener('mouseup', handler);
+    englishTextElement.addEventListener('touchend', handler);
 }
 
-// Listen for highlights on a verse
-function listenForHighlights(verseRef, callback) {
+function startHighlightListener(verseRef, verseContainer, englishTextElement) {
+    if (highlightListeners.has(verseRef)) {
+        const dispose = highlightListeners.get(verseRef);
+        dispose();
+    }
+
     try {
         const highlightsQuery = query(
             collection(db, 'highlights'),
@@ -162,136 +81,419 @@ function listenForHighlights(verseRef, callback) {
         );
 
         const unsubscribe = onSnapshot(highlightsQuery,
-            (querySnapshot) => {
+            (snapshot) => {
                 const highlights = [];
-                querySnapshot.forEach((doc) => {
+                snapshot.forEach((docSnapshot) => {
+                    const data = docSnapshot.data();
                     highlights.push({
-                        id: doc.id,
-                        ...doc.data()
+                        id: docSnapshot.id,
+                        verseRef: data.verseRef,
+                        userId: data.userId,
+                        username: data.username || 'Anonymous',
+                        selectedText: data.selectedText || '',
+                        color: data.color || 'gold',
+                        startOffset: data.startOffset ?? 0,
+                        endOffset: data.endOffset ?? 0,
+                        timestamp: data.timestamp
                     });
                 });
-                callback(highlights);
+
+                highlights.sort((a, b) => a.startOffset - b.startOffset);
+                highlightState.set(verseRef, highlights);
+
+                applyHighlightsToVerse(englishTextElement, highlights);
+                renderHighlightSummary(verseContainer, highlights);
+                updateHighlightIndicator(verseContainer, highlights.length);
             },
             (error) => {
                 console.error('Error listening to highlights:', error);
-                callback([]);
+                renderHighlightSummary(verseContainer, []);
+                updateHighlightIndicator(verseContainer, 0);
             }
         );
 
-        return unsubscribe;
+        highlightListeners.set(verseRef, unsubscribe);
     } catch (error) {
-        console.error('Error setting up highlights listener:', error);
-        callback([]);
+        console.error('Error setting up highlight listener:', error);
     }
 }
 
-// Apply highlights to verse text
-function applyHighlightsToVerse(textElement, highlights, verseRef) {
-    // TEMPORARILY DISABLED - This function was interfering with keyword highlighting
-    // Will be re-enabled in a future update with proper keyword preservation
-    return;
+function handleTextSelection(event, verseRef, verseContainer, englishTextElement) {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
 
-    /* DISABLED CODE
-    if (!textElement || highlights.length === 0) return;
+    const range = selection.getRangeAt(0);
+    if (!englishTextElement.contains(range.commonAncestorContainer)) return;
 
-    const currentUserId = getCurrentUserId();
-    const userHighlights = highlights.filter(h => h.userId === currentUserId);
-    const otherHighlights = highlights.filter(h => h.userId !== currentUserId);
+    const rawText = selection.toString();
+    const trimmedText = rawText.trim();
 
-    // Get original text
-    let originalText = textElement.getAttribute('data-original-text');
-    if (!originalText) {
-        originalText = textElement.textContent;
-        textElement.setAttribute('data-original-text', originalText);
+    if (!trimmedText || trimmedText.length < 2) {
+        return;
     }
 
-    // Sort highlights by start offset
-    const allHighlights = [...userHighlights, ...otherHighlights].sort((a, b) => a.startOffset - b.startOffset);
+    const username = getSavedUsername();
+    if (!username) {
+        showHighlightStatus(verseContainer, 'Please open the discussion panel and set your display name before highlighting.', true);
+        return;
+    }
 
-    // Build highlighted HTML
-    let html = '';
-    let lastIndex = 0;
+    showHighlightMenu(event, verseRef, verseContainer, englishTextElement, selection);
+}
 
-    allHighlights.forEach(highlight => {
-        const start = highlight.startOffset;
-        const end = highlight.endOffset;
+function showHighlightMenu(event, verseRef, verseContainer, englishTextElement, selection) {
+    removeHighlightMenu(verseRef);
 
-        if (start < lastIndex) return; // Skip overlapping
+    const menu = document.createElement('div');
+    menu.className = 'highlight-menu';
 
-        // Add non-highlighted text
-        html += escapeHtml(originalText.substring(lastIndex, start));
-
-        // Add highlighted text
-        const isCurrentUser = highlight.userId === currentUserId;
-        const highlightClass = `highlight highlight-${highlight.color} ${isCurrentUser ? 'highlight-own' : 'highlight-other'}`;
-        const title = isCurrentUser ? 'Your highlight - Click to remove' : `Highlighted by another user`;
-
-        html += `<span class="${highlightClass}" data-highlight-id="${highlight.id}" data-is-own="${isCurrentUser}" title="${title}">${escapeHtml(originalText.substring(start, end))}</span>`;
-
-        lastIndex = end;
+    HIGHLIGHT_COLORS.forEach(color => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `highlight-menu-btn ${color.className}`;
+        button.textContent = `Highlight – ${color.label}`;
+        button.addEventListener('click', async () => {
+            await saveHighlight(verseRef, verseContainer, englishTextElement, selection, color.id);
+            removeHighlightMenu(verseRef);
+            window.getSelection().removeAllRanges();
+        });
+        menu.appendChild(button);
     });
 
-    // Add remaining text
-    html += escapeHtml(originalText.substring(lastIndex));
+    const cancelButton = document.createElement('button');
+    cancelButton.type = 'button';
+    cancelButton.className = 'highlight-menu-btn highlight-cancel';
+    cancelButton.textContent = 'Cancel';
+    cancelButton.addEventListener('click', () => {
+        removeHighlightMenu(verseRef);
+        window.getSelection().removeAllRanges();
+    });
+    menu.appendChild(cancelButton);
 
-    textElement.innerHTML = html;
+    document.body.appendChild(menu);
+    positionMenuNearSelection(menu, selection);
 
-    // Add click handlers to remove own highlights
-    textElement.querySelectorAll('.highlight-own').forEach(span => {
-        span.style.cursor = 'pointer';
-        span.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            const highlightId = span.getAttribute('data-highlight-id');
-            if (confirm('Remove this highlight?')) {
-                await removeHighlight(highlightId);
+    const outsideClickHandler = (e) => {
+        if (!menu.contains(e.target)) {
+            removeHighlightMenu(verseRef);
+            document.removeEventListener('mousedown', outsideClickHandler);
+        }
+    };
+
+    document.addEventListener('mousedown', outsideClickHandler);
+    activeMenus.set(verseRef, { menu, outsideClickHandler });
+}
+
+function removeHighlightMenu(verseRef) {
+    const activeMenu = activeMenus.get(verseRef);
+    if (activeMenu) {
+        const { menu, outsideClickHandler } = activeMenu;
+        if (menu && menu.parentNode) {
+            menu.parentNode.removeChild(menu);
+        }
+        if (outsideClickHandler) {
+            document.removeEventListener('mousedown', outsideClickHandler);
+        }
+        activeMenus.delete(verseRef);
+    }
+}
+
+function positionMenuNearSelection(menu, selection) {
+    try {
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        const scrollX = window.scrollX || document.documentElement.scrollLeft;
+
+        menu.style.top = `${rect.bottom + scrollY + 8}px`;
+        menu.style.left = `${rect.left + scrollX}px`;
+    } catch (error) {
+        menu.style.top = '50%';
+        menu.style.left = '50%';
+        menu.style.transform = 'translate(-50%, -50%)';
+    }
+}
+
+async function saveHighlight(verseRef, verseContainer, englishTextElement, selection, colorId) {
+    const userId = getCurrentUserId();
+    if (!userId) {
+        showHighlightStatus(verseContainer, 'Connecting to the study service. Please try again in a moment.', true);
+        return;
+    }
+
+    const username = getSavedUsername();
+    if (!username) {
+        showHighlightStatus(verseContainer, 'Please set your display name before adding a highlight.', true);
+        return;
+    }
+
+    const offsets = computeOffsets(englishTextElement, selection);
+    if (!offsets) return;
+
+    const { trimmedText, startOffset, endOffset } = offsets;
+
+    if (!trimmedText || trimmedText.length < 2) {
+        showHighlightStatus(verseContainer, 'Highlights should include at least two characters.', true);
+        return;
+    }
+
+    const existing = (highlightState.get(verseRef) || []).find(h =>
+        h.userId === userId &&
+        h.startOffset === startOffset &&
+        h.endOffset === endOffset
+    );
+
+    if (existing) {
+        showHighlightStatus(verseContainer, 'You already highlighted that quote.', true);
+        return;
+    }
+
+    try {
+        await addDoc(collection(db, 'highlights'), {
+            verseRef,
+            userId,
+            username,
+            selectedText: trimmedText,
+            color: colorId,
+            startOffset,
+            endOffset,
+            timestamp: serverTimestamp()
+        });
+
+        showHighlightStatus(verseContainer, 'Highlight saved.', false);
+    } catch (error) {
+        console.error('Error saving highlight:', error);
+        showHighlightStatus(verseContainer, 'Unable to save highlight. Please try again.', true);
+    }
+}
+
+function computeOffsets(englishTextElement, selection) {
+    if (!selection.rangeCount) return null;
+    const range = selection.getRangeAt(0);
+
+    const preRange = range.cloneRange();
+    preRange.selectNodeContents(englishTextElement);
+    preRange.setEnd(range.startContainer, range.startOffset);
+
+    const startOffsetRaw = preRange.toString().length;
+    const selectionText = selection.toString();
+    const leadingWhitespace = selectionText.match(/^\s*/)?.[0].length || 0;
+    const trailingWhitespace = selectionText.match(/\s*$/)?.[0].length || 0;
+    const trimmedText = selectionText.trim();
+
+    const startOffset = startOffsetRaw + leadingWhitespace;
+    const endOffset = startOffset + trimmedText.length;
+
+    if (startOffset >= endOffset) {
+        return null;
+    }
+
+    return {
+        trimmedText,
+        startOffset,
+        endOffset
+    };
+}
+
+function applyHighlightsToVerse(englishTextElement, highlights) {
+    clearExistingHighlights(englishTextElement);
+
+    if (!highlights || highlights.length === 0) {
+        return;
+    }
+
+    highlights.forEach(highlight => {
+        const range = createRangeFromOffsets(englishTextElement, highlight.startOffset, highlight.endOffset);
+        if (!range) {
+            return;
+        }
+
+        const highlightSpan = document.createElement('span');
+        highlightSpan.className = `user-highlight ${getHighlightColorClass(highlight.color)}`;
+        highlightSpan.dataset.highlightId = highlight.id;
+        highlightSpan.dataset.username = highlight.username || 'Anonymous';
+        highlightSpan.title = `Highlighted by ${highlight.username || 'Anonymous'}`;
+
+        try {
+            range.surroundContents(highlightSpan);
+        } catch (error) {
+            // If the range cannot be wrapped (likely due to complex markup), skip this highlight but log for debugging.
+            console.warn('Could not apply highlight for range', highlight, error);
+        }
+    });
+}
+
+function clearExistingHighlights(englishTextElement) {
+    const existingHighlights = englishTextElement.querySelectorAll('.user-highlight');
+    existingHighlights.forEach(span => {
+        const parent = span.parentNode;
+        while (span.firstChild) {
+            parent.insertBefore(span.firstChild, span);
+        }
+        parent.removeChild(span);
+        parent.normalize();
+    });
+}
+
+function createRangeFromOffsets(container, startOffset, endOffset) {
+    if (startOffset == null || endOffset == null) return null;
+
+    const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null);
+    const range = document.createRange();
+
+    let currentOffset = 0;
+    let startNode = null;
+    let startNodeOffset = 0;
+    let endNode = null;
+    let endNodeOffset = 0;
+
+    while (walker.nextNode()) {
+        const node = walker.currentNode;
+        const nodeLength = node.nodeValue.length;
+        const nextOffset = currentOffset + nodeLength;
+
+        if (!startNode && nextOffset > startOffset) {
+            startNode = node;
+            startNodeOffset = startOffset - currentOffset;
+        }
+
+        if (!endNode && nextOffset >= endOffset) {
+            endNode = node;
+            endNodeOffset = endOffset - currentOffset;
+            break;
+        }
+
+        currentOffset = nextOffset;
+    }
+
+    if (!startNode || !endNode) {
+        return null;
+    }
+
+    range.setStart(startNode, startNodeOffset);
+    range.setEnd(endNode, endNodeOffset);
+
+    return range;
+}
+
+function renderHighlightSummary(verseContainer, highlights) {
+    const summary = verseContainer.querySelector('.highlight-summary');
+    if (!summary) return;
+
+    if (!highlights || highlights.length === 0) {
+        summary.innerHTML = '';
+        summary.classList.add('hidden');
+        verseContainer.classList.remove('has-highlights');
+        return;
+    }
+
+    verseContainer.classList.add('has-highlights');
+    summary.classList.remove('hidden');
+
+    const items = highlights.map(highlight => {
+        const text = truncateText(highlight.selectedText, 240);
+        return `
+            <div class="highlight-entry" data-highlight-id="${highlight.id}">
+                <div class="highlight-quote">${escapeHtml(text)}</div>
+                <div class="highlight-meta">
+                    <span class="highlight-user">${escapeHtml(highlight.username || 'Anonymous')}</span>
+                    ${renderRemoveButton(highlight)}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    summary.innerHTML = items;
+
+    summary.querySelectorAll('.remove-highlight-btn').forEach(button => {
+        button.addEventListener('click', async (event) => {
+            event.stopPropagation();
+            const highlightId = button.dataset.highlightId;
+            if (!highlightId) return;
+
+            try {
+                await deleteDoc(doc(db, 'highlights', highlightId));
+            } catch (error) {
+                console.error('Error removing highlight:', error);
             }
         });
     });
-    */
 }
 
-// Remove highlight
-async function removeHighlight(highlightId) {
-    try {
-        await deleteDoc(doc(db, 'highlights', highlightId));
-    } catch (error) {
-        console.error('Error removing highlight:', error);
-        alert('Failed to remove highlight. Please try again.');
+function renderRemoveButton(highlight) {
+    const currentUserId = getCurrentUserId();
+    if (highlight.userId !== currentUserId) {
+        return '';
+    }
+
+    return `<button type="button" class="remove-highlight-btn" data-highlight-id="${highlight.id}">Remove</button>`;
+}
+
+function updateHighlightIndicator(verseContainer, count) {
+    const indicator = verseContainer.querySelector('.highlight-indicator');
+    if (!indicator) return;
+
+    indicator.textContent = count > 0 ? `Highlights (${count})` : 'Highlights';
+    indicator.dataset.state = count > 0 ? 'open' : 'closed';
+}
+
+function toggleHighlightSummary(verseContainer) {
+    const summary = verseContainer.querySelector('.highlight-summary');
+    const indicator = verseContainer.querySelector('.highlight-indicator');
+    if (!summary || !indicator) return;
+
+    if (summary.classList.contains('hidden')) {
+        summary.classList.remove('hidden');
+        indicator.dataset.state = 'open';
+    } else {
+        summary.classList.add('hidden');
+        indicator.dataset.state = 'closed';
     }
 }
 
-// Load highlights count for a verse (for badges)
-export async function getHighlightCount(verseRef) {
-    try {
-        const highlightsQuery = query(
-            collection(db, 'highlights'),
-            where('verseRef', '==', verseRef)
-        );
-        const snapshot = await getDocs(highlightsQuery);
-        return snapshot.size;
-    } catch (error) {
-        console.error('Error getting highlight count:', error);
-        return 0;
+function getHighlightColorClass(colorId) {
+    const color = HIGHLIGHT_COLORS.find(c => c.id === colorId);
+    return color ? color.className : 'highlight-color-gold';
+}
+
+function showHighlightStatus(verseContainer, message, isError) {
+    const status = verseContainer.querySelector('.highlight-status');
+    if (!status) return;
+
+    status.textContent = message;
+    status.classList.toggle('error', Boolean(isError));
+    status.classList.toggle('success', !isError);
+
+    if (!isError) {
+        setTimeout(() => {
+            status.textContent = '';
+            status.classList.remove('success');
+        }, 3000);
+    } else {
+        setTimeout(() => {
+            status.textContent = '';
+            status.classList.remove('error');
+        }, 5000);
     }
 }
 
-// Escape HTML for security
+function truncateText(text, maxLength) {
+    if (!text) return '';
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength - 3) + '...';
+}
+
 function escapeHtml(text) {
     const div = document.createElement('div');
-    div.textContent = text;
+    div.textContent = text || '';
     return div.innerHTML;
 }
 
-// Stop listening for highlights
-export function stopListeningForHighlights() {
-    if (currentHighlightsUnsubscribe) {
-        currentHighlightsUnsubscribe();
-        currentHighlightsUnsubscribe = null;
+// For completeness, export a cleanup function (currently unused but available)
+export function disposeHighlightListener(verseRef) {
+    if (highlightListeners.has(verseRef)) {
+        const dispose = highlightListeners.get(verseRef);
+        dispose();
+        highlightListeners.delete(verseRef);
     }
 }
-
-export {
-    initializeHighlighting,
-    listenForHighlights,
-    getHighlightCount
-};
