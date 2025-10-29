@@ -822,3 +822,255 @@ header a svg {
 .mb-4 {
     margin-bottom: 1.5rem;
 }
+
+/* ========================================
+   HIGHLIGHT FEATURE STYLES
+   ======================================== */
+
+/* Text Highlights */
+.highlight {
+    padding: 2px 4px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.highlight-yellow {
+    background: linear-gradient(120deg, #fef3c7 0%, #fde68a 100%);
+    border-bottom: 2px solid #fbbf24;
+}
+
+.highlight-green {
+    background: linear-gradient(120deg, #d1fae5 0%, #a7f3d0 100%);
+    border-bottom: 2px solid #34d399;
+}
+
+.highlight-blue {
+    background: linear-gradient(120deg, #dbeafe 0%, #bfdbfe 100%);
+    border-bottom: 2px solid #60a5fa;
+}
+
+.highlight-red {
+    background: linear-gradient(120deg, #fee2e2 0%, #fecaca 100%);
+    border-bottom: 2px solid #f87171;
+}
+
+/* Own highlights - clickable to remove */
+.highlight-own {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.highlight-own:hover {
+    opacity: 0.8;
+    transform: translateY(-1px);
+}
+
+/* Other users' highlights */
+.highlight-other {
+    opacity: 0.6;
+    cursor: default;
+}
+
+/* Highlight Menu Popup */
+.highlight-menu {
+    background: white;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 180px;
+}
+
+.highlight-menu-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.highlight-menu-btn.highlight-yellow {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.highlight-menu-btn.highlight-yellow:hover {
+    background: #fde68a;
+}
+
+.highlight-menu-btn.highlight-green {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.highlight-menu-btn.highlight-green:hover {
+    background: #a7f3d0;
+}
+
+.highlight-menu-btn.highlight-blue {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.highlight-menu-btn.highlight-blue:hover {
+    background: #bfdbfe;
+}
+
+.highlight-menu-btn.highlight-red {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.highlight-menu-btn.highlight-red:hover {
+    background: #fecaca;
+}
+
+.highlight-menu-btn.highlight-cancel {
+    background: #f3f4f6;
+    color: #374151;
+    margin-top: 0.25rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.highlight-menu-btn.highlight-cancel:hover {
+    background: #e5e7eb;
+}
+
+/* ========================================
+   EMPHASIS FEATURE STYLES
+   ======================================== */
+
+.emphasis-section {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.emphasis-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.emphasis-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.375rem 0.625rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.emphasis-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.emphasis-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.emphasis-count {
+    font-size: 0.8rem;
+    color: #60a5fa;
+    min-width: 1rem;
+    text-align: center;
+}
+
+/* Emphasis Type Specific Styles */
+.emphasis-star {
+    border-color: #fbbf24;
+    color: #92400e;
+}
+
+.emphasis-star:hover {
+    background: #fef3c7;
+}
+
+.emphasis-star.emphasis-active {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-color: #f59e0b;
+}
+
+.emphasis-bookmark {
+    border-color: #60a5fa;
+    color: #1e40af;
+}
+
+.emphasis-bookmark:hover {
+    background: #dbeafe;
+}
+
+.emphasis-bookmark.emphasis-active {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    border-color: #3b82f6;
+}
+
+.emphasis-heart {
+    border-color: #f87171;
+    color: #991b1b;
+}
+
+.emphasis-heart:hover {
+    background: #fee2e2;
+}
+
+.emphasis-heart.emphasis-active {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border-color: #ef4444;
+}
+
+.emphasis-question {
+    border-color: #a78bfa;
+    color: #5b21b6;
+}
+
+.emphasis-question:hover {
+    background: #ede9fe;
+}
+
+.emphasis-question.emphasis-active {
+    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+    border-color: #8b5cf6;
+}
+
+/* Active emphasis button animation */
+.emphasis-active .emphasis-count {
+    color: inherit;
+    font-weight: 700;
+}
+
+/* Mobile Responsive for Emphasis */
+@media (max-width: 768px) {
+    .emphasis-btn {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .emphasis-icon {
+        font-size: 1rem;
+    }
+
+    .highlight-menu {
+        min-width: 150px;
+    }
+
+    .highlight-menu-btn {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.85rem;
+    }
+}

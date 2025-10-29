@@ -34,6 +34,9 @@ import {
     db
 } from './firebase.js';
 
+import { initializeHighlighting } from './highlights.js';
+import { initializeEmphasis } from './emphasis.js';
+
 import { collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 let verseCommentCounts = {};
@@ -624,9 +627,15 @@ function createVerseElement(englishText, hebrewText, verseRef, verseNumber) {
     commentBadge.style.display = 'none';
     commentBadge.dataset.verseRef = verseRef;
     indicatorsSection.appendChild(commentBadge);
-    
+
     container.appendChild(indicatorsSection);
-    
+
+    // Initialize highlighting feature for this verse
+    initializeHighlighting(verseRef, englishDiv, hebrewDiv);
+
+    // Initialize emphasis feature for this verse
+    initializeEmphasis(verseRef, container);
+
     return container;
 }
 

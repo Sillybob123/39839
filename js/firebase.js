@@ -139,6 +139,7 @@ function stopListeningForComments() {
   }
 }
 
+// Export Firebase utilities for highlights and emphasis modules
 export {
   auth,
   db,
@@ -146,5 +147,13 @@ export {
   getCurrentUserId,
   submitComment,
   listenForComments,
-  stopListeningForComments
+  stopListeningForComments,
+  // Export Firestore methods for other modules to use
+  collection,
+  addDoc,
+  query,
+  where,
+  onSnapshot,
+  deleteDoc,
+  serverTimestamp
 };
