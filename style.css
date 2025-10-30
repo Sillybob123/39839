@@ -15,6 +15,90 @@ body {
 /* Smooth Scrolling */
 html {
     scroll-behavior: smooth;
+    /* Prevent rubber band scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent text size adjustment on mobile */
+html {
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+/* Improve touch scrolling */
+body {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+}
+
+/* Better text rendering on all devices */
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* Better tap highlighting for mobile */
+* {
+    -webkit-tap-highlight-color: rgba(59, 130, 246, 0.15);
+    -webkit-touch-callout: none;
+}
+
+/* Allow selection for text content */
+.hebrew-text,
+.english-text,
+.commentary-text,
+.definition-text,
+.comment-text,
+p,
+span {
+    -webkit-touch-callout: default;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+/* Disable selection for interactive elements */
+button,
+.verse-number,
+.content-indicator,
+.reaction-btn {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Ensure proper word wrapping on mobile */
+.verse-text-container,
+.hebrew-text,
+.english-text,
+.commentary-text,
+.definition-text,
+.comment-text {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+}
+
+/* Prevent zoom on inputs for mobile Safari */
+@media screen and (max-width: 640px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="url"],
+    input[type="password"],
+    textarea,
+    select {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
 }
 
 /* Header Enhancements */
@@ -100,7 +184,29 @@ header a svg {
     header button,
     header a {
         padding: 0.625rem 1rem;
+        /* Ensure touch targets are at least 44px */
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
+}
+
+/* Touch Target Minimum Sizes for All Devices */
+button,
+a,
+input[type="submit"],
+input[type="button"],
+select {
+    min-height: 44px; /* iOS recommended touch target */
+    min-width: 44px;
+}
+
+/* Exception for very small decorative elements */
+.reaction-icon,
+.indicator-icon {
+    min-height: unset;
+    min-width: unset;
 }
 
 /* Hebrew Text Styling - 4px LARGER than English */
@@ -916,34 +1022,817 @@ header a svg {
     color: #991b1b;
 }
 
-/* Mobile Responsive */
+/* Info Panel/Modal Mobile Optimizations */
+#info-panel .bg-white {
+    max-width: 100%;
+    margin: 0;
+}
+
 @media (max-width: 768px) {
+    #info-panel .bg-white {
+        max-height: 90vh;
+        border-radius: 0;
+    }
+
+    #info-panel {
+        padding: 1rem;
+    }
+
+    #info-content {
+        padding: 1.25rem !important;
+    }
+}
+
+@media (max-width: 640px) {
+    #info-panel .bg-white {
+        max-height: 95vh;
+    }
+
+    #info-content {
+        padding: 1rem !important;
+    }
+
+    #close-panel-button {
+        font-size: 2rem;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* Main Content Mobile Spacing */
+@media (max-width: 768px) {
+    main.container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+
+    #content-area {
+        padding: 1.25rem !important;
+    }
+
+    #parsha-title {
+        font-size: 1.5rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+
+    #parsha-reference {
+        font-size: 1rem !important;
+        margin-bottom: 1.25rem !important;
+    }
+}
+
+@media (max-width: 640px) {
+    main.container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    #content-area {
+        padding: 1rem !important;
+        border-radius: 8px;
+    }
+
+    #parsha-title {
+        font-size: 1.35rem !important;
+        line-height: 1.3;
+    }
+
+    #parsha-reference {
+        font-size: 0.95rem !important;
+        margin-bottom: 1rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    main.container {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    #content-area {
+        padding: 0.875rem !important;
+    }
+
+    #parsha-title {
+        font-size: 1.25rem !important;
+    }
+
+    #parsha-reference {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* ========================================
+   MOBILE RESPONSIVE - COMPREHENSIVE
+   ======================================== */
+
+/* Header Mobile Optimizations */
+@media (max-width: 768px) {
+    header {
+        padding: 0 !important;
+    }
+
+    header .container {
+        padding: 1.25rem 1rem !important;
+    }
+
+    header h1 {
+        font-size: 1.5rem !important;
+    }
+
+    header p {
+        font-size: 0.875rem !important;
+    }
+
+    header img {
+        height: 3rem !important;
+        width: 3rem !important;
+    }
+
+    header .flex.gap-3 {
+        width: 100%;
+    }
+
+    header button,
+    header a {
+        flex: 1;
+        justify-content: center;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 640px) {
+    header .container {
+        padding: 1rem 0.75rem !important;
+    }
+
+    header h1 {
+        font-size: 1.35rem !important;
+        line-height: 1.2;
+    }
+
+    header p {
+        font-size: 0.8rem !important;
+    }
+
+    header img {
+        height: 2.75rem !important;
+        width: 2.75rem !important;
+    }
+
+    header button span,
+    header a span {
+        font-size: 0.8rem;
+    }
+
+    header button svg,
+    header a svg {
+        width: 1.125rem;
+        height: 1.125rem;
+    }
+}
+
+@media (max-width: 480px) {
+    header .container {
+        padding: 0.875rem 0.625rem !important;
+    }
+
+    header h1 {
+        font-size: 1.25rem !important;
+    }
+
+    header p {
+        font-size: 0.75rem !important;
+        line-height: 1.4;
+    }
+
+    header img {
+        height: 2.5rem !important;
+        width: 2.5rem !important;
+    }
+}
+
+/* Navigation Mobile Optimizations */
+@media (max-width: 768px) {
+    nav {
+        padding: 0.75rem 0 !important;
+    }
+
+    nav .container {
+        padding: 0.75rem 1rem !important;
+    }
+
+    nav label {
+        font-size: 0.875rem !important;
+    }
+
+    nav select {
+        font-size: 0.875rem !important;
+        padding: 0.625rem 2.5rem 0.625rem 0.75rem !important;
+    }
+
+    nav button {
+        font-size: 0.875rem !important;
+        padding: 0.625rem 0.875rem !important;
+    }
+}
+
+@media (max-width: 640px) {
+    nav .container {
+        padding: 0.625rem 0.75rem !important;
+    }
+
+    nav label {
+        font-size: 0.8rem !important;
+    }
+
+    nav select {
+        font-size: 0.8rem !important;
+        padding: 0.5rem 2.25rem 0.5rem 0.625rem !important;
+    }
+
+    nav button {
+        font-size: 0.8rem !important;
+        padding: 0.5rem 0.75rem !important;
+    }
+
+    nav button svg {
+        width: 1rem;
+        height: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    nav .container {
+        padding: 0.5rem 0.625rem !important;
+    }
+
+    nav select {
+        font-size: 0.75rem !important;
+    }
+
+    nav button {
+        font-size: 0.75rem !important;
+        padding: 0.5rem 0.625rem !important;
+    }
+}
+
+/* Footer Mobile Optimizations */
+@media (max-width: 768px) {
+    footer {
+        padding: 1.25rem 0 !important;
+        margin-top: 2.5rem !important;
+    }
+
+    footer .container {
+        padding: 0 1rem !important;
+    }
+
+    footer p {
+        font-size: 0.875rem !important;
+    }
+
+    footer p.text-xs {
+        font-size: 0.75rem !important;
+    }
+}
+
+@media (max-width: 640px) {
+    footer {
+        padding: 1rem 0 !important;
+        margin-top: 2rem !important;
+    }
+
+    footer .container {
+        padding: 0 0.75rem !important;
+    }
+
+    footer p {
+        font-size: 0.8rem !important;
+        line-height: 1.5;
+    }
+
+    footer p.text-xs {
+        font-size: 0.7rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    footer {
+        padding: 0.875rem 0 !important;
+        margin-top: 1.5rem !important;
+    }
+
+    footer .container {
+        padding: 0 0.625rem !important;
+    }
+
+    footer p {
+        font-size: 0.75rem !important;
+    }
+
+    footer p.text-xs {
+        font-size: 0.65rem !important;
+    }
+}
+
+/* Tablet and Below - 768px */
+@media (max-width: 768px) {
+    /* Full-width comment panel on mobile */
     .comment-panel {
         width: 100%;
         right: -100%;
     }
-    
+
+    /* Better verse container spacing */
     .verse-container {
         padding: 1rem;
+        margin-bottom: 1rem;
     }
-    
+
+    /* Optimized typography for tablets */
     [lang="he"] {
         font-size: 1.19rem !important; /* Still 4px larger than mobile English */
+        line-height: 1.8;
     }
-    
+
     .english-text {
         font-size: 0.95rem;
+        line-height: 1.7;
     }
-    
+
+    /* Adjusted verse numbers */
     .verse-number {
         width: 2.5rem;
         height: 2.5rem;
         font-size: 1rem;
     }
 
+    /* Chapter headers */
     .chapter-header {
         font-size: 1.35rem;
-        margin: 4rem 0 2rem 0; /* Adjusted for mobile */
+        margin: 4rem 0 2rem 0;
+        padding: 1.25rem 1.5rem;
+    }
+
+    /* Commentary and info panels */
+    .commentary-item {
+        padding: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+    /* Definition containers */
+    .definition-container {
+        padding: 1.5rem;
+    }
+}
+
+/* Small Mobile Devices - 640px and Below */
+@media (max-width: 640px) {
+    /* Better body padding on small screens */
+    body {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+
+    /* Optimized verse containers for small screens */
+    .verse-container {
+        padding: 0.875rem;
+        margin-bottom: 0.875rem;
+        border-radius: 6px;
+    }
+
+    /* Content wrapper adjustments */
+    .verse-content-wrapper {
+        gap: 0.75rem;
+    }
+
+    /* Smaller verse numbers on mobile */
+    .verse-number {
+        width: 2.25rem;
+        height: 2.25rem;
+        font-size: 0.95rem;
+        border-radius: 6px;
+    }
+
+    /* Mobile-optimized text sizes */
+    [lang="he"] {
+        font-size: 1.15rem !important;
+        line-height: 1.85;
+        padding: 0.375rem 0;
+    }
+
+    .english-text {
+        font-size: 0.9rem;
+        line-height: 1.65;
+    }
+
+    /* Chapter headers for small mobile */
+    .chapter-header {
+        font-size: 1.2rem;
+        margin: 3rem 0 1.5rem 0;
+        padding: 1rem 1.25rem;
+    }
+
+    .chapter-header::before {
+        top: -1.75rem;
+        width: 70%;
+    }
+
+    /* Indicators and badges */
+    .verse-indicators {
+        gap: 0.375rem;
+        margin-top: 0.625rem;
+        padding-top: 0.625rem;
+    }
+
+    .content-indicator {
+        padding: 0.3rem 0.625rem;
+        font-size: 0.8rem;
+        gap: 0.2rem;
+    }
+
+    .comment-count-badge {
+        padding: 0.3rem 0.625rem;
+        font-size: 0.8rem;
+    }
+
+    /* Reaction buttons for mobile */
+    .verse-reactions {
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .reaction-btn {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8rem;
+        gap: 0.3rem;
+    }
+
+    .reaction-icon {
+        font-size: 0.85rem;
+        width: 1rem;
+    }
+
+    .reaction-count {
+        font-size: 0.7rem;
+        padding: 0.1rem 0.375rem;
+        min-width: 1.35rem;
+    }
+
+    /* Touch-friendly keyword styling */
+    .keyword {
+        padding: 3px 7px;
+        border-radius: 4px;
+    }
+
+    /* Commentary styling for mobile */
+    .commentary-item {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 6px;
+    }
+
+    .commentary-source {
+        font-size: 1rem;
+        margin-bottom: 0.625rem;
+    }
+
+    .commentary-text {
+        font-size: 0.9rem;
+        line-height: 1.7;
+    }
+
+    /* Definition containers */
+    .definition-container {
+        padding: 1.25rem;
+        border-radius: 6px;
+    }
+
+    .definition-word {
+        font-size: 1.15em;
+        margin-bottom: 0.625rem;
+    }
+
+    .definition-text {
+        font-size: 0.9rem;
+        line-height: 1.7;
+    }
+
+    /* Comment panel optimizations */
+    .comment-panel-header {
+        padding: 1rem;
+    }
+
+    .comment-panel-title {
+        font-size: 1.1rem;
+    }
+
+    .close-panel-btn {
+        font-size: 1.75rem;
+        width: 28px;
+        height: 28px;
+    }
+
+    .comments-list {
+        padding: 0.75rem;
+    }
+
+    .comment-item {
+        padding: 0.875rem;
+        margin-bottom: 0.875rem;
+        border-radius: 5px;
+    }
+
+    .comment-user {
+        font-size: 0.85rem;
+    }
+
+    .comment-time {
+        font-size: 0.7rem;
+    }
+
+    .comment-text {
+        font-size: 0.875rem;
+        line-height: 1.55;
+    }
+
+    .add-comment-section {
+        padding: 0.875rem;
+    }
+
+    .add-comment-section textarea {
+        padding: 0.625rem;
+        font-size: 0.875rem;
+        min-height: 70px;
+        border-radius: 5px;
+    }
+
+    .submit-comment-btn {
+        margin-top: 0.625rem;
+        padding: 0.625rem;
+        font-size: 0.875rem;
+        border-radius: 5px;
+    }
+
+    .username-setup {
+        padding: 0.875rem;
+    }
+
+    .username-input {
+        padding: 0.5rem;
+        font-size: 0.875rem;
+        border-radius: 4px;
+    }
+
+    .save-username-btn {
+        padding: 0.5rem 0.875rem;
+        font-size: 0.875rem;
+        border-radius: 4px;
+    }
+
+    .username-display {
+        padding: 0.625rem 0.875rem;
+    }
+
+    .username-label {
+        font-size: 0.8rem;
+    }
+
+    .current-username {
+        font-size: 0.875rem;
+    }
+}
+
+/* Extra Small Mobile - 480px and Below */
+@media (max-width: 480px) {
+    /* Even tighter spacing for very small screens */
+    .verse-container {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .verse-content-wrapper {
+        gap: 0.625rem;
+    }
+
+    /* Compact verse numbers */
+    .verse-number {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.875rem;
+        border-radius: 5px;
+    }
+
+    /* Very small screen text optimization */
+    [lang="he"] {
+        font-size: 1.1rem !important;
+        line-height: 1.8;
+    }
+
+    .english-text {
+        font-size: 0.875rem;
+        line-height: 1.6;
+    }
+
+    /* Compact chapter headers */
+    .chapter-header {
+        font-size: 1.1rem;
+        margin: 2.5rem 0 1.25rem 0;
+        padding: 0.875rem 1rem;
+    }
+
+    /* Smaller indicators */
+    .content-indicator {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .comment-count-badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    /* Compact reactions */
+    .reaction-btn {
+        padding: 0.35rem 0.625rem;
+        font-size: 0.75rem;
+    }
+
+    .reaction-icon {
+        font-size: 0.8rem;
+    }
+
+    .reaction-count {
+        font-size: 0.65rem;
+        padding: 0.075rem 0.3rem;
+    }
+
+    /* Commentary adjustments */
+    .commentary-item {
+        padding: 0.875rem;
+        margin-bottom: 0.875rem;
+    }
+
+    .commentary-source {
+        font-size: 0.95rem;
+    }
+
+    .commentary-text {
+        font-size: 0.875rem;
+    }
+
+    /* Definition adjustments */
+    .definition-container {
+        padding: 1rem;
+    }
+
+    .definition-word {
+        font-size: 1.05em;
+    }
+
+    .definition-text {
+        font-size: 0.875rem;
+    }
+}
+
+/* Very Small Screens - 375px and Below (iPhone SE, etc.) */
+@media (max-width: 375px) {
+    /* Ultra-compact for smallest devices */
+    .verse-container {
+        padding: 0.625rem;
+        margin-bottom: 0.625rem;
+    }
+
+    .verse-number {
+        width: 1.875rem;
+        height: 1.875rem;
+        font-size: 0.8rem;
+    }
+
+    [lang="he"] {
+        font-size: 1.05rem !important;
+    }
+
+    .english-text {
+        font-size: 0.85rem;
+    }
+
+    .chapter-header {
+        font-size: 1rem;
+        padding: 0.75rem 0.875rem;
+        margin: 2rem 0 1rem 0;
+    }
+
+    .reaction-btn {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+    }
+
+    .content-indicator,
+    .comment-count-badge {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.7rem;
+    }
+}
+
+/* Landscape Mode Optimizations for Mobile */
+@media (max-width: 896px) and (orientation: landscape) {
+    /* Reduce vertical spacing in landscape */
+    header .container {
+        padding-top: 0.75rem !important;
+        padding-bottom: 0.75rem !important;
+    }
+
+    nav .container {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+    }
+
+    .verse-container {
+        margin-bottom: 0.75rem;
+    }
+
+    .chapter-header {
+        margin-top: 2rem;
+        margin-bottom: 1.25rem;
+        padding: 0.75rem 1rem;
+    }
+
+    main.container {
+        padding-top: 0.75rem !important;
+        padding-bottom: 0.75rem !important;
+    }
+
+    footer {
+        margin-top: 1.5rem !important;
+        padding: 0.75rem 0 !important;
+    }
+
+    /* Make comment panel narrower in landscape */
+    .comment-panel {
+        width: 60%;
+        right: -60%;
+    }
+
+    .comment-panel.active {
+        right: 0;
+    }
+}
+
+/* Very narrow landscape screens (phones) */
+@media (max-width: 667px) and (orientation: landscape) {
+    .comment-panel {
+        width: 75%;
+        right: -75%;
+    }
+
+    header h1 {
+        font-size: 1.15rem !important;
+    }
+
+    header p {
+        display: none; /* Hide subtitle in narrow landscape */
+    }
+
+    header img {
+        height: 2.25rem !important;
+        width: 2.25rem !important;
+    }
+
+    .verse-number {
+        width: 1.75rem;
+        height: 1.75rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Loading and Error Messages Mobile Optimization */
+@media (max-width: 640px) {
+    #loading-message {
+        padding: 2rem 1rem !important;
+        font-size: 0.875rem;
+    }
+
+    #loading-message .h-8.w-8 {
+        height: 1.75rem !important;
+        width: 1.75rem !important;
+    }
+
+    #error-message {
+        padding: 0.75rem 1rem !important;
+        font-size: 0.875rem;
+        border-radius: 6px;
+    }
+
+    #error-message strong {
+        font-size: 0.875rem;
     }
 }
 
@@ -963,6 +1852,17 @@ header a svg {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #60a5fa;
+}
+
+/* Thin scrollbar for mobile */
+@media (max-width: 768px) {
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 3px;
+    }
 }
 
 /* Print Styles */
