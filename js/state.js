@@ -4,7 +4,9 @@ export const state = {
     currentParshaRef: null,
     currentParshaIndex: -1,
     allParshas: [],
-    isLoading: false
+    isLoading: false,
+    currentParshaSignificance: null,
+    currentParshaSignificanceName: null
 };
 
 export function setState(updates) {

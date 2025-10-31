@@ -2,7 +2,7 @@
   "parshas": [
     {
       "name": "Bereshit",
-      "reference": "Genesis 1:1–6:8",
+      "reference": "Genesis 1:1-6:8",
       "verses": [
         {
           "ref": "Genesis 1:1",
@@ -676,11 +676,12 @@
             }
           ]
         }
-      ]
+      ],
+      "significance": "Parsha Summary: This parsha details the creation of the universe in seven days, the story of Adam and Eve in the Garden of Eden, their sin and expulsion, and the first murder, as Cain kills his brother Abel. It concludes with the genealogy of humanity leading up to Noah.\n\nSignificance & Takeaway: Bereshit opens the Torah with the poetry of creation and the first fragile steps of humanity. We learn that existence is neither random nor indifferent; a loving God speaks the world into being and entrusts it to human guardians created b'tzelem Elohim, in His image. The stories of Eden, Cain and Abel, and the generations that follow show both the wonder of free will and the havoc it can wreak when untethered from moral purpose. Yet every failure is met with the possibility of return. From the very first verse we are called to build lives that echo God's goodness, treating each person and every choice as part of a divine story that has meaning and direction."
     },
     {
-      "name": "Noah",
-      "reference": "Genesis 6:9–11:32",
+      "name": "Noach",
+      "reference": "Genesis 6:9-11:32",
       "verses": [
         {
           "ref": "Genesis 6:9",
@@ -1027,11 +1028,12 @@
           ],
           "keywords": []
         }
-      ]
+      ],
+      "significance": "Parsha Summary: The parsha describes a world that has descended into corruption and violence (chamas). God resolves to bring a great flood, saving only the righteous Noah, his family, and animals in an ark. After the flood, God establishes a new covenant with humanity, symbolized by the rainbow. The parsha ends with the story of the Tower of Babel, where humanity's unified defiance leads to their languages being confused and their being scattered across the earth.\n\nSignificance & Takeaway: This is a story of destruction and rebirth. It teaches that while humanity has the capacity for self-destruction, God always provides a path for renewal. The main lesson is about the responsibility of a righteous individual in a corrupt society. Noah's righteousness saves the world. The Tower of Babel then serves as a powerful counter-lesson: unity without a moral, divine purpose is arrogance and leads to breakdown, not greatness. Noach is the saga of a world gone dark—and of the lone light that keeps hope alive. Violence and corruption nearly erase creation, but one righteous individual has the courage to stand apart and becomes the seed of renewal. After the waters recede, the rainbow covenant reaffirms that God will not abandon humanity, even when we stumble. God always leaves a path back, but He waits for us to choose righteousness and humility."
     },
     {
-      "name": "Lech Lecha",
-      "reference": "Genesis 12:1–17:27",
+      "name": "Lech-Lecha",
+      "reference": "Genesis 12:1-17:27",
       "verses": [
         {
           "ref": "Genesis 12:1",
@@ -1357,11 +1359,12 @@
             }
           ]
         }
-      ]
+      ],
+      "significance": "Parsha Summary: The Torah's focus shifts from all humanity to one family. God commands Abram (later Abraham) \"Lech Lecha\"—\"Go forth from your land\"—to a new, unknown land. God promises to make him a great nation. This parsha details his journey, his separation from his nephew Lot, the Covenant Between the Parts (where God promises the land to his descendants), and the establishment of Brit Milah (circumcision) as the physical sign of this eternal covenant.\n\nSignificance & Takeaway: This is the birth of the Jewish people. The central theme is faith. Abraham is the ultimate model of emunah (faith), leaving everything familiar to follow a divine call. The phrase \"Lech Lecha\" can be translated as \"Go for yourself,\" teaching a beautiful lesson: it is precisely by leaving our comfort zone for a higher purpose that we discover who we are truly meant to be. Lech-Lecha chronicles the moment a single family steps into the unknown and history changes course. Abram hears the words \"Go for yourself\"—leave comfort, leave certainty—and discovers that true identity is born in the journey toward a higher calling. Covenants of land, nationhood, and brit milah translate faith into life in the body and on the soil. Living a life of emunah means trusting that God's call, though demanding, reveals our truest self. By saying yes to that call we become channels of blessing for the whole world."
     },
     {
       "name": "Vayera",
-      "reference": "Genesis 18:1–22:24",
+      "reference": "Genesis 18:1-22:24",
       "verses": [
         {
           "ref": "Genesis 18:1",
@@ -1663,11 +1666,12 @@
             }
           ]
         }
-      ]
+      ],
+      "significance": "Parsha Summary: This parsha reveals Abraham's character. It begins with him performing Hachnasat Orchim (hospitality) for three \"men\" (angels), who promise that his wife Sarah will give birth to a son. Abraham then famously argues with God to save the wicked cities of Sodom and Gomorrah. Lot is saved, the cities are destroyed, and Isaac is finally born. The parsha culminates in the Akedah, the Binding of Isaac, where Abraham is tested with the command to sacrifice his beloved son.\n\nSignificance & Takeaway: Vayera paints Abraham as a man whose tent is open to strangers and whose heart is bold enough to argue with Heaven. Hospitality, advocacy for Sodom, the birth of Isaac, and the Akedah weave together kindness, justice, and awe-filled obedience. The Binding forces us to wrestle with the tension between divine command and human ethics—and teaches that God desires loyalty that never abandons conscience. Holiness is expressed both in generosity to people and in unwavering devotion to God; the greatest heroes hold both simultaneously."
     },
     {
       "name": "Chayei Sara",
-      "reference": "Genesis 23:1–25:18",
+      "reference": "Genesis 23:1-25:18",
       "verses": [
         {
           "ref": "Genesis 23:2",
@@ -1809,11 +1813,12 @@
           ],
           "keywords": []
         }
-      ]
+      ],
+      "significance": "Parsha Summary: Meaning \"The Life of Sarah,\" this parsha ironically begins with her death. Abraham negotiates with the Hittites to purchase the Cave of Machpelah as a family burial plot, establishing the first permanent, legal Israelite holding in the land of Canaan. The majority of the parsha is then dedicated to Abraham's servant, Eliezer, on his mission to find a wife (Rebekah) for Isaac, a story filled with prayer, signs, and acts of kindness.\n\nSignificance & Takeaway: Chayei Sara is a meditation on continuity. Abraham arranges Sarah's burial in Machpelah, securing an eternal foothold in the promised land, and dispatches Eliezer to find a spouse who will carry the covenant forward with Isaac. Rebekah's kindness at the well shows that destiny rests on everyday acts of compassion. Dreams survive only when we invest in the future—preserving our stories, anchoring ourselves to sacred space, and ensuring the next generation is ready to inherit both land and mission."
     },
     {
       "name": "Toldot",
-      "reference": "Genesis 25:19–28:9",
+      "reference": "Genesis 25:19-28:9",
       "verses": [
         {
           "ref": "Genesis 25:21",
@@ -2065,11 +2070,12 @@
           ],
           "keywords": []
         }
-      ]
+      ],
+      "significance": "Parsha Summary: \"Toldot\" (Generations) tells the story of Isaac and Rebekah's twin sons, Jacob and Esau. The brothers are opposites: Esau the physical \"man of the field,\" and Jacob the spiritual \"dweller in tents\". Jacob famously acquires Esau's birthright (bechorah) for a bowl of stew. Later, with Rebekah's encouragement, Jacob deceives his blind father Isaac to \"steal\" the blessing intended for Esau, forcing him to flee for his life.\n\nSignificance & Takeaway: Toldot reveals a family wrestling with inheritance—who will carry Abraham's spiritual torch? Jacob hungers for the birthright while Esau squanders it, yet the path to blessing winds through painful deception and exile. The parsha reminds us that sacred legacies aren't inherited automatically; they must be chosen, valued, and sometimes fought for. Becoming \"Israel\" demands integrity and courage. We must decide what kind of people we wish to be and live up to the destiny we claim."
     },
     {
       "name": "Vayetzei",
-      "reference": "Genesis 28:10–32:3",
+      "reference": "Genesis 28:10-32:3",
       "verses": [
         {
           "ref": "Genesis 28:11",
@@ -2336,11 +2342,12 @@
             }
           ]
         }
-      ]
+      ],
+      "significance": "Parsha Summary: \"And he went out,\" Jacob flees from Esau. Alone and afraid, he dreams of a ladder (sulam) connecting heaven and earth, with angels ascending and descending. God stands above it and reaffirms the covenantal promise. Jacob arrives in Haran, where he is deceived by his uncle Laban into marrying Leah before he can marry Rachel. He works for 20 years, and his 12 children (the future tribes of Israel) are born, before he flees Laban to return home.\n\nSignificance & Takeaway: Vayetzei finds Jacob alone on the road, dreaming of a ladder that links earth to Heaven. In exile he learns that even the bleakest places are gateways to holiness. Years of toil under Laban's manipulation refine him, teach empathy, and give rise to the twelve tribes. God is present in our detours. When we carry faith into difficult workplaces and strained relationships, we build the foundations of a holy nation."
     },
     {
       "name": "Vayishlach",
-      "reference": "Genesis 32:4–36:43",
+      "reference": "Genesis 32:4-36:43",
       "verses": [
         {
           "ref": "Genesis 32:4 (32:3 Heb)",
@@ -2572,11 +2579,12 @@
             }
           ]
         }
-      ]
+      ],
+      "significance": "Parsha Summary: \"And he sent.\" Jacob prepares to reunite with Esau after 20 years. The night before, he wrestles with a mysterious man (an angel) and is given a new name: Yisrael (Israel), meaning \"one who struggles with God.\" He then has a tense but peaceful reunion with Esau. The parsha concludes with the tragic story of Dinah's assault and the violent, vengeful response of her brothers, Simeon and Levi.\n\nSignificance & Takeaway: Vayishlach captures Jacob's transformation. He wrestles through the night, confronts Esau, faces the family trauma of Dinah, and receives a new name—Yisrael, one who struggles with God. Not every battle ends in victory, but the struggle itself shapes him into someone capable of meeting the future honestly. We are defined less by the wounds we suffer than by the courage with which we face them. Justice must be pursued with wisdom, and reconciliation sought without surrendering principle."
     },
     {
       "name": "Vayeshev",
-      "reference": "Genesis 37:1–40:23",
+      "reference": "Genesis 37:1-40:23",
       "verses": [
         {
           "ref": "Genesis 37:2",
@@ -2772,11 +2780,12 @@
           ],
           "keywords": []
         }
-      ]
+      ],
+      "significance": "Parsha Summary: \"And he settled.\" This parsha begins the famous Joseph story. Jacob favors his son Joseph, giving him an ornamented coat, which fuels intense jealousy from his brothers. Joseph's arrogant dreams of superiority are the final straw. The brothers plot to kill him, but Judah intervenes, and they instead sell him into slavery. The story then cuts to the narrative of Judah and Tamar, before returning to Joseph in Egypt, where he resists the advances of Potiphar's wife and is unjustly thrown into prison.\n\nSignificance & Takeaway: Vayeshev turns the camera toward Joseph—a gifted young man whose dreams ignite jealousy and whose integrity is tested in darkness. Betrayed by brothers, sold into slavery, imprisoned despite innocence, he clings to the conviction that God is still with him. The interlude of Judah and Tamar shows that growth can sprout from failure. Even when life feels like a pit, faithfulness to God and moral courage can transform descent into the first step of redemption."
     },
     {
       "name": "Miketz",
-      "reference": "Genesis 41:1–44:17",
+      "reference": "Genesis 41:1-44:17",
       "verses": [
         {
           "ref": "Genesis 41:8",
@@ -2958,11 +2967,12 @@
           ],
           "keywords": []
         }
-      ]
+      ],
+      "significance": "Parsha Summary: \"At the end of.\" Two years later, Pharaoh has two ominous dreams (the cows and the ears of grain). Joseph is summoned from prison and correctly interprets them as seven years of plenty followed by seven years of famine. He is immediately appointed viceroy of Egypt and put in charge of gathering and storing food. When the famine strikes, his own brothers travel from Canaan to buy grain, bowing down before him, thus fulfilling his first dream. Joseph recognizes them, but they do not recognize him.\n\nSignificance & Takeaway: Miketz is the great reversal: the dreamer becomes Egypt's savior. Joseph uses divine insight to craft human strategy, turning prophecy into policy that rescues millions. When famine drives his brothers to his door, he sees God's hand guiding every twist of his story. Providence and prudence must partner. Our trials can cultivate the wisdom needed to steward blessing for others."
     },
     {
       "name": "Vayigash",
-      "reference": "Genesis 44:18–47:27",
+      "reference": "Genesis 44:18-47:27",
       "verses": [
         {
           "ref": "Genesis 45:5",
@@ -3074,11 +3084,12 @@
           ],
           "keywords": []
         }
-      ]
+      ],
+      "significance": "Parsha Summary: \"And he approached.\" This is the emotional climax of the story. Joseph continues to test his brothers by framing his youngest brother, Benjamin, for stealing a goblet. Judah, in a powerful act of leadership, steps forward (\"Vayigash\") and offers himself as a slave in Benjamin's place to spare their father Jacob from more pain. Seeing that his brothers have truly changed, Joseph reveals his identity: \"I am Joseph!\" The family is joyfully reunited, and Jacob and his 70 descendants move down to live in Egypt, in the land of Goshen.\n\nSignificance & Takeaway: Vayigash delivers one of Torah's most moving scenes: Judah offers himself for Benjamin, proving that the brothers who sold Joseph have changed. Joseph reveals his identity and reframes their betrayal as part of God's plan to save lives. The family relocates to Goshen, united at last. Teshuvah is real. When we accept responsibility and choose compassion over revenge, we turn pain into a platform for reconciliation and blessing."
     },
     {
       "name": "Vayechi",
-      "reference": "Genesis 47:28–50:26",
+      "reference": "Genesis 47:28-50:26",
       "verses": [
         {
           "ref": "Genesis 48:5",
@@ -3245,7 +3256,631 @@
             }
           ]
         }
-      ]
+      ],
+      "significance": "Parsha Summary: \"And he lived.\" Jacob lives his final 17 years in Egypt. As his death approaches, he makes Joseph swear to bury him not in Egypt, but in the family tomb in Canaan. He blesses Joseph's two sons, Ephraim and Manasseh, famously crossing his hands to give the younger son precedence. He then gathers his 12 sons to give each a final, prophetic blessing, designating Judah as the leader. The parsha, and the book of Genesis, concludes with the death of Jacob and, years later, the death of Joseph, who also makes the Israelites swear to carry his bones with them when they eventually leave Egypt.\n\nSignificance & Takeaway: Vayechi closes Genesis with a masterclass in legacy. Jacob blesses his sons and grandsons, maps the future of the tribes, and insists on burial in the land to declare that Egypt is a station, not a destiny. Joseph reiterates the promise that God will redeem his people and makes them swear to carry his bones home. Faith looks beyond the present moment. We bless the next generation, hold fast to hope, and trust that God will remember His people and lead them forward."
+    },
+    {
+      "name": "Shemot",
+      "reference": "Exodus 1:1-6:1",
+      "verses": [
+        {
+          "ref": "Exodus 1:1",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "The verse lists the sons of Jacob who came to Egypt, even though they were already listed in Genesis. Rashi explains that this repetition shows God's love for the Israelites, counting them again and again. It's like a person counting their precious treasures, showing how much they are cherished."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 1:8",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "The Torah states that a 'new king arose over Egypt who did not know Joseph.' Rashi offers two interpretations from the Talmud. One is that it was literally a new king. The other is that it was the same king, but he pretended not to know Joseph and issued new, harsh decrees against the Israelites. This highlights the fragility of political favor and how quickly a positive relationship can be forgotten."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 1:10",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "Pharaoh's plan to 'deal shrewdly' with the Israelites reveals his cunning and fear. The Hebrew word 'havah' (let us) signifies preparation. Pharaoh's fear was not just of the Israelites' numbers, but that they would join Egypt's enemies in war and escape the land. This verse shows how fear can lead to oppression."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 1:15",
+          "commentary": [],
+          "keywords": [
+            {
+              "word": "Shifrah and Puah",
+              "definition": "The Hebrew midwives who defied Pharaoh's decree to kill the male Israelite babies. Tradition identifies them as Yocheved and Miriam, Moses' mother and sister. Their names are symbolic: Shifrah means 'to beautify' and Puah means 'to coo' or 'cry out', reflecting their roles in caring for the newborns."
+            }
+          ]
+        },
+        {
+          "ref": "Exodus 1:17",
+          "commentary": [
+            {
+              "source": "Rabbi Sacks",
+              "explanation": "The midwives' defiance of Pharaoh was an act of civil disobedience, one of the first in recorded history. They chose to fear God more than the king of Egypt, demonstrating that there is a moral limit to political power. Their courage shows that even in the face of tyranny, individuals can make a choice to uphold what is right."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 1:20",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "Because the midwives feared God and saved the male infants, God 'made them houses.' Rashi explains this means God established two great dynasties from them: the house of Priesthood (Kohanim) and the house of royalty (the Davidic dynasty). This shows that acts of moral courage and faith are rewarded with enduring legacy."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 2:1",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "Amram, a man from the house of Levi, remarried his wife Yocheved after they had separated due to Pharaoh's decree against male infants. Rashi notes that Yocheved was 130 years old at the time, yet the Torah calls her a 'daughter of Levi' to signify that she miraculously regained her youth."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 2:2",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "When Moses was born, the Torah says his mother saw that he was 'good.' Rashi explains this means the house was filled with light. This suggests that from birth, Moses had a special, divine radiance, a sign of his future role as a leader and prophet."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 2:5",
+          "commentary": [
+            {
+              "source": "Rabbi Sacks",
+              "explanation": "Pharaoh's daughter is an unlikely hero. She had everything to lose by saving the Hebrew baby. Her act of compassion was not just a momentary impulse; she adopted Moses and raised him as her own. This shows that moral courage can be found even in the darkest of places and that tyranny cannot extinguish the human capacity for good."
+            }
+          ],
+          "keywords": [
+            {
+              "word": "Pharaoh's daughter",
+              "definition": "The daughter of the tyrannical Pharaoh who discovered and saved Moses from the Nile. She is seen as a righteous gentile who acted with compassion and courage, defying her father's decree. Her act of kindness was essential for the future redemption of Israel."
+            }
+          ]
+        },
+        {
+          "ref": "Exodus 2:7",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "Moses refused to nurse from Egyptian women. Rashi explains that this was because the mouth that was destined to speak with God (the Shechinah) should not be nourished by something impure."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 2:12",
+          "commentary": [
+            {
+              "source": "Maimonides",
+              "explanation": "Maimonides, in his Mishneh Torah, states that while the Egyptian was deserving of death, Moses did not kill him directly. Rather, the Egyptian was put to death 'at the hands of G-d'. This interpretation suggests a divine intervention in the Egyptian's death, highlighting Moses' role as an instrument of God's justice."
+            },
+            {
+              "source": "Rabbi Sacks",
+              "explanation": "Moses' act of killing the Egyptian was not just an act of violence, but a profound moment of identity crisis. Having grown up in Pharaoh's palace, he was an outsider to his own people. This act was his first step towards identifying with the suffering of the Israelites and taking a stand against injustice. It was a reckless act, but it was also the beginning of his journey to becoming the leader of his people."
+            }
+          ],
+          "keywords": [
+            {
+              "word": "Moses kills the Egyptian",
+              "definition": "Moses, seeing an Egyptian taskmaster beating a Hebrew slave, intervenes and kills the Egyptian. This act, born of a passion for justice, forces Moses to flee Egypt and begin his journey as a fugitive. It is a pivotal moment in his development, showing his innate connection to his people and his willingness to fight for them."
+            }
+          ]
+        },
+        {
+          "ref": "Exodus 2:25",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "The verse says that God 'knew.' Rashi explains that this means God took notice of their suffering and did not ignore it. It signifies a turning point, where God's attention is now focused on their plight, and the process of redemption is about to begin."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 3:2",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "Why a lowly thornbush? Rashi explains that God chose a simple thornbush to show that He is with the Jewish people in their suffering. Just as the thornbush is humble, so too were the Israelites in their affliction. The fire that did not consume the bush symbolized that the Israelites would not be consumed by their suffering."
+            },
+            {
+              "source": "Maimonides",
+              "explanation": "Maimonides, in his Guide for the Perplexed, explains the burning bush as a prophetic vision. The angel in the bush represents the level of prophecy Moses was experiencing. The event was not a physical miracle in the sense of a violation of the laws of nature, but a profound spiritual experience that conveyed deep truths to Moses about God's nature and His relationship with the world."
+            },
+            {
+              "source": "Rabbi Sacks",
+              "explanation": "The burning bush represents the resilience of the Jewish people. Just as the bush burns but is not consumed, so too have the Jewish people endured persecution and suffering throughout history without being destroyed. The fire is the suffering, but the bush is not consumed because God is with them. It is a symbol of hope and the eternal covenant between God and Israel."
+            }
+          ],
+          "keywords": [
+            {
+              "word": "The Burning Bush",
+              "definition": "The event where God appeared to Moses in a bush that was on fire but not consumed. This miraculous event is a symbol of God's presence in the midst of suffering and the eternal nature of the Jewish people. It is where Moses was chosen to lead the Israelites out of Egypt."
+            }
+          ]
+        },
+        {
+          "ref": "Exodus 3:14",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "Rashi explains that God's name 'Ehyeh Asher Ehyeh' means 'I will be with them in this sorrow as I will be with them in the subjection they will suffer at the hands of other kingdoms.' It is a promise of God's enduring presence and faithfulness through all of Israel's suffering."
+            },
+            {
+              "source": "Maimonides",
+              "explanation": "Maimonides understands 'Ehyeh Asher Ehyeh' as a statement of God's necessary existence. God is the only being whose existence is not contingent on anything else. This name teaches that God is the ultimate reality, the foundation of all being."
+            },
+            {
+              "source": "Rabbi Sacks",
+              "explanation": "Rabbi Sacks translates 'Ehyeh Asher Ehyeh' as 'I will be what I will be.' This emphasizes that God is not a static being, but a dynamic force in history. God is a God of action, and He will be known through His deeds. This name is a promise of future redemption and a call to hope."
+            }
+          ],
+          "keywords": [
+            {
+              "word": "Ehyeh Asher Ehyeh (I Am That I Am)",
+              "definition": "The name God reveals to Moses at the burning bush. It is a statement of God's eternal and unchanging nature, and His promise to be with His people in their suffering and redemption. It is a name that speaks of God's active presence in history."
+            }
+          ]
+        },
+        {
+          "ref": "Exodus 4:2",
+          "commentary": [],
+          "keywords": [
+            {
+              "word": "The Signs of Moses",
+              "definition": "The three miraculous signs God gave Moses to perform to prove to the Israelites that he was sent by God. The staff that turned into a snake, the hand that became leprous, and the water that turned to blood. These signs were not just displays of power, but had deep symbolic meaning."
+            }
+          ]
+        },
+        {
+          "ref": "Exodus 4:3",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "The staff turning into a snake was a symbolic rebuke to Moses for speaking slanderously about the Israelites. Just as the serpent in the Garden of Eden spoke slander, so too had Moses. This sign was a lesson to Moses about the power and danger of speech."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 4:6",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "The sign of the leprous hand was also a symbol of slander. Leprosy in the Torah is often associated with the sin of slander. This sign was another lesson to Moses about the importance of using his words carefully and righteously."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 4:9",
+          "commentary": [
+            {
+              "source": "Maimonides",
+              "explanation": "Maimonides saw the signs of Moses not as the primary basis for faith, but as a means to an end. The ultimate proof of Moses' prophecy was the national revelation at Mount Sinai. The signs were to convince the people to follow Moses to that point, but true faith was to be based on the direct experience of God's presence."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 4:10",
+          "commentary": [
+            {
+              "source": "Rabbi Sacks",
+              "explanation": "Moses' initial reluctance to lead, his claim of being 'slow of speech,' is a sign of true leadership. The greatest leaders are often those who are hesitant to take power, who are aware of their own limitations. Moses' humility and self-doubt are what make him a relatable and inspiring leader."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 5:2",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "Rashi explains that Pharaoh's question 'Who is the Lord?' was not a question of ignorance, but of defiance. Pharaoh was saying that he did not recognize any power higher than himself. This was the classic attitude of a pagan king, who saw himself as a god on earth."
+            },
+            {
+              "source": "Maimonides",
+              "explanation": "Maimonides explains that Pharaoh's initial refusal to let the Israelites go was an act of free will. However, after the first five plagues, God hardened Pharaoh's heart as a punishment for his initial defiance. This was not to force him to sin, but to ensure that he would receive the full measure of his punishment."
+            },
+            {
+              "source": "Rabbi Sacks",
+              "explanation": "Rabbi Sacks sees Pharaoh's response as a classic example of the 'march of folly.' Pharaoh was a deeply conservative leader who feared change. He was unable to see that his refusal to let the Israelites go would lead to his own destruction. His inability to listen to his advisors and adapt to changing circumstances is a timeless lesson in the dangers of hubris."
+            }
+          ],
+          "keywords": [
+            {
+              "word": "Pharaoh's response to Moses",
+              "definition": "Pharaoh's defiant response to Moses' request to let the Israelites go: 'Who is the Lord, that I should obey Him and let Israel go? I do not know the Lord and I will not let Israel go.' This response sets the stage for the conflict between Pharaoh and God, and the ten plagues."
+            }
+          ]
+        }
+      ],
+      "significance": "Parsha Summary: This parsha, whose name means \"Names,\" opens by listing the names of Jacob's sons who came to Egypt. Generations pass, and a new Pharaoh arises who \"did not know Joseph.\" Fearing the Israelites' growing numbers, he enslaves them and decrees that all newborn Hebrew boys be thrown into the Nile. In the midst of this oppression, Moses is born, saved by Pharaoh's daughter, and grows up in the royal palace. He kills an Egyptian taskmaster and flees to Midian. There, God appears to a reluctant Moses at the Burning Bush, revealing His name and commanding him to return to Egypt to liberate his people. Moses's initial confrontation with Pharaoh only results in the Israelites' burdens being made even heavier.\n\nSignificance & Takeaway: This parsha pivots the Torah from the story of a single family (Genesis) to the epic of an entire nation. The central lesson is about leadership and empathy. Moses, raised as a prince, \"went out to his kinsfolk and witnessed their labors\" (Exodus 2:11). His ability to see and feel their pain is what makes him worthy of being their leader. The parsha also begins with the courageous civil disobedience of the midwives, Shiphrah and Puah, who \"feared God\" more than Pharaoh. Their actions teach a powerful, eternal lesson: morality and conscience must always take precedence over the unjust laws of any human ruler."
+    },
+    {
+      "name": "Vaera",
+      "reference": "Exodus 6:2-9:35",
+      "verses": [
+        {
+          "ref": "Exodus 6:2",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "Rashi explains that God's revelation of the name YHVH signifies His attribute of mercy and His faithfulness in fulfilling promises. God is saying that while the patriarchs knew Him as El Shaddai (God Almighty), they did not see the fulfillment of His promises. Now, with the name YHVH, Moses will see those promises fulfilled."
+            },
+            {
+              "source": "Maimonides",
+              "explanation": "Maimonides sees this as a deeper revelation of God's essence. The name YHVH represents God's necessary existence, a concept that was not fully grasped by the patriarchs. Moses, with his superior prophetic ability, was able to understand this deeper truth, which gave him the ultimate reassurance of God's power and immutability."
+            },
+            {
+              "source": "Rabbi Sacks",
+              "explanation": "Rabbi Sacks emphasizes the shift from El Shaddai to YHVH as a shift from a God of promises to a God of action. The patriarchs lived with the promise, but now, with Moses, God is entering history to act. This is a God who is not just a creator, but a redeemer. This reassurance is not just for Moses, but for all of Israel, that the time of redemption has come."
+            }
+          ],
+          "keywords": [
+            {
+              "word": "God's reassurance to Moses",
+              "definition": "After Moses' initial failure and the worsening of the Israelites' situation, God reassures Moses, revealing His name YHVH and promising to fulfill the covenant with the patriarchs. This moment is a turning point, where God's plan of redemption is reaffirmed."
+            }
+          ]
+        },
+        {
+          "ref": "Exodus 7:3",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "Rashi explains that for the first five plagues, the Torah says that Pharaoh hardened his own heart. It was only for the last five plagues that God hardened Pharaoh's heart. This shows that God gave Pharaoh a chance to repent, but he refused. The hardening of his heart was a punishment for his initial defiance."
+            },
+            {
+              "source": "Maimonides",
+              "explanation": "Maimonides explains that God's hardening of Pharaoh's heart was a withdrawal of the possibility of repentance. Because Pharaoh had sinned so grievously and of his own free will, God removed from him the ability to repent, so that he would suffer the full consequences of his actions. This is a punishment reserved for the most wicked."
+            },
+            {
+              "source": "Rabbi Sacks",
+              "explanation": "Rabbi Sacks offers a different perspective, suggesting that God hardened Pharaoh's heart to restore his free will. After so many plagues, Pharaoh would have been coerced into letting the Israelites go. By hardening his heart, God gave him the strength to make a free choice, so that his ultimate defeat would be a true demonstration of God's power."
+            }
+          ],
+          "keywords": [
+            {
+              "word": "Hardening of Pharaoh's heart",
+              "definition": "The repeated hardening of Pharaoh's heart is a central theme in the story of the plagues. It raises questions about free will and divine justice. The commentators explain that Pharaoh initially hardened his own heart, and only later did God harden his heart as a punishment, to ensure that the full measure of justice would be carried out."
+            }
+          ]
+        }
+      ],
+      "significance": "Parsha Summary: \"And I appeared.\" God reassures Moses, whose faith is shaken after his first failed attempt to free the people. God reveals Himself using the four expressions of redemption (\"I will bring you out... I will deliver you... I will redeem you... I will take you\"). Moses and Aaron then begin the divine assault on the Egyptian empire, unleashing the first seven of the Ten Plagues: Blood (Dam), Frogs (Tzefardea), Lice (Kinim), Wild Beasts (Arov), Pestilence (Dever), Boils (Shechin), and Hail (Barad). With each plague, Pharaoh's \"heart is hardened,\" and he refuses to let the people go.\n\nSignificance & Takeaway: This parsha is a systematic dismantling of the Egyptian worldview. Each plague is not just a random disaster but a direct, theological attack on a specific Egyptian deity—the god of the Nile, the frog-god, the sun-god Ra. The plagues are a lesson in divine power, showing that the gods of Egypt are powerless before the one true God. The parsha's main takeaway is about the nature of free will and stubbornness. Pharaoh's \"hardened heart\" (kaved lev) teaches that if a person repeatedly refuses to acknowledge the truth, they can reach a point where they lose the very ability to choose good. Stubbornness becomes its own prison."
+    },
+    {
+      "name": "Bo",
+      "reference": "Exodus 10:1-13:16",
+      "verses": [
+        {
+          "ref": "Exodus 10:1",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "Rashi notes that the plague of locusts was a particularly severe punishment because it destroyed the very source of life and sustenance for the Egyptians. It was a clear demonstration of God's power over nature and His ability to bring a mighty empire to its knees."
+            },
+            {
+              "source": "Maimonides",
+              "explanation": "Maimonides would have likely viewed the plague of locusts as a severe, but natural, event. He believed that God works through the laws of nature, and that miracles are not a violation of those laws, but rather an unusual or unexpected manifestation of them. The plague of locusts was a demonstration of God's power and providence within the natural order."
+            },
+            {
+              "source": "Rabbi Sacks",
+              "explanation": "Rabbi Sacks sees the plague of locusts as a turning point in the plagues. It was the first plague that destroyed the food supply, and it was a clear sign that Pharaoh's stubbornness was leading his people to ruin. Pharaoh's own advisors begged him to let the Israelites go, but he refused. This shows how leaders can become so blinded by their own power that they are unable to see the destruction they are causing."
+            }
+          ],
+          "keywords": [
+            {
+              "word": "Plague of Locusts",
+              "definition": "The eighth plague that God brought upon Egypt. A massive swarm of locusts covered the land, devouring all the crops and vegetation that had been left after the plague of hail. This plague was a devastating blow to Egypt's food supply and economy."
+            }
+          ]
+        },
+        {
+          "ref": "Exodus 12:3",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "Rashi explains that the word 'Pesach' means to 'pass over' or 'skip.' God 'skipped' over the Israelite homes when He smote the Egyptian firstborn. The Passover sacrifice is a commemoration of this divine protection."
+            },
+            {
+              "source": "Maimonides",
+              "explanation": "Maimonides sees the Passover sacrifice as a powerful educational tool. It was a way to transition the Israelites away from idolatry and towards the worship of the one true God. The sacrifice was a way of demonstrating faith and commitment to God, and it was a central part of the process of becoming a free people."
+            },
+            {
+              "source": "Rabbi Sacks",
+              "explanation": "Rabbi Sacks sees the Passover sacrifice as a symbol of freedom. The lamb was a god in Egypt, and by sacrificing it, the Israelites were making a radical statement that they were no longer slaves to Egyptian culture or religion. They were choosing to be free, and to serve God alone."
+            }
+          ],
+          "keywords": [
+            {
+              "word": "The Passover Sacrifice",
+              "definition": "The central ritual of the Passover holiday, where a lamb is sacrificed and its blood is placed on the doorposts of the Israelite homes. This act of faith was a sign for God to 'pass over' the Israelite homes during the plague of the firstborn. The lamb is then eaten in a special meal called the Seder."
+            }
+          ]
+        },
+        {
+          "ref": "Exodus 13:2",
+          "commentary": [
+            {
+              "source": "Rashi",
+              "explanation": "Rashi explains that the consecration of the firstborn is a direct result of the plague of the firstborn. Because God spared the Israelite firstborn, they now belong to Him. This is a sign of God's ownership and a reminder of His salvation."
+            },
+            {
+              "source": "Maimonides",
+              "explanation": "Maimonides sees the consecration of the firstborn as a way of instilling gratitude and humility. By redeeming the firstborn, the Israelites are acknowledging that their lives are a gift from God. It is a way of remembering the Exodus and the special relationship between God and Israel."
+            },
+            {
+              "source": "Rabbi Sacks",
+              "explanation": "Rabbi Sacks emphasizes that the consecration of the firstborn is a rejection of the pagan idea that the firstborn has special powers or privileges. In Judaism, the firstborn is not inherently superior, but is dedicated to God. This is a radical statement about the nature of holiness and the equality of all people before God."
+            }
+          ],
+          "keywords": [
+            {
+              "word": "Consecration of the Firstborn",
+              "definition": "The commandment to sanctify the firstborn male of every womb, both human and animal. This is a reminder of the tenth plague, when God spared the firstborn of Israel. The firstborn are to be redeemed through a special ceremony called Pidyon HaBen."
+            }
+          ]
+        }
+      ],
+      "significance": "Parsha Summary: \"Go in.\" God tells Moses to go in to Pharaoh, as his heart has been hardened to show God's final signs. This parsha delivers the last three plagues: a supernatural plague of Locusts (Arbeh), a palpable Darkness (Choshech) that \"people could not see one another\" while the Israelites \"had light in their dwellings,\" and the devastating climactic plague, the Death of the Firstborn (Makat Bechorot). Before this final plague, God commands the Israelites to perform the first Passover (Pesach) sacrifice, painting the blood on their doorposts as a sign of faith. This plague finally breaks Pharaoh, who begs the Israelites to leave.\n\nSignificance & Takeaway: This parsha marks the physical act of liberation. The key lesson is one of collective identity and active faith. The Passover sacrifice is the first ritual that the Israelites must perform as a nation. They are no longer passive victims; they must actively choose to be part of the covenant by participating in the ritual. The contrast between darkness and light is a beautiful lesson: even in a world consumed by an \"oppressive darkness,\" it is possible for a community to create and maintain its own spiritual light."
+    },
+    {
+      "name": "Beshalach",
+      "reference": "Exodus 13:17-17:16",
+      "verses": [],
+      "significance": "Parsha Summary: \"When he sent.\" Pharaoh allows the people to leave, but God leads them on an indirect path. Pharaoh pursues them, trapping them at the Red Sea (Yam Suf). As the people cry out in terror, Moses lifts his staff and God splits the sea, allowing the Israelites to cross on dry land. The Egyptian army is drowned when they follow. The people, led by Moses and Miriam, break out into the \"Song of the Sea\" (Shirat HaYam). This spiritual high is short-lived; the people immediately begin to grumble about the lack of water and food. God provides them with Manna from heaven and fresh water from a rock. The parsha ends with the unprovoked, symbolic attack by the tribe of Amalek.\n\nSignificance & Takeaway: This parsha teaches that physical redemption is only the first step. The Israelites are free from Egypt, but they have not yet freed \"Egypt\" from themselves—they still have the mentality of slaves, complaining at the first sign of trouble. The central lesson is that faith is not a one-time event; it is a daily struggle. We must constantly choose belief over despair, gratitude over complaint. The Manna, which came \"a day's portion each day,\" teaches us to trust God for our daily bread and not be consumed by anxiety for the future."
+    },
+    {
+      "name": "Yitro",
+      "reference": "Exodus 18:1-20:23",
+      "verses": [],
+      "significance": "Parsha Summary: Moses's father-in-law, Jethro (Yitro), hears of the miracles and rejoins Moses in the desert. He sees Moses judging the people from morning till night and gives him crucial advice: to delegate authority by appointing a hierarchy of judges. Moses accepts this wisdom. The Israelites then arrive at Mount Sinai, where they prepare for three days. God descends upon the mountain in \"thunder and lightning, and a dense cloud,\" and in a moment of awesome national revelation, the entire people hear God speak the Ten Commandments (Aseret HaDibrot).\n\nSignificance & Takeaway: This is the spiritual climax of the Torah. If the Exodus was liberation from slavery, Sinai is liberation to a purpose. The people are transformed from a tribe of runaway slaves into a holy nation bound by a covenant. The parsha offers two profound lessons. First, from Jethro, an \"outsider,\" we learn that wisdom can come from anyone and that great leadership is not about doing everything yourself, but about empowering others. Second, the revelation at Sinai, witnessed by every man, woman, and child, establishes that Jewish faith is not based on a private miracle, but on a shared, public experience."
+    },
+    {
+      "name": "Mishpatim",
+      "reference": "Exodus 21:1-24:18",
+      "verses": [],
+      "significance": "Parsha Summary: \"Ordinances.\" Immediately following the spiritual revelation of the Ten Commandments, this parsha gives a dense list of mishpatim—social and civil laws. These laws govern the details of everyday life: laws for servants, personal injury (\"an eye for an eye\"), property damage, theft, and interest-free loans. Most importantly, it gives repeated, specific commands to protect the most vulnerable members of society: the widow, the orphan, and the stranger (ger). The parsha concludes with the people formally accepting the covenant, declaring, Na'aseh v'Nishma (\"All that God has spoken, we will do and we will hear\").\n\nSignificance & Takeaway: This parsha is the essential grounding of the Torah. It teaches that spirituality is not an abstract concept; it is expressed in how we build a just and compassionate society. The central lesson is that a holy nation is defined by its social justice. The repeated command to love the stranger—\"for you know the feelings of the stranger, having yourselves been strangers in the land of Egypt\" (Exodus 23:9)—is the heart of the mishpatim. It commands us to transform our national memory of suffering not into a desire for power, but into a radical empathy for all who are on the outside."
+    },
+    {
+      "name": "Terumah",
+      "reference": "Exodus 25:1-27:19",
+      "verses": [],
+      "significance": "Parsha Summary: \"An offering.\" After the legal code of Mishpatim, God asks Moses to collect a voluntary \"offering\" from the people to build a Mishkan (a portable Tabernacle). The parsha provides the exact, intricate blueprints for this sanctuary. It details the construction of the Ark of the Covenant (Aron Habrit) to hold the tablets, the golden Table (Shulchan) for the showbread, and the seven-branched golden Menorah. God's purpose for this building is stated clearly: \"And they shall make Me a sanctuary, and I will dwell among them\" (v'shachanti b'tocham).\n\nSignificance & Takeaway: The Mishkan is the solution to the problem of how to maintain a connection with God after the peak experience of Sinai. The beautiful lesson is found in God's specific wording. God asks for a gift from \"every person whose heart is so moved,\" teaching that holiness can only be built from generosity, not coercion. Most profoundly, God does not say \"I will dwell in it\" (the building) but \"I will dwell in them\" (the people). This teaches that the entire purpose of building the physical sanctuary was to create a shared project that would, in turn, build a spiritual sanctuary inside the heart of each person and the community."
+    },
+    {
+      "name": "Tetzaveh",
+      "reference": "Exodus 27:20-30:10",
+      "verses": [],
+      "significance": "Parsha Summary: \"You shall command.\" This parsha focuses on the Kohanim (priests) who will serve in the Mishkan. It begins with the command to bring pure olive oil for the Ner Tamid, the \"eternal light\" of the Menorah. It then describes in detail the sacred, symbolic garments for Aaron (the High Priest) and his sons, including the Choshen (breastplate) with its 12 stones representing the tribes, and the golden frontlet (Tzitz) inscribed with \"Holy to God.\" The parsha concludes with instructions for the golden incense altar, which stood inside the holy place.\n\nSignificance & Takeaway: This parsha teaches about the awesome responsibility of representing the community before God. The High Priest does not act as an individual; he is a living symbol of the entire nation. He carries the names of the 12 tribes on his shoulders (on the Ephod straps) and over his heart (on the Choshen). This is a powerful, eternal lesson for any leader: true leadership means literally carrying the burden of your people on your shoulders and holding their well-being and concerns in your heart."
+    },
+    {
+      "name": "Ki Tisa",
+      "reference": "Exodus 30:11-34:35",
+      "verses": [],
+      "significance": "Parsha Summary: \"When you count.\" This parsha contains the greatest crisis in the wilderness. It begins with the laws of the census (a half-shekel donation), the anointing oil, and the incense. While Moses is on Mount Sinai for 40 days, the people grow fearful and force Aaron to build a Golden Calf (Egel HaZahav). God is enraged and threatens to destroy the nation, but Moses intercedes, pleading for mercy. Moses descends with the first set of tablets, sees the people dancing around the idol, and in a moment of righteous fury, shatters them. After punishing the instigators, Moses re-ascends the mountain to beg for forgiveness, and God reveals His Thirteen Attributes of Mercy. Moses returns with a second, replacement set of tablets.\n\nSignificance & Takeaway: The core theme is the fragility of faith and the power of forgiveness. The shattering of the first tablets represents a broken covenant. The parsha's lesson, however, is that no failure is final. The fact that God gives a second set of tablets is the ultimate symbol of teshuvah (repentance). It teaches that our relationship with God is not so brittle that it can be permanently destroyed by one sin. Through Moses's intercession, we learn that God's essence is not unbending justice but infinite compassion, and that a broken relationship can be rebuilt."
+    },
+    {
+      "name": "Vayakhel",
+      "reference": "Exodus 35:1-38:20",
+      "verses": [],
+      "significance": "Parsha Summary: \"And he assembled.\" After the trauma of the Golden Calf, Moses assembles the people. His first act is to reiterate the commandment of Shabbat, teaching that even the urgent work of building the Mishkan cannot override it. He then calls for the voluntary donations for the Mishkan (as in Terumah). This time, the people respond with overwhelming generosity, bringing \"more than enough.\" The rest of the parsha describes the actual construction of the Mishkan and its vessels by the inspired artisans Bezalel and Oholiab, carefully following the blueprints from earlier parshas.\n\nSignificance & Takeaway: This parsha is the great \"repair\" (tikkun) for the sin of the Golden Calf. The sin began when the people \"assembled\" (vayikahel) against Aaron to build an idol. Now, Moses reclaims that same act of \"assembling\" for a holy purpose. The main lesson is that the antidote to sin is not just sorrow, but positive action. The people channel their misguided energy and excess wealth (the same gold from the calf) into a unified, sacred project. By repeating the law of Shabbat first, Moses teaches a profound lesson: how we build is as important as what we build. Holy ends cannot be achieved through unholy means."
+    },
+    {
+      "name": "Pekudei",
+      "reference": "Exodus 38:21-40:38",
+      "verses": [],
+      "significance": "Parsha Summary: \"The accountings of.\" This parsha is the final audit and assembly of the Mishkan. It meticulously lists and \"accounts for\" all the precious materials donated by the people, showing that everything was used for its intended sacred purpose. The priestly garments are completed, and all the components are brought to Moses. On the first day of the first month, Moses follows God's instructions and erects the Tabernacle, anoints its vessels, and consecrates Aaron and his sons. As soon as the work is finished, the Divine \"Cloud of Glory\" covers the tent and the \"Presence of God filled the Tabernacle,\" signifying that God had accepted their work.\n\nSignificance & Takeaway: This is the grand finale of the Book of Exodus. The book that began with \"Names\" (Shemot) and a people in slavery, ends with \"Accountings\" (Pekudei) and the presence of God dwelling among them. The lesson is one of partnership and completion. The Israelites, who failed so spectacularly with the Golden Calf, have now successfully completed a holy task. The parsha concludes with a beautiful image: \"Moses could not enter the Tent... because the Presence of God filled the Tabernacle.\" Moses, the great leader, has now fulfilled his purpose. He has built the structure that allows the people to have a direct relationship with God, and he now steps aside so that God's glory can be the center."
+    },
+    {
+      "name": "Vayikra",
+      "reference": "Leviticus 1:1-5:26",
+      "verses": [],
+      "significance": "Vayikra opens the book of holiness with the language of korban—drawing close. Sacrifices translate inner states into tangible offerings, teaching that atonement, gratitude, and devotion engage body and soul. The takeaway: Spiritual life requires discipline and intentionality; we approach God through structured service that refines heart and action."
+    },
+    {
+      "name": "Tzav",
+      "reference": "Leviticus 6:1-8:36",
+      "verses": [],
+      "significance": "Tzav emphasizes continuity in worship: the perpetual fire, daily offerings, and the induction of priests. Zeal is not frenzy but steady commitment. The takeaway: Sacred routines, tended with care, keep passion alive; holiness is sustained by faithful repetition."
+    },
+    {
+      "name": "Shmini",
+      "reference": "Leviticus 9:1-11:47",
+      "verses": [],
+      "significance": "Shmini juxtaposes celebration with caution. The Mishkan is inaugurated with Divine fire, yet Nadav and Avihu’s unauthorized offering costs their lives. Dietary laws then teach mindfulness in what we consume. The takeaway: Access to the holy demands reverence; joy must be partnered with obedience and self-restraint."
+    },
+    {
+      "name": "Tazria",
+      "reference": "Leviticus 12:1-13:59",
+      "verses": [],
+      "significance": "Tazria explores birth, purity, and speech. The rituals surrounding new life honor partnership with God, while the affliction of tzara’at (often linked to harmful speech) reminds us that words can wound communities. The takeaway: Bodies and language are sacred trusts; bringing life into the world and safeguarding dignity require holiness."
+    },
+    {
+      "name": "Metzora",
+      "reference": "Leviticus 14:1-15:33",
+      "verses": [],
+      "significance": "Metzora continues the journey from isolation back to belonging. The metzora is examined, purified, and reintroduced, demonstrating communal responsibility for both accountability and reintegration. The takeaway: Healing is social as well as spiritual; true holiness restores relationships rather than merely punishing wrongdoing."
+    },
+    {
+      "name": "Achrei Mot",
+      "reference": "Leviticus 16:1-18:30",
+      "verses": [],
+      "significance": "Achrei Mot centers on the Day of Atonement and moral boundaries. The High Priest enters the Holy of Holies once a year, embodying humility before God. Laws against immorality safeguard the covenant. The takeaway: Atonement requires honesty, ritual focus, and the courage to reject societal corruption."
+    },
+    {
+      "name": "Kedoshim",
+      "reference": "Leviticus 19:1-20:27",
+      "verses": [],
+      "significance": "Kedoshim proclaims ‘You shall be holy’ and then details what holiness looks like: honoring parents, honest weights, loving the stranger, and rebuking without hatred. Sacredness permeates business, agriculture, and relationships. The takeaway: To be holy is to make daily life a sanctuary of justice, compassion, and respect."
+    },
+    {
+      "name": "Emor",
+      "reference": "Leviticus 21:1-24:23",
+      "verses": [],
+      "significance": "Emor elevates the role of the priest and the sanctity of time. It details festival cycles, reminding us that the calendar itself tells the story of creation and redemption. The takeaway: Communities thrive when leaders embody holiness and when time is punctuated with moments that reconnect us to God and one another."
+    },
+    {
+      "name": "Behar",
+      "reference": "Leviticus 25:1-26:2",
+      "verses": [],
+      "significance": "Behar teaches economic compassion through Shemittah and Yovel. Releasing land and remitting debts declare that the earth belongs to God and that people must never be trapped forever in poverty. The takeaway: Freedom is unfinished unless society guards rest, dignity, and opportunity for all its members."
+    },
+    {
+      "name": "Bechukotai",
+      "reference": "Leviticus 26:3-27:34",
+      "verses": [],
+      "significance": "Bechukotai presents blessings for obedience and consequences for betrayal, not as threats but as the moral fabric of covenantal life. Even in exile, God promises not to reject us. The takeaway: History is a dialogue between divine fidelity and human choice; repentance can always reopen the covenant."
+    },
+    {
+      "name": "Bamidbar",
+      "reference": "Numbers 1:1-4:20",
+      "verses": [],
+      "significance": "Bamidbar begins the wilderness journey with a census that affirms every person counts. The camp is organized around the Mishkan, teaching that structure and purpose are essential in moments of transition. The takeaway: Identity is sustained when community, mission, and the presence of God remain at the center even in uncharted terrain."
+    },
+    {
+      "name": "Nasso",
+      "reference": "Numbers 4:21-7:89",
+      "verses": [],
+      "significance": "Nasso expands communal holiness: guarding the camp’s purity, dealing with jealousy, embracing voluntary devotion (Nazir), and invoking Birkat Kohanim. The dedication of the tribal princes underscores shared responsibility. The takeaway: Diverse paths—discipline, blessing, generosity—all contribute to a healthy sacred society."
+    },
+    {
+      "name": "Beha'alotcha",
+      "reference": "Numbers 8:1-12:16",
+      "verses": [],
+      "significance": "Beha'alotcha moves from ritual to journey. The Menorah is lit, the Levites are appointed, and the cloud lifts to signal travel. Complaints, cravings, and the leadership crisis with Miriam and Aaron reveal the growing pains of freedom. The takeaway: Growth involves setbacks; leaders must balance humility with resolve, and the people must learn to channel longing into faith."
+    },
+    {
+      "name": "Sh'lach",
+      "reference": "Numbers 13:1-15:41",
+      "verses": [],
+      "significance": "Sh'lach recounts the spies’ fearful report and the nation’s collapse of courage. Wilderness wanderings become the consequence, yet tzitzit is introduced to keep eyes and hearts aligned with God. The takeaway: Vision determines destiny; when we see ourselves as grasshoppers, we forfeit the promised future. Faith demands trust in the possibilities God reveals."
+    },
+    {
+      "name": "Korach",
+      "reference": "Numbers 16:1-18:32",
+      "verses": [],
+      "significance": "Korach exposes the danger of ego cloaked in piety. His rebellion against Moses and Aaron challenges the very idea of holy leadership. The earth’s response and the blossoming staff affirm that authority in Torah is service, not self-aggrandizement. The takeaway: Genuine holiness lifts others; jealousy masquerading as righteousness tears communities apart."
+    },
+    {
+      "name": "Chukat",
+      "reference": "Numbers 19:1-22:1",
+      "verses": [],
+      "significance": "Chukat confronts mysteries: the red heifer ritual, Miriam’s death, Moses striking the rock, and battles en route to the land. Even heroes have limits, and grief can cloud judgment. The takeaway: Not every command is explained, yet obedience shapes us; leaders must steward their emotions even amid loss."
+    },
+    {
+      "name": "Balak",
+      "reference": "Numbers 22:2-25:9",
+      "verses": [],
+      "significance": "Balak shifts perspective to a foreign prophet hired to curse Israel. Balaam’s blessings affirm that Israel’s strength lies in moral vision and intimate tents. The episode with Baal Peor warns how seduction undermines destiny. The takeaway: Our greatest threats are not external curses but internal compromise; our calling is to turn curses into blessings through fidelity."
+    },
+    {
+      "name": "Pinchas",
+      "reference": "Numbers 25:10-30:1",
+      "verses": [],
+      "significance": "Pinchas follows zeal with covenant. The census, daughters of Zelophehad, and Moses appointing Joshua all signal generational change. Festivals and offerings are reviewed, anchoring time. The takeaway: Passion must transition into covenantal structure; every generation must claim its portion while respecting the gifts of women, leaders, and sacred rhythms."
+    },
+    {
+      "name": "Matot",
+      "reference": "Numbers 30:2-32:42",
+      "verses": [],
+      "significance": "Matot addresses the power of speech (vows), the war against Midian, and the request of the Transjordan tribes. Moses negotiates conditions to keep the community united. The takeaway: Words bind reality, and personal prosperity must be balanced with communal responsibility and presence in the land."
+    },
+    {
+      "name": "Masei",
+      "reference": "Numbers 33:1-36:13",
+      "verses": [],
+      "significance": "Masei maps Israel’s journeys and delineates the borders of the land, appointing cities of refuge to protect life and due process. The daughters of Zelophehad model loyalty to both family and heritage. The takeaway: Memory of the road traveled and clarity about the destination sustain national purpose; justice must live in the geography we inhabit."
+    },
+    {
+      "name": "Devarim",
+      "reference": "Deuteronomy 1:1-3:22",
+      "verses": [],
+      "significance": "Devarim begins Moses’ valedictory addresses, transforming wilderness experiences into lessons. He revisits leaders, judges, and battles to show how God guided them despite their stumbles. The takeaway: Reviewing history through the lens of gratitude and responsibility prepares us to enter the future with wisdom."
+    },
+    {
+      "name": "Vaetchanan",
+      "reference": "Deuteronomy 3:23-7:11",
+      "verses": [],
+      "significance": "Vaetchanan contains the Shema and Ten Commandments recast for a new generation. Moses pleads to enter the land, modeling persistent prayer even when the answer is no. The takeaway: Love of God, transmitted diligently to children, is Israel’s lifeline; covenant flourishes through memory, instruction, and unwavering devotion."
+    },
+    {
+      "name": "Eikev",
+      "reference": "Deuteronomy 7:12-11:25",
+      "verses": [],
+      "significance": "Eikev highlights gratitude for manna, warning against arrogance in prosperity. Circumcising the heart means softening stubbornness. The takeaway: Blessing brings responsibility; we serve God through humility, care for the vulnerable, and mindful blessing over every meal."
+    },
+    {
+      "name": "Re'eh",
+      "reference": "Deuteronomy 11:26-16:17",
+      "verses": [],
+      "significance": "Re'eh sets blessing and curse before us, urging discernment between true and false worship. It outlines centralized worship, tzedakah, and festivals that protect society’s moral core. The takeaway: Choice defines covenant; generosity and fidelity to God’s place weld community into a source of blessing."
+    },
+    {
+      "name": "Shoftim",
+      "reference": "Deuteronomy 16:18-21:9",
+      "verses": [],
+      "significance": "Shoftim designs a just society: impartial judges, ethical kings, prophets, and safeguards for war. The Torah insists that power be checked and guided by accountability. The takeaway: Justice is the foundation of holiness; leadership must be humble, law-bound, and aligned with the prophetic voice."
+    },
+    {
+      "name": "Ki Teitzei",
+      "reference": "Deuteronomy 21:10-25:19",
+      "verses": [],
+      "significance": "Ki Teitzei covers dozens of mitzvot spanning war, family, business, and compassion, weaving holiness into mundane details. Returning lost objects, paying workers on time, and protecting dignity in vulnerable moments all feature. The takeaway: Torah enters everyday life; the measure of righteousness is how we treat those on society’s margins."
+    },
+    {
+      "name": "Ki Tavo",
+      "reference": "Deuteronomy 26:1-29:8",
+      "verses": [],
+      "significance": "Ki Tavo introduces bikurim (first fruits) and the declaration over tithes, framing abundance as testimony to God’s covenant. The dramatic blessings and curses on Mount Gerizim and Ebal renew accountability. The takeaway: Gratitude and transparency anchor our relationship with God; success must prompt service, not self-congratulation."
+    },
+    {
+      "name": "Nitzavim",
+      "reference": "Deuteronomy 29:9-30:20",
+      "verses": [],
+      "significance": "Nitzavim gathers every strata of Israel to reaffirm the covenant, proclaiming that Torah is ‘very near’ to us. It promises that even after exile, teshuvah can restore us. The takeaway: We stand together—past, present, and future—and we are empowered to choose life through returning to God."
+    },
+    {
+      "name": "Vayeilech",
+      "reference": "Deuteronomy 31:1-31:30",
+      "verses": [],
+      "significance": "Vayeilech captures transition. Moses walks to every tribe, writes the Torah, and entrusts leadership to Joshua while instituting Hakhel, the septennial public reading. The takeaway: Continuity depends on transmitting Torah, empowering new leaders, and creating communal moments that rekindle awe."
+    },
+    {
+      "name": "Ha'Azinu",
+      "reference": "Deuteronomy 32:1-32:52",
+      "verses": [],
+      "significance": "Ha'Azinu is Moses’ lyrical testimony, describing Israel’s past kindness, future rebellion, and ultimate redemption. Heaven and earth stand as witnesses. The takeaway: Song engraves truth on the soul; even when we falter, God’s fidelity invites us back through remembering our story."
+    },
+    {
+      "name": "V'Zot HaBerachah",
+      "reference": "Deuteronomy 33:1-34:12",
+      "verses": [],
+      "significance": "V'Zot HaBerachah closes the Torah with blessings tailored to each tribe, honoring their unique gifts. Moses dies with eyes undimmed, and Joshua succeeds him. The takeaway: Leadership culminates in empowering others; though prophets may pass, the Torah they transmit remains eternal and ready for us to continue the journey."
     }
   ]
 }

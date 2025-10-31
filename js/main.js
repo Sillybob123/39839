@@ -140,7 +140,18 @@ function setupEventListeners() {
             }
         });
     }
-    
+
+    const significanceButton = document.getElementById('show-significance');
+    if (significanceButton) {
+        significanceButton.addEventListener('click', openParshaSignificanceModal);
+    }
+
+    // Significance Button (Mobile)
+    const significanceButtonMobile = document.getElementById('show-significance-mobile');
+    if (significanceButtonMobile) {
+        significanceButtonMobile.addEventListener('click', openParshaSignificanceModal);
+    }
+
     // General Parsha Chat Button (Desktop)
     const parshaChatButton = document.getElementById('general-parsha-chat');
     if (parshaChatButton) {
@@ -601,7 +612,7 @@ async function loadParsha(parshaRef) {
 
 function parseParshaReference(parshaRef) {
     const match = parshaRef.match(/^(\w+)\s+(\d+):(\d+)(?:-(\d+):(\d+))?$/);
-    
+
     if (!match) {
         const simpleMatch = parshaRef.match(/^(\w+)\s+(\d+):(\d+)$/);
         if (simpleMatch) {
@@ -625,11 +636,64 @@ function parseParshaReference(parshaRef) {
     };
 }
 
+function openParshaSignificanceModal() {
+    const significance = state.currentParshaSignificance;
+    if (!significance) return;
+
+    const parshaName = state.currentParshaSignificanceName || state.allParshas[state.currentParshaIndex]?.name || 'Torah Portion';
+    const infoContent = document.getElementById('info-content');
+    infoContent.innerHTML = `
+        <div class="text-xl font-bold mb-3 text-blue-900">${escapeHtml(parshaName)} — Significance</div>
+        <div class="text-gray-800 leading-relaxed">${formatText(significance)}</div>
+    `;
+    showInfoPanel();
+}
+
 function renderParsha(data, parshaRef) {
     const textContainer = document.getElementById('parsha-text');
     
     updateParshaHeader(data.book || 'Torah Portion', parshaRef);
     textContainer.innerHTML = '';
+
+    let significanceText = null;
+    let significanceParshaName = null;
+    try {
+        const currentParsha = state.allParshas.find(p => p.reference === parshaRef);
+        if (currentParsha && state.commentaryData && Array.isArray(state.commentaryData.parshas)) {
+            const parshaEntry = state.commentaryData.parshas.find(p => p.name === currentParsha.name);
+            if (parshaEntry && parshaEntry.significance) {
+                significanceText = parshaEntry.significance;
+                significanceParshaName = currentParsha.name;
+                // Significance will only display in modal when button is clicked
+            }
+        }
+    } catch (e) {
+        console.warn('Unable to render significance for parsha:', e);
+    }
+
+    setState({
+        currentParshaSignificance: significanceText,
+        currentParshaSignificanceName: significanceParshaName
+    });
+
+    // Update both desktop and mobile significance buttons
+    const significanceButton = document.getElementById('show-significance');
+    if (significanceButton) {
+        const enabled = Boolean(significanceText);
+        significanceButton.disabled = !enabled;
+        significanceButton.classList.toggle('opacity-40', !enabled);
+        significanceButton.classList.toggle('cursor-not-allowed', !enabled);
+        significanceButton.classList.toggle('pointer-events-none', !enabled);
+    }
+
+    const significanceButtonMobile = document.getElementById('show-significance-mobile');
+    if (significanceButtonMobile) {
+        const enabled = Boolean(significanceText);
+        significanceButtonMobile.disabled = !enabled;
+        significanceButtonMobile.classList.toggle('opacity-40', !enabled);
+        significanceButtonMobile.classList.toggle('cursor-not-allowed', !enabled);
+        significanceButtonMobile.classList.toggle('pointer-events-none', !enabled);
+    }
     
     const englishText = Array.isArray(data.text) ? data.text : [data.text];
     const hebrewText = Array.isArray(data.he) ? data.he : [data.he];
@@ -999,10 +1063,21 @@ function escapeHtml(text) {
 
 function formatText(text) {
     if (!text) return '';
-    
+
     let escaped = escapeHtml(text);
+
+    // Make specific section headers bold
+    escaped = escaped.replace(/Parsha Summary:/g, '<strong>Parsha Summary:</strong>');
+    escaped = escaped.replace(/Significance &amp; Takeaway:/g, '<strong>Significance &amp; Takeaway:</strong>');
+
+    // Handle both ** and * for bold (markdown style)
+    escaped = escaped.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     escaped = escaped.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
-    
+
+    // Handle line breaks
+    escaped = escaped.replace(/\n\n/g, '</p><p class="mt-4">');
+    escaped = '<p>' + escaped + '</p>';
+
     return escaped;
 }
 
