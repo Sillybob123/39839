@@ -10,7 +10,7 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
     <!-- Improved Header with Better Layout -->
-    <header class="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white shadow-2xl border-b-4 border-blue-600">
+    <header class="relative z-30 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white shadow-2xl border-b-4 border-blue-600">
         <div class="container mx-auto px-6 py-8">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                 <!-- Logo/Title Section -->
@@ -25,22 +25,22 @@
                 </div>
                 
                 <!-- Quick Actions -->
-                <div class="flex flex-wrap sm:flex-nowrap gap-3 flex-shrink-0">
-                    <button id="go-to-weekly" class="px-5 py-3 bg-white text-blue-900 rounded-lg font-semibold shadow-lg hover:bg-blue-50 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap">
+                <div id="header-actions" class="flex flex-wrap gap-3 flex-shrink-0">
+                    <button id="go-to-weekly" class="px-5 py-3 bg-white text-blue-900 rounded-lg font-semibold shadow-lg hover:bg-blue-50 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap flex-1 sm:flex-initial justify-center">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                         <span class="hidden sm:inline">This Week's Parsha</span>
                         <span class="sm:hidden">This Week</span>
                     </button>
-                    <a href="prayers.html" class="px-5 py-3 bg-blue-700 text-white rounded-lg font-semibold shadow-lg hover:bg-blue-600 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap">
+                    <a href="prayers.html" class="px-5 py-3 bg-blue-700 text-white rounded-lg font-semibold shadow-lg hover:bg-blue-600 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap flex-1 sm:flex-initial justify-center">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                         </svg>
                         <span class="hidden sm:inline">Important Prayers/Readings</span>
                         <span class="sm:hidden">Prayers</span>
                     </a>
-                    <a href="about.html" class="px-5 py-3 bg-blue-700 text-white rounded-lg font-semibold shadow-lg hover:bg-blue-600 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap">
+                    <a href="about.html" class="px-5 py-3 bg-blue-700 text-white rounded-lg font-semibold shadow-lg hover:bg-blue-600 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap flex-1 sm:flex-initial justify-center">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
@@ -64,9 +64,10 @@
                         <option value="">Loading portions...</option>
                     </select>
                 </div>
-                
-                <!-- Navigation Buttons -->
+
+                <!-- Navigation Buttons and Text Size Control -->
                 <div class="flex items-center gap-2">
+                    <div id="header-actions" class="flex items-center gap-2"></div>
                     <button id="general-parsha-chat" class="px-4 py-2.5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all font-medium shadow-md hover:shadow-lg flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
@@ -90,6 +91,9 @@
             
             <!-- Mobile Layout -->
             <div class="md:hidden space-y-3">
+                <!-- Text Size Control (Mobile) -->
+                <div id="header-actions-mobile" class="flex justify-end"></div>
+
                 <!-- Parsha Selector -->
                 <div class="flex flex-col gap-2">
                     <label for="parsha-selector-mobile" class="font-semibold text-gray-700 text-sm">Torah Portion:</label>
@@ -227,5 +231,6 @@
     </footer>
 
     <script type="module" src="js/main.js"></script>
+    <script src="text-size-control.js"></script>
 </body>
 </html>
