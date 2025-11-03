@@ -20,21 +20,33 @@ import {
     displayComments,
     updateCommentInputState,
     showCommentStatus,
-    saveUsername,
     getSavedUsername,
-    updateUsernameDisplay
+    updateUsernameDisplay,
+    setCurrentUserEmail
 } from './ui.js';
 
 import {
     initAuth,
     getCurrentUserId,
+    getCurrentUserEmail,
+    signInWithEmail,
+    createAccountWithEmail,
+    signOutUser,
+    hideLoginModal,
+    sendPasswordReset,
     submitComment,
     listenForComments,
     stopListeningForComments,
     db,
     submitReaction,
     getUserReactions,
-    getReactionCountsForBook
+    getReactionCountsForBook,
+    getBookmarkCountsForBook,
+    getBookmarkCountsForVerses,
+    addBookmark,
+    removeBookmark,
+    isVerseBookmarked,
+    getUserBookmarks
 } from './firebase.js';
 
 import { collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
@@ -43,15 +55,145 @@ let verseCommentCounts = {};
 let verseReactionCounts = {};
 let userReactions = {};
 let isAuthReady = false;
+let bookmarkedVerses = new Set();
+let verseBookmarkCounts = {};
+const verseDisplayTexts = {};
+
+function escapeForAttributeSelector(value) {
+    if (typeof value !== 'string') {
+        return '';
+    }
+    if (window.CSS && typeof window.CSS.escape === 'function') {
+        return window.CSS.escape(value);
+    }
+    return value.replace(/["\\]/g, '\\$&');
+}
+
+function findVerseElement(verseRef) {
+    if (!verseRef) {
+        return null;
+    }
+    const escaped = escapeForAttributeSelector(verseRef);
+    return document.querySelector(`[data-ref="${escaped}"]`);
+}
+
+function getVerseTextSnippet(verseRef) {
+    if (!verseRef) {
+        return '';
+    }
+
+    if (verseDisplayTexts[verseRef] && verseDisplayTexts[verseRef].english) {
+        return verseDisplayTexts[verseRef].english;
+    }
+
+    const verseElement = findVerseElement(verseRef);
+    if (verseElement) {
+        const englishElement = verseElement.querySelector('.english-text');
+        if (englishElement) {
+            const text = englishElement.textContent.trim();
+            verseDisplayTexts[verseRef] = { english: text };
+            return text;
+        }
+    }
+
+    return '';
+}
+
+function parseVerseReference(verseRef) {
+    if (!verseRef || typeof verseRef !== 'string') {
+        return null;
+    }
+
+    const match = verseRef.trim().match(/^([A-Za-z]+)\s+(\d+):(\d+)$/);
+    if (!match) {
+        return null;
+    }
+
+    return {
+        bookName: match[1],
+        chapter: parseInt(match[2], 10),
+        verse: parseInt(match[3], 10)
+    };
+}
+
+function isVerseWithinParshaRange(verseDetails, parshaRange) {
+    if (!verseDetails || !parshaRange) {
+        return false;
+    }
+
+    if (verseDetails.bookName !== parshaRange.bookName) {
+        return false;
+    }
+
+    const startChapter = parshaRange.startChapter;
+    const startVerse = parshaRange.startVerse;
+    const endChapter = parshaRange.endChapter ?? parshaRange.startChapter;
+    const endVerse = parshaRange.endVerse ?? parshaRange.startVerse;
+
+    if (verseDetails.chapter < startChapter || verseDetails.chapter > endChapter) {
+        return false;
+    }
+
+    if (verseDetails.chapter === startChapter && verseDetails.verse < startVerse) {
+        return false;
+    }
+
+    if (verseDetails.chapter === endChapter && verseDetails.verse > endVerse) {
+        return false;
+    }
+
+    return true;
+}
+
+function findParshaForVerse(verseRef) {
+    const verseDetails = parseVerseReference(verseRef);
+    if (!verseDetails || !Array.isArray(state.allParshas)) {
+        return null;
+    }
+
+    for (const parsha of state.allParshas) {
+        const range = parseParshaReference(parsha.reference);
+        if (isVerseWithinParshaRange(verseDetails, range)) {
+            return parsha;
+        }
+    }
+
+    return state.allParshas.find((parsha) => parsha.reference.startsWith(`${verseDetails.bookName} `)) || null;
+}
+
+function highlightVerseAndScroll(verseRef, attempt = 0) {
+    const target = findVerseElement(verseRef);
+    if (!target) {
+        if (attempt < 12) {
+            setTimeout(() => highlightVerseAndScroll(verseRef, attempt + 1), 120);
+        }
+        return;
+    }
+
+    document.querySelectorAll('.bookmark-highlight').forEach((el) => {
+        el.classList.remove('bookmark-highlight');
+    });
+
+    target.classList.add('bookmark-highlight');
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    setTimeout(() => {
+        target.classList.remove('bookmark-highlight');
+    }, 2600);
+}
 
 async function init() {
     try {
-        // CRITICAL: Wait for authentication to complete before proceeding
+        // Wait for the first authentication state result before continuing
         await new Promise((resolve) => {
-            initAuth((user) => {
+            let initialResolved = false;
+            initAuth(async (user) => {
                 isAuthReady = true;
-                updateCommentInputState(true);
-                resolve();
+                await handleAuthStateChange(user);
+                if (!initialResolved) {
+                    initialResolved = true;
+                    resolve();
+                }
             });
         });
         
@@ -97,12 +239,19 @@ async function init() {
 }
 
 function setupEventListeners() {
-    document.getElementById('parsha-selector').addEventListener('change', async (e) => {
-        const selectedRef = e.target.value;
-        const index = state.allParshas.findIndex(p => p.reference === selectedRef);
-        setState({ currentParshaIndex: index });
-        await loadParsha(selectedRef);
-        updateNavigationButtons();
+    // Add change listener to ALL parsha selector elements (desktop and mobile)
+    document.querySelectorAll('select#parsha-selector').forEach((selector) => {
+        selector.addEventListener('change', async (e) => {
+            const selectedRef = e.target.value;
+            const index = state.allParshas.findIndex(p => p.reference === selectedRef);
+            setState({ currentParshaIndex: index });
+            await loadParsha(selectedRef);
+            updateNavigationButtons();
+            // Update the selected value in ALL select elements to keep them in sync
+            document.querySelectorAll('select#parsha-selector').forEach((s) => {
+                s.value = selectedRef;
+            });
+        });
     });
     
     document.getElementById('prev-parsha').addEventListener('click', async () => {
@@ -110,18 +259,24 @@ function setupEventListeners() {
             const newIndex = state.currentParshaIndex - 1;
             setState({ currentParshaIndex: newIndex });
             const prevParsha = state.allParshas[newIndex];
-            document.getElementById('parsha-selector').value = prevParsha.reference;
+            // Update ALL select elements to keep them in sync
+            document.querySelectorAll('select#parsha-selector').forEach((s) => {
+                s.value = prevParsha.reference;
+            });
             await loadParsha(prevParsha.reference);
             updateNavigationButtons();
         }
     });
-    
+
     document.getElementById('next-parsha').addEventListener('click', async () => {
         if (state.currentParshaIndex < state.allParshas.length - 1) {
             const newIndex = state.currentParshaIndex + 1;
             setState({ currentParshaIndex: newIndex });
             const nextParsha = state.allParshas[newIndex];
-            document.getElementById('parsha-selector').value = nextParsha.reference;
+            // Update ALL select elements to keep them in sync
+            document.querySelectorAll('select#parsha-selector').forEach((s) => {
+                s.value = nextParsha.reference;
+            });
             await loadParsha(nextParsha.reference);
             updateNavigationButtons();
         }
@@ -133,7 +288,10 @@ function setupEventListeners() {
             if (state.currentParshaRef) {
                 const index = state.allParshas.findIndex(p => p.reference === state.currentParshaRef);
                 setState({ currentParshaIndex: index });
-                document.getElementById('parsha-selector').value = state.currentParshaRef;
+                // Update ALL select elements to keep them in sync
+                document.querySelectorAll('select#parsha-selector').forEach((s) => {
+                    s.value = state.currentParshaRef;
+                });
                 await loadParsha(state.currentParshaRef);
                 updateNavigationButtons();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -189,8 +347,8 @@ function setupEventListeners() {
     document.getElementById('parsha-text').addEventListener('click', handleTextClick);
     
     setupCommentPanelListeners();
-    setupUsernameListener();
-    
+    setupLoginListeners();
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             hideInfoPanel();
@@ -205,40 +363,6 @@ function setupEventListeners() {
             }
         }
     });
-}
-
-function setupUsernameListener() {
-    const saveButton = document.getElementById('save-username-btn');
-    const usernameInput = document.getElementById('username-input');
-    
-    if (saveButton && usernameInput) {
-        saveButton.addEventListener('click', () => {
-            const username = usernameInput.value.trim();
-            
-            if (!username) {
-                showCommentStatus('Please enter a name', true);
-                return;
-            }
-            
-            if (username.length > 50) {
-                showCommentStatus('Name must be 50 characters or less', true);
-                return;
-            }
-            
-            if (saveUsername(username)) {
-                usernameInput.value = '';
-                showCommentStatus('Name saved successfully!', false);
-            } else {
-                showCommentStatus('Failed to save name', true);
-            }
-        });
-        
-        usernameInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                saveButton.click();
-            }
-        });
-    }
 }
 
 function setupCommentPanelListeners() {
@@ -257,6 +381,161 @@ function setupCommentPanelListeners() {
             handleCommentSubmit();
         }
     });
+}
+
+function setupLoginListeners() {
+    const loginBtn = document.getElementById('login-btn');
+    const loginEmail = document.getElementById('login-email');
+    const loginPassword = document.getElementById('login-password');
+    const loginError = document.getElementById('login-error');
+    const myBookmarksBtn = document.getElementById('my-bookmarks-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    // Password reset modal elements
+    const forgotPasswordBtn = document.getElementById('forgot-password-btn');
+    const resetPasswordModal = document.getElementById('reset-password-modal');
+    const resetEmail = document.getElementById('reset-email');
+    const sendResetBtn = document.getElementById('send-reset-btn');
+    const backToLoginBtn = document.getElementById('back-to-login-btn');
+    const resetError = document.getElementById('reset-error');
+    const resetSuccess = document.getElementById('reset-success');
+
+    if (loginBtn) {
+        loginBtn.addEventListener('click', async () => {
+            const email = loginEmail.value.trim();
+            const password = loginPassword.value.trim();
+
+            if (!email || !password) {
+                showLoginError(loginError, 'Please enter email and password');
+                return;
+            }
+
+            try {
+                loginBtn.disabled = true;
+                loginBtn.textContent = 'Signing In...';
+
+                await signInWithEmail(email, password);
+                hideLoginModal();
+                loginEmail.value = '';
+                loginPassword.value = '';
+                loginError.classList.add('hidden');
+            } catch (error) {
+                console.error('Sign-in error:', error);
+                let errorMessage = 'Sign-in failed. Check your credentials.';
+                if (error.code === 'auth/user-not-found') {
+                    errorMessage = 'No account found with this email. Click "Create Account" to sign up.';
+                } else if (error.code === 'auth/wrong-password') {
+                    errorMessage = 'Incorrect password. Please try again.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Please enter a valid email address.';
+                }
+                showLoginError(loginError, errorMessage);
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
+            }
+        });
+
+        // Enter key to sign in
+        [loginEmail, loginPassword].forEach(field => {
+            field.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    loginBtn.click();
+                }
+            });
+        });
+    }
+
+    // Forgot Password Button
+    if (forgotPasswordBtn) {
+        forgotPasswordBtn.addEventListener('click', () => {
+            // Reset the password reset form
+            resetEmail.value = '';
+            resetError.classList.add('hidden');
+            resetSuccess.classList.add('hidden');
+            resetPasswordModal.classList.remove('hidden');
+        });
+    }
+
+    // Send Reset Email Button
+    if (sendResetBtn) {
+        sendResetBtn.addEventListener('click', async () => {
+            const email = resetEmail.value.trim();
+
+            if (!email) {
+                resetError.textContent = 'Please enter your email address';
+                resetError.classList.remove('hidden');
+                resetSuccess.classList.add('hidden');
+                return;
+            }
+
+            try {
+                sendResetBtn.disabled = true;
+                sendResetBtn.textContent = 'Sending...';
+
+                const result = await sendPasswordReset(email);
+
+                if (result.success) {
+                    resetSuccess.textContent = 'Password reset email sent! Check your inbox.';
+                    resetSuccess.classList.remove('hidden');
+                    resetError.classList.add('hidden');
+                    resetEmail.value = '';
+                } else {
+                    resetError.textContent = result.error || 'Failed to send reset email';
+                    resetError.classList.remove('hidden');
+                    resetSuccess.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Error sending password reset:', error);
+                resetError.textContent = 'Error sending reset email. Please try again.';
+                resetError.classList.remove('hidden');
+                resetSuccess.classList.add('hidden');
+            } finally {
+                sendResetBtn.disabled = false;
+                sendResetBtn.textContent = 'Send Reset Email';
+            }
+        });
+    }
+
+    // Back to Login Button
+    if (backToLoginBtn) {
+        backToLoginBtn.addEventListener('click', () => {
+            resetPasswordModal.classList.add('hidden');
+            resetEmail.value = '';
+            resetError.classList.add('hidden');
+            resetSuccess.classList.add('hidden');
+        });
+    }
+
+    // Enter key to send reset email
+    if (resetEmail) {
+        resetEmail.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && sendResetBtn) {
+                sendResetBtn.click();
+            }
+        });
+    }
+
+    if (myBookmarksBtn) {
+        myBookmarksBtn.addEventListener('click', openBookmarksPanel);
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOutUser();
+                closeCommentsPanel(stopListeningForComments);
+                hideInfoPanel();
+            } catch (error) {
+                console.error('Sign-out error:', error);
+            }
+        });
+    }
+}
+
+function showLoginError(element, message) {
+    element.textContent = message;
+    element.classList.remove('hidden');
 }
 
 async function handleCommentSubmit() {
@@ -408,6 +687,33 @@ async function updateCommentCount(verseRef) {
 }
 
 // ========================================
+// BOOKMARK COUNTING FUNCTIONS
+// ========================================
+
+async function loadBookmarkCounts(parshaRef) {
+    const { bookName } = parseParshaReference(parshaRef);
+
+    try {
+        const counts = await getBookmarkCountsForBook(bookName);
+
+        // Remove stale counts for this book before merging
+        Object.keys(verseBookmarkCounts).forEach((ref) => {
+            if (ref.startsWith(`${bookName} `)) {
+                delete verseBookmarkCounts[ref];
+            }
+        });
+
+        Object.entries(counts).forEach(([ref, value]) => {
+            verseBookmarkCounts[ref] = Math.max(0, value || 0);
+        });
+
+        applyBookmarkStateToVisibleVerses();
+    } catch (error) {
+        console.error('Error loading bookmark counts:', error);
+    }
+}
+
+// ========================================
 // REACTION FUNCTIONS
 // ========================================
 
@@ -484,6 +790,137 @@ async function handleReactionClick(verseRef, reactionType) {
     } catch (error) {
         console.error('Error submitting reaction:', error);
         alert('Error submitting reaction. Please try again.');
+    }
+}
+
+async function handleAuthStateChange(user) {
+    updateCommentInputState(Boolean(user));
+
+    if (user) {
+        // Set the user's email so display name can be extracted from it
+        setCurrentUserEmail(user.email);
+        updateUsernameDisplay();
+        await refreshBookmarkedVerses();
+    } else {
+        setCurrentUserEmail(null);
+        updateUsernameDisplay();
+        bookmarkedVerses.clear();
+        clearBookmarkUIState();
+    }
+}
+
+async function refreshBookmarkedVerses(options = {}) {
+    const userId = getCurrentUserId();
+
+    if (!userId) {
+        bookmarkedVerses.clear();
+        clearBookmarkUIState();
+        return options.returnList ? [] : undefined;
+    }
+
+    try {
+        const bookmarks = await getUserBookmarks(userId);
+        bookmarkedVerses = new Set(bookmarks.map((bookmark) => bookmark.verseRef));
+
+        bookmarks.forEach((bookmark) => {
+            if (bookmark.verseText && (!verseDisplayTexts[bookmark.verseRef] || !verseDisplayTexts[bookmark.verseRef].english)) {
+                verseDisplayTexts[bookmark.verseRef] = {
+                    english: bookmark.verseText
+                };
+            }
+        });
+
+        if (bookmarks.length > 0) {
+            const uniqueRefs = Array.from(new Set(bookmarks.map((bookmark) => bookmark.verseRef)));
+            const bookmarkCounts = await getBookmarkCountsForVerses(uniqueRefs);
+            Object.entries(bookmarkCounts).forEach(([ref, value]) => {
+                verseBookmarkCounts[ref] = Math.max(0, value || 0);
+            });
+        }
+
+        applyBookmarkStateToVisibleVerses();
+        return options.returnList ? bookmarks : undefined;
+    } catch (error) {
+        console.error('Error refreshing bookmarks:', error);
+        if (options.returnList) {
+            throw error;
+        }
+        return undefined;
+    }
+}
+
+function applyBookmarkStateToVisibleVerses() {
+    const buttons = document.querySelectorAll('.bookmark-btn');
+    buttons.forEach((btn) => {
+        const verseRef = btn.getAttribute('data-verse-ref');
+        const isActive = verseRef && bookmarkedVerses.has(verseRef);
+        const baseCount = verseRef ? (verseBookmarkCounts[verseRef] || 0) : 0;
+        const displayCount = Math.max(baseCount, isActive ? 1 : 0);
+        btn.classList.toggle('active', Boolean(isActive));
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        const countSpan = btn.querySelector('.bookmark-count');
+        if (countSpan) {
+            countSpan.textContent = displayCount > 0 ? displayCount : '';
+            countSpan.style.display = displayCount > 0 ? 'inline-flex' : 'none';
+        }
+        if (verseRef) {
+            const countText = displayCount > 0
+                ? `${displayCount} ${displayCount === 1 ? 'person has' : 'people have'} bookmarked this verse`
+                : 'No bookmarks yet';
+            btn.setAttribute(
+                'title',
+                isActive ? `Remove bookmark • ${countText}` : `Bookmark this verse • ${countText}`
+            );
+            btn.setAttribute(
+                'aria-label',
+                `${isActive ? 'Remove your bookmark.' : 'Bookmark this verse.'} ${countText}.`
+            );
+        }
+    });
+}
+
+function clearBookmarkUIState() {
+    applyBookmarkStateToVisibleVerses();
+}
+
+async function handleBookmarkClick(verseRef, bookmarkBtn) {
+    const userId = getCurrentUserId();
+
+    if (!userId) {
+        alert('Please sign in to bookmark verses');
+        return;
+    }
+
+    try {
+        const isBookmarked = bookmarkedVerses.has(verseRef)
+            ? true
+            : await isVerseBookmarked(verseRef, userId);
+
+        if (isBookmarked) {
+            // Remove bookmark
+            await removeBookmark(verseRef, userId);
+            bookmarkBtn.classList.remove('active');
+            bookmarkBtn.setAttribute('aria-pressed', 'false');
+            bookmarkedVerses.delete(verseRef);
+            if (verseBookmarkCounts[verseRef]) {
+                verseBookmarkCounts[verseRef] = Math.max(0, verseBookmarkCounts[verseRef] - 1);
+            }
+        } else {
+            // Add bookmark
+            const verseText = getVerseTextSnippet(verseRef);
+            await addBookmark(verseRef, userId, { verseText });
+            bookmarkBtn.classList.add('active');
+            bookmarkBtn.setAttribute('aria-pressed', 'true');
+            bookmarkedVerses.add(verseRef);
+            verseBookmarkCounts[verseRef] = (verseBookmarkCounts[verseRef] || 0) + 1;
+        }
+
+        // Ensure all instances stay in sync (e.g., if verse appears twice)
+        applyBookmarkStateToVisibleVerses();
+
+    } catch (error) {
+        console.error('Error toggling bookmark:', error);
+        alert('Error saving bookmark. Please try again.');
     }
 }
 
@@ -597,7 +1034,8 @@ async function loadParsha(parshaRef) {
         // Load both comments and reactions
         await Promise.all([
             loadCommentCounts(parshaRef),
-            loadReactionCounts(parshaRef)
+            loadReactionCounts(parshaRef),
+            loadBookmarkCounts(parshaRef)
         ]);
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -759,6 +1197,8 @@ function renderParsha(data, parshaRef) {
             textContainer.appendChild(verseElement);
         });
     }
+
+    applyBookmarkStateToVisibleVerses();
 }
 
 function createVerseElement(englishText, hebrewText, verseRef, verseNumber) {
@@ -797,6 +1237,9 @@ function createVerseElement(englishText, hebrewText, verseRef, verseNumber) {
     const cleanedEnglish = cleanSefariaAnnotationsFromText(englishText);
     const processedEnglish = processKeywords(cleanedEnglish, verseRef);
     englishDiv.innerHTML = processedEnglish;
+    verseDisplayTexts[verseRef] = {
+        english: cleanedEnglish.trim()
+    };
     
     textContainer.appendChild(hebrewDiv);
     textContainer.appendChild(englishDiv);
@@ -862,9 +1305,32 @@ function createVerseElement(englishText, hebrewText, verseRef, verseNumber) {
         handleReactionClick(verseRef, 'heart');
     });
 
+    // Bookmark button
+    const bookmarkBtn = document.createElement('button');
+    bookmarkBtn.type = 'button';
+    bookmarkBtn.className = 'reaction-btn bookmark-btn';
+    bookmarkBtn.setAttribute('aria-label', 'Bookmark this verse');
+    bookmarkBtn.setAttribute('data-verse-ref', verseRef);
+    bookmarkBtn.setAttribute('aria-pressed', 'false');
+    bookmarkBtn.setAttribute('title', 'Bookmark this verse');
+    bookmarkBtn.innerHTML = `
+        <svg class="bookmark-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" fill="currentColor"></path>
+        </svg>
+        <span class="bookmark-count"></span>
+    `;
+    bookmarkBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        handleBookmarkClick(verseRef, bookmarkBtn);
+    });
+
     reactionsSection.appendChild(emphasizeBtn);
     reactionsSection.appendChild(heartBtn);
+    reactionsSection.appendChild(bookmarkBtn);
     container.appendChild(reactionsSection);
+
+    // Store bookmark button reference for later updates
+    container.dataset.bookmarkBtn = true;
 
     return container;
 }
@@ -1084,5 +1550,111 @@ function formatText(text) {
 function escapeRegex(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
+
+async function openBookmarksPanel() {
+    const userId = getCurrentUserId();
+    if (!userId) {
+        showError('Please sign in to view bookmarks');
+        return;
+    }
+
+    try {
+        const bookmarks = await refreshBookmarkedVerses({ returnList: true });
+
+        let html = `
+            <div class="bookmarks-container">
+                <h3 class="text-2xl font-bold mb-4 text-blue-900">My Bookmarks</h3>
+        `;
+
+        if (bookmarks.length === 0) {
+            html += `
+                <div class="text-center py-8">
+                    <p class="text-gray-500">No bookmarks yet.</p>
+                    <p class="text-sm text-gray-400 mt-2">Click the bookmark icon on any verse to save it!</p>
+                </div>
+            `;
+        } else {
+            html += `<div class="bookmarks-list">`;
+            bookmarks.forEach(bookmark => {
+                const verseRef = bookmark.verseRef;
+                const escapedRef = escapeHtml(verseRef);
+                const verseText = getVerseTextSnippet(verseRef) || bookmark.verseText || '';
+                const displayText = verseText
+                    ? escapeHtml(verseText)
+                    : 'Verse text will load when opened.';
+                const count = Math.max(verseBookmarkCounts[verseRef] || 0, 1);
+                const countLabel = count === 1 ? 'Saved by 1 reader' : `Saved by ${count} readers`;
+                let savedDateLabel = 'Date unavailable';
+                if (bookmark.timestamp && typeof bookmark.timestamp.toDate === 'function') {
+                    savedDateLabel = bookmark.timestamp.toDate().toLocaleDateString();
+                }
+
+                html += `
+                    <button type="button" class="bookmark-item" data-verse-ref="${escapedRef}" onclick="loadVerseFromBookmark('${escapedRef}')">
+                        <div class="bookmark-item-header">
+                            <span class="bookmark-item-ref">${escapedRef}</span>
+                            <span class="bookmark-item-count">${escapeHtml(countLabel)}</span>
+                        </div>
+                        <div class="bookmark-item-text">${displayText}</div>
+                        <div class="bookmark-item-meta">
+                            <span class="bookmark-item-date">Saved ${escapeHtml(savedDateLabel)}</span>
+                        </div>
+                    </button>
+                `;
+            });
+            html += `</div>`;
+        }
+
+        html += `</div>`;
+
+        const infoContent = document.getElementById('info-content');
+        infoContent.innerHTML = html;
+        showInfoPanel();
+
+    } catch (error) {
+        console.error('Error loading bookmarks:', error);
+        showError('Failed to load bookmarks');
+    }
+}
+
+// Make this available globally for onclick
+window.loadVerseFromBookmark = async function(verseRef) {
+    if (!verseRef) {
+        return;
+    }
+
+    hideInfoPanel();
+
+    const parsha = findParshaForVerse(verseRef);
+
+    if (!parsha) {
+        showError('Unable to locate that verse. Please select the book manually.');
+        return;
+    }
+
+    const parshaIndex = state.allParshas.indexOf(parsha);
+    const needsLoad = state.currentParshaRef !== parsha.reference;
+
+    setState({
+        currentParshaIndex: parshaIndex,
+        currentParshaRef: parsha.reference
+    });
+
+    document.querySelectorAll('select#parsha-selector').forEach((s) => {
+        s.value = parsha.reference;
+    });
+
+    if (needsLoad) {
+        await loadParsha(parsha.reference);
+    }
+
+    updateNavigationButtons();
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            highlightVerseAndScroll(verseRef);
+        });
+    });
+};
 
 document.addEventListener('DOMContentLoaded', init);

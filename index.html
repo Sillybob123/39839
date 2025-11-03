@@ -9,44 +9,158 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <!-- Improved Header with Better Layout -->
-    <header class="relative z-30 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white shadow-2xl border-b-4 border-blue-600">
-        <div class="container mx-auto px-6 py-8">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                <!-- Logo/Title Section -->
-                <div class="flex-1 min-w-0">
-                    <button id="home-branding" type="button" aria-label="Return to this week's parsha" class="flex items-center gap-4 mb-2 w-full bg-transparent p-0 text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-300 rounded-lg transition group">
-                        <img src="Icon.png" alt="A Letter in the Scroll Logo" class="h-12 w-12 sm:h-16 sm:w-16 rounded-lg shadow-lg transition-transform duration-200 group-hover:scale-105">
-                        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide leading-tight group-hover:text-blue-100">
-                            A Letter in the Scroll
-                        </h1>
-                    </button>
-                    <p class="text-blue-200 text-sm md:text-base leading-relaxed">Interactive Weekly Portion Study & Discussion</p>
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg shadow-2xl max-w-md w-full overflow-hidden">
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8">
+                <h2 class="text-2xl font-bold text-white">Torah Study Portal</h2>
+                <p class="text-blue-100 text-sm mt-2">Sign in with your email to save bookmarks and participate in discussions</p>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 space-y-4">
+                <!-- Email Input -->
+                <div>
+                    <label for="login-email" class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                    <input
+                        type="email"
+                        id="login-email"
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                        autocapitalize="none"
+                        spellcheck="false"
+                        class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+                    />
+                    <p class="text-xs text-gray-600 mt-2">Use the email from the Dvar Torah weekly newsletter</p>
                 </div>
-                
-                <!-- Quick Actions -->
-                <div id="header-actions" class="flex flex-wrap gap-3 flex-shrink-0">
-                    <button id="go-to-weekly" class="px-5 py-3 bg-white text-blue-900 rounded-lg font-semibold shadow-lg hover:bg-blue-50 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap flex-1 sm:flex-initial justify-center">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                <!-- Password Input -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="login-password" class="block text-sm font-semibold text-gray-700">Password</label>
+                        <button type="button" id="forgot-password-btn" class="text-xs text-blue-600 hover:text-blue-800 font-medium">
+                            Forgot password?
+                        </button>
+                    </div>
+                    <input
+                        type="password"
+                        id="login-password"
+                        placeholder="••••••••"
+                        autocomplete="current-password"
+                        autocapitalize="none"
+                        spellcheck="false"
+                        class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+                    />
+                </div>
+
+                <!-- Error Message -->
+                <div id="login-error" class="bg-red-50 border border-red-400 text-red-700 px-3 py-2 rounded text-sm hidden"></div>
+
+                <!-- Sign In Button -->
+                <button id="login-btn" class="w-full px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-semibold shadow-md hover:shadow-lg">
+                    Sign In
+                </button>
+
+                <!-- Account Request Notice -->
+                <div class="bg-blue-50 border border-blue-300 rounded-lg p-4 text-center">
+                    <p class="text-sm text-gray-700 mb-2">If you would like an account, please reach out to <span class="font-semibold text-blue-900">Yair</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Reset Modal -->
+    <div id="reset-password-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg shadow-2xl max-w-md w-full overflow-hidden">
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8">
+                <h2 class="text-2xl font-bold text-white">Reset Password</h2>
+                <p class="text-blue-100 text-sm mt-2">Enter your email to receive a password reset link</p>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 space-y-4">
+                <!-- Email Input -->
+                <div>
+                    <label for="reset-email" class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                    <input
+                        type="email"
+                        id="reset-email"
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                        autocapitalize="none"
+                        spellcheck="false"
+                        class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+                    />
+                </div>
+
+                <!-- Error Message -->
+                <div id="reset-error" class="bg-red-50 border border-red-400 text-red-700 px-3 py-2 rounded text-sm hidden"></div>
+
+                <!-- Success Message -->
+                <div id="reset-success" class="bg-green-50 border border-green-400 text-green-700 px-3 py-2 rounded text-sm hidden"></div>
+
+                <!-- Send Reset Email Button -->
+                <button id="send-reset-btn" class="w-full px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-semibold shadow-md hover:shadow-lg">
+                    Send Reset Email
+                </button>
+
+                <!-- Back to Login Button -->
+                <button id="back-to-login-btn" class="w-full px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all font-semibold border border-gray-300">
+                    Back to Login
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional Responsive Header -->
+    <header class="header-main relative z-30 text-blue-950">
+        <div class="header-container">
+            <!-- Logo/Title Section -->
+            <div class="header-branding-section">
+                <button id="home-branding" type="button" aria-label="Return to this week's parsha" class="header-branding-button">
+                    <img src="Icon.png" alt="A Letter in the Scroll Logo" class="header-logo">
+                    <div class="header-text">
+                        <h1 class="header-title">A Letter in the Scroll</h1>
+                        <p class="header-subtitle">Interactive Weekly Portion Study & Discussion</p>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="header-actions-wrapper">
+                <div id="header-actions" class="header-actions">
+                    <button id="go-to-weekly" class="header-btn header-btn-primary" title="Go to this week's parsha">
+                        <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
-                        <span class="hidden sm:inline">This Week's Parsha</span>
-                        <span class="sm:hidden">This Week</span>
+                        <span class="header-btn-text">This Week's Parsha</span>
                     </button>
-                    <a href="prayers.html" class="px-5 py-3 bg-blue-700 text-white rounded-lg font-semibold shadow-lg hover:bg-blue-600 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap flex-1 sm:flex-initial justify-center">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="prayers.html" class="header-btn header-btn-secondary" title="Important Prayers and Readings">
+                        <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                         </svg>
-                        <span class="hidden sm:inline">Important Prayers/Readings</span>
-                        <span class="sm:hidden">Prayers</span>
+                        <span class="header-btn-text">Prayers</span>
                     </a>
-                    <a href="about.html" class="px-5 py-3 bg-blue-700 text-white rounded-lg font-semibold shadow-lg hover:bg-blue-600 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap flex-1 sm:flex-initial justify-center">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="about.html" class="header-btn header-btn-secondary" title="About this project">
+                        <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <span class="hidden sm:inline">About</span>
-                        <span class="sm:hidden">Info</span>
+                        <span class="header-btn-text">About</span>
                     </a>
+                    <button id="my-bookmarks-btn" class="header-btn header-btn-secondary" title="View your saved verses">
+                        <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h6a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                        </svg>
+                        <span class="header-btn-text">My Bookmarks</span>
+                    </button>
+                    <button id="logout-btn" class="header-btn header-btn-secondary" title="Sign out">
+                        <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        <span class="header-btn-text">Sign Out</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -56,7 +170,7 @@
     <nav class="bg-white shadow-md sticky top-0 z-10 border-b-2 border-gray-200">
         <div class="container mx-auto px-4 py-4">
             <!-- Desktop Layout -->
-            <div class="hidden md:flex items-center justify-between gap-4">
+            <div id="nav-desktop" class="hidden md:flex items-center justify-between gap-4">
                 <!-- Parsha Selector -->
                 <div class="flex items-center gap-3 flex-1 max-w-xl">
                     <label for="parsha-selector" class="font-semibold text-gray-700 whitespace-nowrap text-sm">Torah Portion:</label>
@@ -67,7 +181,7 @@
 
                 <!-- Navigation Buttons and Text Size Control -->
                 <div class="flex items-center gap-2">
-                    <div id="header-actions" class="flex items-center gap-2"></div>
+                    <div id="nav-header-actions" class="flex items-center gap-2"></div>
                     <button id="general-parsha-chat" class="px-4 py-2.5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all font-medium shadow-md hover:shadow-lg flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
@@ -96,13 +210,13 @@
             </div>
             
             <!-- Mobile Layout -->
-            <div class="md:hidden space-y-3">
+            <div id="nav-mobile" class="md:hidden space-y-3">
                 <!-- Text Size Control (Mobile) -->
                 <div id="header-actions-mobile" class="flex justify-end"></div>
 
                 <!-- Parsha Selector -->
                 <div class="flex flex-col gap-2">
-                    <label for="parsha-selector-mobile" class="font-semibold text-gray-700 text-sm">Torah Portion:</label>
+                    <label for="parsha-selector" class="font-semibold text-gray-700 text-sm">Torah Portion:</label>
                     <select id="parsha-selector" class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-white text-gray-900 font-medium shadow-sm">
                         <option value="">Loading portions...</option>
                     </select>
@@ -121,14 +235,6 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     Significance
-                </button>
-
-                <!-- Significance Button (Mobile) -->
-                <button id="show-significance-mobile" class="w-full px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-medium shadow-md hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed hidden">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    Parsha Significance
                 </button>
 
                 <!-- Navigation Buttons -->
@@ -198,23 +304,8 @@
         </div>
         
         <div class="comment-panel-body">
-            <!-- Username Setup Section -->
-            <div id="username-setup" class="username-setup hidden">
-                <p class="username-prompt">Please set your display name to participate:</p>
-                <div class="username-input-group">
-                    <input 
-                        type="text" 
-                        id="username-input" 
-                        placeholder="Enter your name (max 50 characters)"
-                        maxlength="50"
-                        class="username-input"
-                    />
-                    <button id="save-username-btn" class="save-username-btn">Save Name</button>
-                </div>
-            </div>
-            
-            <!-- Display Saved Username -->
-            <div id="username-display" class="username-display hidden">
+            <!-- Display User Name -->
+            <div id="name-display" class="username-display hidden">
                 <span class="username-label">Commenting as:</span>
                 <span id="current-username" class="current-username"></span>
             </div>

@@ -67,17 +67,22 @@ export function updateNavigationButtons() {
  * Populate parsha selector dropdown
  */
 export function populateParshaSelector() {
-    const selector = document.getElementById('parsha-selector');
-    selector.innerHTML = '';
-    
-    state.allParshas.forEach((parsha, index) => {
-        const option = document.createElement('option');
-        option.value = parsha.reference;
-        option.textContent = `${parsha.name} (${parsha.reference})`;
-        if (parsha.reference === state.currentParshaRef) {
-            option.selected = true;
-        }
-        selector.appendChild(option);
+    // Get ALL select elements with id 'parsha-selector' (desktop and mobile)
+    const selectors = document.querySelectorAll('select#parsha-selector');
+
+    // Populate each select element with all parshas
+    selectors.forEach((selector) => {
+        selector.innerHTML = '';
+
+        state.allParshas.forEach((parsha, index) => {
+            const option = document.createElement('option');
+            option.value = parsha.reference;
+            option.textContent = `${parsha.name} (${parsha.reference})`;
+            if (parsha.reference === state.currentParshaRef) {
+                option.selected = true;
+            }
+            selector.appendChild(option);
+        });
     });
 }
 
@@ -269,44 +274,187 @@ export function updateCommentInputState(isLoggedIn) {
 }
 
 /**
- * Update username display in comment panel
+ * Manual name mappings for emails that don't parse well automatically
+ */
+const emailNameMappings = {
+    // Naama Ben-Dor
+    'naama.bendor': 'Naama Ben-Dor',
+    'naama.bendor1': 'Naama Ben-Dor',
+    'nb852': 'Naama Ben-Dor',
+
+    // Yair Ben-Dor
+    'bendoryair': 'Yair Ben-Dor',
+    'yair.ben-dor': 'Yair Ben-Dor',
+    'yairben-dor': 'Yair Ben-Dor',
+    'yair.bendor': 'Yair Ben-Dor',
+    'yairen-dor': 'Yair Ben-Dor',
+
+    // Lori Preci
+    'loripreci': 'Lori Preci',
+    'loripreci03': 'Lori Preci',
+    'lpreci1': 'Lori Preci',
+
+    // Aidan Schurr
+    'aidan.schurr': 'Aidan Schurr',
+    'aidanitaischurr': 'Aidan Schurr',
+
+    // Daniel Stone
+    'stoneda4': 'Daniel Stone',
+    'stoneda': 'Daniel Stone',
+
+    // Erez Yarden
+    'erezroy8': 'Erez Yarden',
+    'erez yarden': 'Erez Yarden',
+    'erezroy': 'Erez Yarden',
+
+    // Ava Uditsky
+    'ava': 'Ava Uditsky',
+    'avauditsky': 'Ava Uditsky',
+
+    // Stephanie Solomon
+    'sas562': 'Stephanie Solomon'
+};
+
+/**
+ * Extract name from email address
+ * Intelligently parses:
+ * - "firstname.lastname" -> "Firstname Lastname"
+ * - "firstname-lastname" -> "Firstname-Lastname"
+ * - "firstnamelastname" -> splits on common name boundaries
+ * Examples:
+ * "naama.bendor1@gmail.com" -> "Naama Ben-Dor"
+ * "yair.ben-dor@example.com" -> "Yair Ben-Dor"
+ * "loripreci03@gmail.com" -> "Lori Preci"
+ * "erezroy8@gmail.com" -> "Erez Yarden"
+ */
+function extractNameFromEmail(email) {
+    if (!email) return 'Anonymous';
+
+    // Get the part before the @ symbol
+    let localPart = email.split('@')[0].toLowerCase();
+
+    // Remove trailing numbers
+    localPart = localPart.replace(/\d+$/, '').trim();
+
+    if (!localPart) return 'Anonymous';
+
+    // Check for manual mappings first (for emails with special cases)
+    if (emailNameMappings[localPart]) {
+        return emailNameMappings[localPart];
+    }
+
+    // Handle period-separated format (first.last)
+    if (localPart.includes('.')) {
+        const parts = localPart.split('.')
+            .map(part => capitalizeWord(part))
+            .filter(part => part.length > 0);
+
+        if (parts.length > 0) {
+            return parts.join(' ');
+        }
+    }
+
+    // Handle hyphen-separated format (first-last)
+    if (localPart.includes('-')) {
+        const parts = localPart.split('-')
+            .map(part => capitalizeWord(part))
+            .filter(part => part.length > 0);
+
+        if (parts.length > 0) {
+            return parts.join('-');
+        }
+    }
+
+    // No separators: try to intelligently split concatenated names
+    // Common pattern: firstname is longer (4+ chars), lastname is 2-4 chars
+    // Examples: "loripreci" (4+5), "erezroy" (4+3), "stoneda" (5+2)
+    if (localPart.length >= 6) {
+        // Try to find a good split point
+        // Look for patterns where splitting makes sense
+        for (let splitPos = 3; splitPos < localPart.length - 1; splitPos++) {
+            const firstName = localPart.substring(0, splitPos);
+            const lastName = localPart.substring(splitPos);
+
+            // Check if this split makes sense:
+            // Both parts should be > 1 char, and last part should be 2-5 chars (typical last name)
+            if (firstName.length > 2 && lastName.length > 1 && lastName.length <= 5) {
+                // Prefer splits where lastName is 2-4 chars (most common pattern)
+                if (lastName.length >= 2 && lastName.length <= 4) {
+                    return capitalizeWord(firstName) + ' ' + capitalizeWord(lastName);
+                }
+            }
+        }
+    }
+
+    // Fallback: just capitalize the whole thing
+    return capitalizeWord(localPart);
+}
+
+/**
+ * Helper function to capitalize a word
+ */
+function capitalizeWord(word) {
+    if (!word) return '';
+    // Handle hyphenated words
+    if (word.includes('-')) {
+        return word.split('-')
+            .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+            .join('-');
+    }
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+}
+
+/**
+ * Update name display in comment panel based on current user email
  */
 export function updateUsernameDisplay() {
-    const usernameSetup = document.getElementById('username-setup');
-    const usernameDisplay = document.getElementById('username-display');
+    const nameDisplay = document.getElementById('name-display');
     const currentUsernameSpan = document.getElementById('current-username');
-    
-    const savedUsername = getSavedUsername();
-    
-    if (savedUsername) {
-        // Show username display, hide setup
-        usernameSetup.classList.add('hidden');
-        usernameDisplay.classList.remove('hidden');
-        currentUsernameSpan.textContent = savedUsername;
+
+    // Get the current user's email from localStorage (set during authentication)
+    const userEmail = localStorage.getItem('currentUserEmail');
+
+    if (userEmail) {
+        // Show name display
+        nameDisplay.classList.remove('hidden');
+        const displayName = extractNameFromEmail(userEmail);
+        currentUsernameSpan.textContent = displayName;
     } else {
-        // Show setup, hide display
-        usernameSetup.classList.remove('hidden');
-        usernameDisplay.classList.add('hidden');
+        // Hide name display if no email
+        nameDisplay.classList.add('hidden');
     }
 }
 
 /**
- * Save username to localStorage
+ * Set current user email (called during authentication)
  */
-export function saveUsername(username) {
-    if (username && username.trim().length > 0 && username.trim().length <= 50) {
-        localStorage.setItem('torahStudyUsername', username.trim());
-        updateUsernameDisplay();
+export function setCurrentUserEmail(email) {
+    if (email) {
+        localStorage.setItem('currentUserEmail', email);
+    } else {
+        localStorage.removeItem('currentUserEmail');
+    }
+    updateUsernameDisplay();
+}
+
+/**
+ * Get display name from email
+ */
+export function getSavedUsername() {
+    const userEmail = localStorage.getItem('currentUserEmail');
+    return userEmail ? extractNameFromEmail(userEmail) : 'Anonymous';
+}
+
+/**
+ * Deprecated - for backward compatibility
+ * Use getSavedUsername() instead
+ */
+export function saveUsername(email) {
+    if (email) {
+        setCurrentUserEmail(email);
         return true;
     }
     return false;
-}
-
-/**
- * Get saved username from localStorage
- */
-export function getSavedUsername() {
-    return localStorage.getItem('torahStudyUsername');
 }
 
 /**

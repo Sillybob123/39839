@@ -106,6 +106,12 @@
             return widget;
         }
 
+        const navActions = document.getElementById('nav-header-actions');
+        if (navActions) {
+            navActions.appendChild(widget);
+            return widget;
+        }
+
         // Try mobile header actions
         const mobileActions = document.getElementById('header-actions-mobile');
         if (mobileActions) {
