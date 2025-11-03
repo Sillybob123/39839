@@ -110,6 +110,21 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // USERS Collection (for tracking login and online status)
+    match /users/{userId} {
+      // Users can read any user's profile info (for displaying who's online)
+      allow read: if isAuthenticated();
+
+      // Users can only create/update their own profile
+      allow create, update: if isAuthenticated() &&
+                              isOwner(userId) &&
+                              request.resource.data.email is string &&
+                              request.resource.data.lastLogin is timestamp;
+
+      // Prevent deletes
+      allow delete: if false;
+    }
+
     // Deny all other access by default
     match /{document=**} {
       allow read, write: if false;
