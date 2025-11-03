@@ -73,9 +73,9 @@ function initAuth(onAuthReady) {
 // Sign in with email and password
 async function signInWithEmail(email, password) {
   try {
-    // Normalize email and password - remove extra whitespace and convert to lowercase for user-friendly experience
+    // Normalize email while leaving password case intact
     const normalizedEmail = email.trim().toLowerCase();
-    const normalizedPassword = password.trim().toLowerCase();
+    const normalizedPassword = password.trim();
 
     const result = await signInWithEmailAndPassword(auth, normalizedEmail, normalizedPassword);
     currentUser = result.user;
@@ -89,9 +89,9 @@ async function signInWithEmail(email, password) {
 // Create account with email and password
 async function createAccountWithEmail(email, password) {
   try {
-    // Normalize email and password - remove extra whitespace and convert to lowercase for user-friendly experience
+    // Normalize email while leaving password case intact
     const normalizedEmail = email.trim().toLowerCase();
-    const normalizedPassword = password.trim().toLowerCase();
+    const normalizedPassword = password.trim();
 
     const result = await createUserWithEmailAndPassword(auth, normalizedEmail, normalizedPassword);
     currentUser = result.user;
