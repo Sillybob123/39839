@@ -2,6 +2,7 @@
 import { TORAH_PARSHAS } from './config.js';
 import { fetchCurrentParsha, fetchParshaText, loadCommentaryData } from './api.js';
 import { state, setState } from './state.js';
+import { getDisplayNameFromEmail } from './name-utils.js';
 import {
     showLoading,
     hideLoading,
@@ -22,7 +23,13 @@ import {
     showCommentStatus,
     getSavedUsername,
     updateUsernameDisplay,
-    setCurrentUserEmail
+    setCurrentUserEmail,
+    displayOnlineUsers,
+    hideOnlineUsers,
+    displayRecentLogins,
+    hideRecentLogins,
+    displayLastLogin,
+    hideLastLogin
 } from './ui.js';
 
 import {
@@ -46,7 +53,14 @@ import {
     addBookmark,
     removeBookmark,
     isVerseBookmarked,
-    getUserBookmarks
+    getUserBookmarks,
+    recordUserLogin,
+    updateUserPresence,
+    markUserOffline,
+    listenForOnlineUsers,
+    stopListeningForOnlineUsers,
+    getUserInfo,
+    getUsersSortedByLogin
 } from './firebase.js';
 
 import { collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
@@ -58,6 +72,14 @@ let isAuthReady = false;
 let bookmarkedVerses = new Set();
 let verseBookmarkCounts = {};
 const verseDisplayTexts = {};
+
+// User presence tracking
+let lastUserId = null;
+let presenceIntervalId = null;
+const PRESENCE_UPDATE_INTERVAL = 30000; // Update every 30 seconds
+let currentUserProfile = null;
+const RECENT_LOGINS_REFRESH_INTERVAL = 60000;
+let recentLoginsRefreshIntervalId = null;
 
 function escapeForAttributeSelector(value) {
     if (typeof value !== 'string') {
@@ -801,11 +823,55 @@ async function handleAuthStateChange(user) {
         setCurrentUserEmail(user.email);
         updateUsernameDisplay();
         await refreshBookmarkedVerses();
+
+        let userProfile = null;
+
+        // Record user login activity
+        try {
+            await recordUserLogin(user.uid, user.email);
+        } catch (error) {
+            console.error('Error recording login:', error);
+        }
+
+        // Fetch the latest user profile (captures Firestore timestamps)
+        try {
+            userProfile = await getUserInfo(user.uid);
+        } catch (error) {
+            console.error('Error loading user profile:', error);
+        }
+
+        currentUserProfile = userProfile;
+
+        // Reflect latest login status in UI
+        updateCurrentUserStatusDisplay(userProfile, user.email);
+
+        // Set up presence tracking
+        startPresenceTracking(user.uid);
+
+        // Re-fetch shortly after login so server timestamps resolve
+        setTimeout(() => {
+            refreshCurrentUserProfile();
+        }, 2000);
+
+        startRecentLoginsPolling();
     } else {
         setCurrentUserEmail(null);
         updateUsernameDisplay();
         bookmarkedVerses.clear();
         clearBookmarkUIState();
+        currentUserProfile = null;
+
+        // Mark user as offline
+        if (lastUserId) {
+            try {
+                await markUserOffline(lastUserId);
+            } catch (error) {
+                console.error('Error marking offline:', error);
+            }
+        }
+
+        // Stop presence tracking
+        stopPresenceTracking();
     }
 }
 
@@ -1656,5 +1722,141 @@ window.loadVerseFromBookmark = async function(verseRef) {
         });
     });
 };
+
+// ========================================
+// PRESENCE TRACKING FUNCTIONS
+// ========================================
+
+// Start tracking user presence (updates every 30 seconds)
+function startPresenceTracking(userId) {
+    lastUserId = userId;
+
+    // Clear existing interval if any
+    if (presenceIntervalId) {
+        clearInterval(presenceIntervalId);
+    }
+
+    // Update presence immediately
+    updateUserPresence(userId).catch(error => console.error('Error updating presence:', error));
+
+    // Then update every 30 seconds
+    presenceIntervalId = setInterval(() => {
+        if (getCurrentUserId() === userId) {
+            updateUserPresence(userId).catch(error => console.error('Error updating presence:', error));
+        }
+    }, PRESENCE_UPDATE_INTERVAL);
+
+    // Set up listener for online users
+    listenForOnlineUsers((onlineUsers) => {
+        displayOnlineUsers(onlineUsers);
+    });
+}
+
+function updateCurrentUserStatusDisplay(userProfile, fallbackEmail) {
+    const defaultName = getSavedUsername();
+    const fallbackName = defaultName !== 'Anonymous'
+        ? defaultName
+        : (fallbackEmail ? getDisplayNameFromEmail(fallbackEmail) : 'Friend');
+    let displayName = userProfile?.username;
+    if (!displayName || (typeof displayName === 'string' && displayName.includes('@'))) {
+        displayName = userProfile?.email ? getDisplayNameFromEmail(userProfile.email) : fallbackName;
+    }
+    displayName = displayName || fallbackName;
+    const loginTime = userProfile?.lastLogin || userProfile?.lastSeen || new Date();
+
+    displayLastLogin(displayName, loginTime);
+}
+
+async function refreshCurrentUserProfile() {
+    const userId = getCurrentUserId();
+    if (!userId) {
+        return;
+    }
+
+    try {
+        const profile = await getUserInfo(userId);
+        if (profile) {
+            currentUserProfile = profile;
+            updateCurrentUserStatusDisplay(profile, getCurrentUserEmail());
+        }
+    } catch (error) {
+        console.error('Error refreshing current user profile:', error);
+    }
+}
+
+async function refreshRecentLogins() {
+    const currentUserId = getCurrentUserId();
+    if (!currentUserId) {
+        hideRecentLogins();
+        return;
+    }
+
+    try {
+        const users = await getUsersSortedByLogin(8);
+        if (!Array.isArray(users) || users.length === 0) {
+            hideRecentLogins();
+            return;
+        }
+
+        const seenKeys = new Set();
+        const uniqueUsers = [];
+
+        users.forEach((user) => {
+            if (!user) {
+                return;
+            }
+            const key = user.userId || user.email;
+            if (!key || seenKeys.has(key)) {
+                return;
+            }
+            seenKeys.add(key);
+            uniqueUsers.push(user);
+        });
+
+        const candidates = uniqueUsers.filter((user) => user.userId !== currentUserId);
+        const prioritizedUsers = (candidates.length > 0 ? candidates : uniqueUsers)
+            .filter((user) => user.lastLogin || user.lastSeen)
+            .slice(0, 4);
+
+        if (prioritizedUsers.length === 0) {
+            hideRecentLogins();
+            return;
+        }
+
+        displayRecentLogins(prioritizedUsers);
+    } catch (error) {
+        console.error('Error loading recent logins:', error);
+        hideRecentLogins();
+    }
+}
+
+function startRecentLoginsPolling() {
+    stopRecentLoginsPolling();
+    refreshRecentLogins();
+    recentLoginsRefreshIntervalId = setInterval(() => {
+        refreshRecentLogins();
+    }, RECENT_LOGINS_REFRESH_INTERVAL);
+}
+
+function stopRecentLoginsPolling() {
+    if (recentLoginsRefreshIntervalId) {
+        clearInterval(recentLoginsRefreshIntervalId);
+        recentLoginsRefreshIntervalId = null;
+    }
+    hideRecentLogins();
+}
+
+// Stop tracking user presence
+function stopPresenceTracking() {
+    if (presenceIntervalId) {
+        clearInterval(presenceIntervalId);
+        presenceIntervalId = null;
+    }
+
+    stopListeningForOnlineUsers();
+    hideOnlineUsers();
+    hideLastLogin();
+    stopRecentLoginsPolling();
+}
 
 document.addEventListener('DOMContentLoaded', init);

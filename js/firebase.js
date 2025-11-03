@@ -23,8 +23,11 @@ import {
     doc,
     getDoc,
     setDoc,
-    increment
+    increment,
+    orderBy,
+    limit
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getDisplayNameFromEmail } from './name-utils.js';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -624,6 +627,247 @@ async function sendPasswordReset(email) {
   }
 }
 
+// ========================================
+// USER TRACKING FUNCTIONS (Login & Online Status)
+// ========================================
+
+// Record user login time and update online status
+async function recordUserLogin(userId, email) {
+  if (!userId || !email) {
+    console.error('Cannot record login: missing userId or email');
+    return null;
+  }
+
+  try {
+    const userDocRef = doc(db, 'users', userId);
+    const username = getDisplayNameFromEmail(email);
+
+    const userData = {
+      userId: userId,
+      email: email,
+      username: username,
+      lastLogin: serverTimestamp(),
+      isOnline: true,
+      lastSeen: serverTimestamp()
+    };
+
+    await setDoc(userDocRef, userData, { merge: true });
+    console.log(`User login recorded for ${email}`);
+    return userData;
+  } catch (error) {
+    console.error('Error recording user login:', error);
+    throw error;
+  }
+}
+
+// Update user's online status (call this periodically while user is active)
+async function updateUserPresence(userId) {
+  if (!userId) {
+    return null;
+  }
+
+  try {
+    const userDocRef = doc(db, 'users', userId);
+    await setDoc(
+      userDocRef,
+      {
+        isOnline: true,
+        lastSeen: serverTimestamp()
+      },
+      { merge: true }
+    );
+  } catch (error) {
+    console.error('Error updating user presence:', error);
+  }
+}
+
+// Mark user as offline
+async function markUserOffline(userId) {
+  if (!userId) {
+    return null;
+  }
+
+  try {
+    const userDocRef = doc(db, 'users', userId);
+    await setDoc(
+      userDocRef,
+      {
+        isOnline: false,
+        lastSeen: serverTimestamp()
+      },
+      { merge: true }
+    );
+    console.log('User marked as offline');
+  } catch (error) {
+    console.error('Error marking user offline:', error);
+  }
+}
+
+// Get all online users
+async function getOnlineUsers() {
+  try {
+    const usersQuery = query(
+      collection(db, 'users'),
+      where('isOnline', '==', true)
+    );
+
+    const querySnapshot = await getDocs(usersQuery);
+    const onlineUsers = [];
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      onlineUsers.push({
+        userId: data.userId,
+        email: data.email,
+        username: data.username || getDisplayNameFromEmail(data.email),
+        lastSeen: data.lastSeen
+      });
+    });
+
+    return onlineUsers;
+  } catch (error) {
+    console.error('Error getting online users:', error);
+    return [];
+  }
+}
+
+// Get all users sorted by last login (most recent first)
+async function getUsersSortedByLogin(limitCount = 10) {
+  try {
+    const usersQuery = query(
+      collection(db, 'users'),
+      orderBy('lastLogin', 'desc'),
+      limit(limitCount)
+    );
+
+    const querySnapshot = await getDocs(usersQuery);
+    const users = [];
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      users.push({
+        userId: data.userId,
+        email: data.email,
+        username: data.username || getDisplayNameFromEmail(data.email),
+        lastLogin: data.lastLogin,
+        isOnline: data.isOnline || false,
+        lastSeen: data.lastSeen
+      });
+    });
+
+    return users;
+  } catch (error) {
+    console.error('Error getting users by login:', error);
+    return [];
+  }
+}
+
+// Get a specific user's info (for displaying their status)
+async function getUserInfo(userId) {
+  if (!userId) {
+    return null;
+  }
+
+  try {
+    const userDocRef = doc(db, 'users', userId);
+    const docSnap = await getDoc(userDocRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return {
+        userId: data.userId,
+        email: data.email,
+        username: data.username || getDisplayNameFromEmail(data.email),
+        lastLogin: data.lastLogin,
+        isOnline: data.isOnline || false,
+        lastSeen: data.lastSeen
+      };
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error getting user info:', error);
+    return null;
+  }
+}
+
+// Listen for online users in real-time
+let onlineUsersUnsubscribe = null;
+
+function listenForOnlineUsers(callback) {
+  // Stop previous listener if exists
+  if (onlineUsersUnsubscribe) {
+    onlineUsersUnsubscribe();
+    onlineUsersUnsubscribe = null;
+  }
+
+  try {
+    const usersQuery = query(
+      collection(db, 'users'),
+      where('isOnline', '==', true)
+    );
+
+    onlineUsersUnsubscribe = onSnapshot(usersQuery,
+      (querySnapshot) => {
+        const onlineUsers = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          onlineUsers.push({
+            userId: data.userId,
+            email: data.email,
+            username: data.username || getDisplayNameFromEmail(data.email),
+            lastSeen: data.lastSeen
+          });
+        });
+
+        callback(onlineUsers);
+      },
+      (error) => {
+        console.error('Error listening to online users:', error);
+        callback([]);
+      }
+    );
+  } catch (error) {
+    console.error('Error setting up online users listener:', error);
+    callback([]);
+  }
+}
+
+// Stop listening for online users
+function stopListeningForOnlineUsers() {
+  if (onlineUsersUnsubscribe) {
+    onlineUsersUnsubscribe();
+    onlineUsersUnsubscribe = null;
+  }
+}
+
+// Format time difference for display (e.g., "10 minutes ago")
+function formatTimeAgo(timestamp) {
+  if (!timestamp) {
+    return 'never';
+  }
+
+  const now = new Date();
+  const loginTime = new Date(timestamp.toMillis ? timestamp.toMillis() : timestamp);
+  const diffMs = now - loginTime;
+  const diffSeconds = Math.floor(diffMs / 1000);
+  const diffMinutes = Math.floor(diffSeconds / 60);
+  const diffHours = Math.floor(diffMinutes / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffSeconds < 60) {
+    return 'just now';
+  } else if (diffMinutes < 60) {
+    return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+  } else if (diffHours < 24) {
+    return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+  } else if (diffDays < 7) {
+    return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+  } else {
+    return loginTime.toLocaleDateString();
+  }
+}
+
 export {
   auth,
   db,
@@ -648,5 +892,14 @@ export {
   removeBookmark,
   isVerseBookmarked,
   getUserBookmarks,
-  getUserBookmarksForVerses
+  getUserBookmarksForVerses,
+  recordUserLogin,
+  updateUserPresence,
+  markUserOffline,
+  getOnlineUsers,
+  getUsersSortedByLogin,
+  getUserInfo,
+  listenForOnlineUsers,
+  stopListeningForOnlineUsers,
+  formatTimeAgo
 };

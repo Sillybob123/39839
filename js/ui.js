@@ -1,5 +1,6 @@
 // UI Module - Handles all DOM manipulation - NO EMOJIS
 import { state } from './state.js';
+import { getDisplayNameFromEmail } from './name-utils.js';
 
 /**
  * Show loading state
@@ -273,136 +274,7 @@ export function updateCommentInputState(isLoggedIn) {
     }
 }
 
-/**
- * Manual name mappings for emails that don't parse well automatically
- */
-const emailNameMappings = {
-    // Naama Ben-Dor
-    'naama.bendor': 'Naama Ben-Dor',
-    'naama.bendor1': 'Naama Ben-Dor',
-    'nb852': 'Naama Ben-Dor',
-
-    // Yair Ben-Dor
-    'bendoryair': 'Yair Ben-Dor',
-    'yair.ben-dor': 'Yair Ben-Dor',
-    'yairben-dor': 'Yair Ben-Dor',
-    'yair.bendor': 'Yair Ben-Dor',
-    'yairen-dor': 'Yair Ben-Dor',
-
-    // Lori Preci
-    'loripreci': 'Lori Preci',
-    'loripreci03': 'Lori Preci',
-    'lpreci1': 'Lori Preci',
-
-    // Aidan Schurr
-    'aidan.schurr': 'Aidan Schurr',
-    'aidanitaischurr': 'Aidan Schurr',
-
-    // Daniel Stone
-    'stoneda4': 'Daniel Stone',
-    'stoneda': 'Daniel Stone',
-
-    // Erez Yarden
-    'erezroy8': 'Erez Yarden',
-    'erez yarden': 'Erez Yarden',
-    'erezroy': 'Erez Yarden',
-
-    // Ava Uditsky
-    'ava': 'Ava Uditsky',
-    'avauditsky': 'Ava Uditsky',
-
-    // Stephanie Solomon
-    'sas562': 'Stephanie Solomon'
-};
-
-/**
- * Extract name from email address
- * Intelligently parses:
- * - "firstname.lastname" -> "Firstname Lastname"
- * - "firstname-lastname" -> "Firstname-Lastname"
- * - "firstnamelastname" -> splits on common name boundaries
- * Examples:
- * "naama.bendor1@gmail.com" -> "Naama Ben-Dor"
- * "yair.ben-dor@example.com" -> "Yair Ben-Dor"
- * "loripreci03@gmail.com" -> "Lori Preci"
- * "erezroy8@gmail.com" -> "Erez Yarden"
- */
-function extractNameFromEmail(email) {
-    if (!email) return 'Anonymous';
-
-    // Get the part before the @ symbol
-    let localPart = email.split('@')[0].toLowerCase();
-
-    // Remove trailing numbers
-    localPart = localPart.replace(/\d+$/, '').trim();
-
-    if (!localPart) return 'Anonymous';
-
-    // Check for manual mappings first (for emails with special cases)
-    if (emailNameMappings[localPart]) {
-        return emailNameMappings[localPart];
-    }
-
-    // Handle period-separated format (first.last)
-    if (localPart.includes('.')) {
-        const parts = localPart.split('.')
-            .map(part => capitalizeWord(part))
-            .filter(part => part.length > 0);
-
-        if (parts.length > 0) {
-            return parts.join(' ');
-        }
-    }
-
-    // Handle hyphen-separated format (first-last)
-    if (localPart.includes('-')) {
-        const parts = localPart.split('-')
-            .map(part => capitalizeWord(part))
-            .filter(part => part.length > 0);
-
-        if (parts.length > 0) {
-            return parts.join('-');
-        }
-    }
-
-    // No separators: try to intelligently split concatenated names
-    // Common pattern: firstname is longer (4+ chars), lastname is 2-4 chars
-    // Examples: "loripreci" (4+5), "erezroy" (4+3), "stoneda" (5+2)
-    if (localPart.length >= 6) {
-        // Try to find a good split point
-        // Look for patterns where splitting makes sense
-        for (let splitPos = 3; splitPos < localPart.length - 1; splitPos++) {
-            const firstName = localPart.substring(0, splitPos);
-            const lastName = localPart.substring(splitPos);
-
-            // Check if this split makes sense:
-            // Both parts should be > 1 char, and last part should be 2-5 chars (typical last name)
-            if (firstName.length > 2 && lastName.length > 1 && lastName.length <= 5) {
-                // Prefer splits where lastName is 2-4 chars (most common pattern)
-                if (lastName.length >= 2 && lastName.length <= 4) {
-                    return capitalizeWord(firstName) + ' ' + capitalizeWord(lastName);
-                }
-            }
-        }
-    }
-
-    // Fallback: just capitalize the whole thing
-    return capitalizeWord(localPart);
-}
-
-/**
- * Helper function to capitalize a word
- */
-function capitalizeWord(word) {
-    if (!word) return '';
-    // Handle hyphenated words
-    if (word.includes('-')) {
-        return word.split('-')
-            .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-            .join('-');
-    }
-    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-}
+// Name extraction handled in shared name-utils module
 
 /**
  * Update name display in comment panel based on current user email
@@ -417,7 +289,7 @@ export function updateUsernameDisplay() {
     if (userEmail) {
         // Show name display
         nameDisplay.classList.remove('hidden');
-        const displayName = extractNameFromEmail(userEmail);
+        const displayName = getDisplayNameFromEmail(userEmail);
         currentUsernameSpan.textContent = displayName;
     } else {
         // Hide name display if no email
@@ -442,7 +314,7 @@ export function setCurrentUserEmail(email) {
  */
 export function getSavedUsername() {
     const userEmail = localStorage.getItem('currentUserEmail');
-    return userEmail ? extractNameFromEmail(userEmail) : 'Anonymous';
+    return userEmail ? getDisplayNameFromEmail(userEmail) : 'Anonymous';
 }
 
 /**
@@ -554,14 +426,486 @@ function escapeHtml(text) {
  */
 function formatText(text) {
     if (!text) return '';
-    
+
     // First escape all HTML to prevent XSS
     let escaped = escapeHtml(text);
-    
+
     // Then apply safe formatting:
     // Convert *text* to <strong>text</strong> for bold
     // Use non-greedy match and replace the entire pattern including asterisks
     escaped = escaped.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
-    
+
     return escaped;
+}
+
+// ========================================
+// USER STATUS DISPLAY FUNCTIONS (HEADER BAR)
+// ========================================
+
+let lastLoginIntervalId = null;
+let lastLoginTimestamp = null;
+let recentLoginsIntervalId = null;
+let recentLoginEntries = [];
+
+const THIRTY_MINUTES_MS = 30 * 60 * 1000;
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+const ONLINE_STALE_THRESHOLD_MS = 2 * 60 * 1000;
+
+const BADGE_STATUS_CLASSES = ['status-badge--green', 'status-badge--yellow', 'status-badge--gray'];
+const DOT_STATUS_CLASSES = ['status-dot--green', 'status-dot--yellow', 'status-dot--gray'];
+const TEXT_STATUS_CLASSES = ['status-text--green', 'status-text--yellow', 'status-text--gray'];
+
+function updateCommunityStatusLayout() {
+    const statusBar = document.getElementById('community-status-bar');
+    if (!statusBar) {
+        return;
+    }
+
+    const sections = [
+        document.getElementById('header-online-section'),
+        document.getElementById('header-last-login-section'),
+        document.getElementById('header-your-status')
+    ];
+
+    const visibleSections = [];
+
+    sections.forEach((section) => {
+        if (!section) {
+            return;
+        }
+        section.classList.remove('status-section--with-divider');
+        if (!section.classList.contains('hidden')) {
+            visibleSections.push(section);
+        }
+    });
+
+    visibleSections.forEach((section, index) => {
+        if (index > 0) {
+            section.classList.add('status-section--with-divider');
+        }
+    });
+
+    if (visibleSections.length === 0) {
+        statusBar.classList.add('hidden');
+    } else {
+        statusBar.classList.remove('hidden');
+    }
+}
+
+function convertToDate(timestamp) {
+    if (!timestamp) {
+        return null;
+    }
+
+    if (typeof timestamp.toDate === 'function') {
+        return timestamp.toDate();
+    }
+
+    if (typeof timestamp.toMillis === 'function') {
+        return new Date(timestamp.toMillis());
+    }
+
+    return new Date(timestamp);
+}
+
+function formatRelativeTime(timestamp) {
+    const date = convertToDate(timestamp);
+    if (!date) {
+        return 'just now';
+    }
+
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffSeconds < 45) {
+        return 'just now';
+    }
+    if (diffMinutes < 60) {
+        return `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;
+    }
+    if (diffHours < 24) {
+        return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+    }
+    if (diffDays < 7) {
+        return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
+    }
+
+    return date.toLocaleDateString();
+}
+
+function getStatusAppearance(timestamp) {
+    const date = convertToDate(timestamp);
+
+    if (!date) {
+        return {
+            tone: 'gray',
+            badgeClass: 'status-badge--gray',
+            dotClass: 'status-dot--gray',
+            textClass: 'status-text--gray',
+            relative: 'No recent activity',
+            date: null
+        };
+    }
+
+    const diff = Date.now() - date.getTime();
+    let tone = 'gray';
+
+    if (diff <= THIRTY_MINUTES_MS) {
+        tone = 'green';
+    } else if (diff <= ONE_DAY_MS) {
+        tone = 'yellow';
+    }
+
+    return {
+        tone,
+        badgeClass: `status-badge--${tone}`,
+        dotClass: `status-dot--${tone}`,
+        textClass: `status-text--${tone}`,
+        relative: formatRelativeTime(timestamp),
+        date
+    };
+}
+
+function buildStatusTooltip(prefix, appearance, timestamp) {
+    if (!appearance || !appearance.date) {
+        return `${prefix}: No recent activity yet`;
+    }
+
+    const relativeText = appearance.relative || formatRelativeTime(timestamp);
+    return `${prefix}: ${appearance.date.toLocaleString()} (${relativeText})`;
+}
+
+function applyStatusClasses(element, classPool, newClass) {
+    if (!element) {
+        return;
+    }
+
+    if (Array.isArray(classPool) && classPool.length > 0) {
+        element.classList.remove(...classPool);
+    }
+
+    if (newClass) {
+        element.classList.add(newClass);
+    }
+}
+
+function resolveDisplayName(user) {
+    if (!user) {
+        return 'Friend';
+    }
+
+    const candidate = user.username;
+    if (candidate && typeof candidate === 'string' && !candidate.includes('@')) {
+        return candidate;
+    }
+
+    if (user.email) {
+        return getDisplayNameFromEmail(user.email);
+    }
+
+    return 'Friend';
+}
+
+function isUserActive(user) {
+    if (!user) {
+        return false;
+    }
+
+    const timestamp = user.lastSeen || user.lastLogin;
+    const date = convertToDate(timestamp);
+
+    if (!date) {
+        return false;
+    }
+
+    return (Date.now() - date.getTime()) <= ONLINE_STALE_THRESHOLD_MS;
+}
+
+/**
+ * Display currently online users in header status bar
+ */
+export function displayOnlineUsers(onlineUsers = []) {
+    const onlineSection = document.getElementById('header-online-section');
+    const usersList = document.getElementById('header-online-users-list');
+
+    if (!onlineSection || !usersList) {
+        return;
+    }
+
+    const activeUsers = Array.isArray(onlineUsers)
+        ? onlineUsers.filter((user) => isUserActive(user))
+        : [];
+
+    if (activeUsers.length === 0) {
+        hideOnlineUsers();
+        return;
+    }
+
+    usersList.innerHTML = '';
+
+    activeUsers.forEach((user) => {
+        const timestamp = user.lastSeen || user.lastLogin;
+        const appearance = getStatusAppearance(timestamp);
+        const badge = document.createElement('span');
+        badge.classList.add('status-badge', appearance.badgeClass);
+
+        const tooltip = buildStatusTooltip('Last seen', appearance, timestamp);
+        badge.setAttribute('aria-label', tooltip);
+        badge.classList.add('status-tooltip');
+        badge.dataset.tooltip = tooltip;
+
+        const dot = document.createElement('span');
+        dot.classList.add('status-dot', appearance.dotClass);
+        if (appearance.tone === 'green') {
+            dot.classList.add('status-dot--pulse');
+        }
+
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = resolveDisplayName(user);
+
+        badge.appendChild(dot);
+        badge.appendChild(nameSpan);
+
+        usersList.appendChild(badge);
+    });
+
+    onlineSection.classList.remove('hidden');
+    updateCommunityStatusLayout();
+}
+
+/**
+ * Hide online users display
+ */
+export function hideOnlineUsers() {
+    const onlineSection = document.getElementById('header-online-section');
+    const usersList = document.getElementById('header-online-users-list');
+
+    if (!onlineSection) {
+        return;
+    }
+
+    if (usersList) {
+        usersList.innerHTML = '';
+    }
+
+    onlineSection.classList.add('hidden');
+    onlineSection.classList.remove('status-section--with-divider');
+    updateCommunityStatusLayout();
+}
+
+/**
+ * Display recent logins in header status bar
+ */
+export function displayRecentLogins(recentUsers = []) {
+    const lastLoginSection = document.getElementById('header-last-login-section');
+    const list = document.getElementById('header-last-login-list');
+
+    if (!lastLoginSection || !list) {
+        return;
+    }
+
+    const safeUsers = Array.isArray(recentUsers) ? recentUsers : [];
+
+    if (safeUsers.length === 0) {
+        hideRecentLogins();
+        return;
+    }
+
+    list.innerHTML = '';
+    recentLoginEntries = [];
+
+    safeUsers.forEach((user) => {
+        const timestamp = user.lastLogin || user.lastSeen;
+        const appearance = getStatusAppearance(timestamp);
+
+        const badge = document.createElement('span');
+        badge.classList.add('status-badge', appearance.badgeClass);
+
+        const tooltip = buildStatusTooltip('Last logged on', appearance, timestamp);
+        badge.setAttribute('aria-label', tooltip);
+        badge.classList.add('status-tooltip');
+        badge.dataset.tooltip = tooltip;
+
+        const dot = document.createElement('span');
+        dot.classList.add('status-dot', appearance.dotClass);
+        if (appearance.tone === 'green') {
+            dot.classList.add('status-dot--pulse');
+        }
+        badge.appendChild(dot);
+
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = resolveDisplayName(user);
+        badge.appendChild(nameSpan);
+
+        const timeSpan = document.createElement('span');
+        timeSpan.classList.add('status-time', appearance.textClass);
+        timeSpan.textContent = appearance.date ? appearance.relative : 'No recent activity';
+        badge.appendChild(timeSpan);
+
+        list.appendChild(badge);
+
+        recentLoginEntries.push({
+            badge,
+            dot,
+            timeEl: timeSpan,
+            timestamp,
+            prefix: 'Last logged on'
+        });
+    });
+
+    if (recentLoginsIntervalId) {
+        clearInterval(recentLoginsIntervalId);
+    }
+
+    recentLoginsIntervalId = setInterval(() => {
+        updateRecentLoginTimes();
+    }, 60000);
+
+    lastLoginSection.classList.remove('hidden');
+    updateCommunityStatusLayout();
+}
+
+function updateRecentLoginTimes() {
+    if (!recentLoginEntries.length) {
+        return;
+    }
+
+    recentLoginEntries.forEach((entry) => {
+        if (!entry || !entry.timeEl) {
+            return;
+        }
+        const appearance = getStatusAppearance(entry.timestamp);
+        entry.timeEl.textContent = appearance.date ? appearance.relative : 'No recent activity';
+
+        applyStatusClasses(entry.badge, BADGE_STATUS_CLASSES, appearance.badgeClass);
+        applyStatusClasses(entry.dot, DOT_STATUS_CLASSES, appearance.dotClass);
+        applyStatusClasses(entry.timeEl, TEXT_STATUS_CLASSES, appearance.textClass);
+
+        if (appearance.tone === 'green') {
+            entry.dot.classList.add('status-dot--pulse');
+        } else {
+            entry.dot.classList.remove('status-dot--pulse');
+        }
+
+        const tooltip = buildStatusTooltip(entry.prefix || 'Last logged on', appearance, entry.timestamp);
+        entry.badge.setAttribute('aria-label', tooltip);
+        entry.badge.dataset.tooltip = tooltip;
+    });
+}
+
+/**
+ * Hide recent logins section
+ */
+export function hideRecentLogins() {
+    const lastLoginSection = document.getElementById('header-last-login-section');
+    const list = document.getElementById('header-last-login-list');
+
+    if (list) {
+        list.innerHTML = '';
+    }
+
+    if (recentLoginsIntervalId) {
+        clearInterval(recentLoginsIntervalId);
+        recentLoginsIntervalId = null;
+    }
+
+    recentLoginEntries = [];
+
+    if (!lastLoginSection) {
+        return;
+    }
+
+    lastLoginSection.classList.add('hidden');
+    lastLoginSection.classList.remove('status-section--with-divider');
+    updateCommunityStatusLayout();
+}
+
+/**
+ * Display user's last login time in header status bar
+ */
+export function displayLastLogin(username, loginTime) {
+    const yourStatusSection = document.getElementById('header-your-status');
+    const usernameEl = document.getElementById('header-your-username');
+    const timeElement = document.getElementById('header-your-login-time');
+
+    if (!yourStatusSection || !usernameEl || !timeElement) {
+        return;
+    }
+
+    if (!username || !loginTime) {
+        hideLastLogin();
+        return;
+    }
+
+    usernameEl.textContent = username;
+    lastLoginTimestamp = loginTime;
+
+    const appearance = getStatusAppearance(loginTime);
+    timeElement.textContent = appearance.date ? appearance.relative : 'No recent activity';
+    applyStatusClasses(timeElement, TEXT_STATUS_CLASSES, appearance.textClass);
+
+    const tooltip = buildStatusTooltip('You last logged on', appearance, loginTime);
+    yourStatusSection.setAttribute('aria-label', tooltip);
+    yourStatusSection.classList.add('status-tooltip');
+    yourStatusSection.dataset.tooltip = tooltip;
+
+    if (lastLoginIntervalId) {
+        clearInterval(lastLoginIntervalId);
+    }
+
+    lastLoginIntervalId = setInterval(updateLoginTimeDisplay, 60000);
+
+    yourStatusSection.classList.remove('hidden');
+    updateCommunityStatusLayout();
+}
+
+function updateLoginTimeDisplay() {
+    const timeAgoElement = document.getElementById('header-your-login-time');
+    const statusSection = document.getElementById('header-your-status');
+
+    if (!timeAgoElement || !lastLoginTimestamp) {
+        return;
+    }
+
+    const appearance = getStatusAppearance(lastLoginTimestamp);
+    timeAgoElement.textContent = appearance.date ? appearance.relative : 'No recent activity';
+    applyStatusClasses(timeAgoElement, TEXT_STATUS_CLASSES, appearance.textClass);
+
+    if (statusSection) {
+        const tooltip = buildStatusTooltip('You last logged on', appearance, lastLoginTimestamp);
+        statusSection.setAttribute('aria-label', tooltip);
+        statusSection.dataset.tooltip = tooltip;
+    }
+}
+
+/**
+ * Hide last login display
+ */
+export function hideLastLogin() {
+    const yourStatusSection = document.getElementById('header-your-status');
+    const timeElement = document.getElementById('header-your-login-time');
+
+    if (yourStatusSection) {
+        yourStatusSection.classList.add('hidden');
+        yourStatusSection.classList.remove('status-section--with-divider');
+        yourStatusSection.removeAttribute('aria-label');
+        delete yourStatusSection.dataset.tooltip;
+    }
+
+    if (timeElement) {
+        applyStatusClasses(timeElement, TEXT_STATUS_CLASSES, null);
+        timeElement.textContent = 'just now';
+    }
+
+    if (lastLoginIntervalId) {
+        clearInterval(lastLoginIntervalId);
+        lastLoginIntervalId = null;
+    }
+
+    lastLoginTimestamp = null;
+    updateCommunityStatusLayout();
 }
