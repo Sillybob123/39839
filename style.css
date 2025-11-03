@@ -922,8 +922,9 @@ select {
 .comment-panel {
     position: fixed;
     top: 0;
-    right: -400px;
-    width: 400px;
+    right: -420px;
+    width: calc(100vw - 4rem);
+    max-width: 360px;
     height: 100%;
     background: white;
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
@@ -1190,10 +1191,28 @@ select {
     color: #991b1b;
 }
 
+/* Authentication Modal Layout */
+#login-modal,
+#reset-password-modal {
+    padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+#login-modal > div,
+#reset-password-modal > div {
+    width: 100%;
+    max-width: 24rem;
+    margin: 0 auto;
+}
+
 /* Info Panel/Modal Mobile Optimizations */
+#info-panel {
+    padding: clamp(1.5rem, 4vw, 3rem);
+}
+
 #info-panel .bg-white {
-    max-width: 100%;
-    margin: 0;
+    width: 100%;
+    max-width: 42rem;
+    margin: 0 auto;
 }
 
 @media (max-width: 768px) {
@@ -1208,6 +1227,16 @@ select {
 
     #info-content {
         padding: 1.25rem !important;
+    }
+
+    #login-modal,
+    #reset-password-modal {
+        padding: 1.25rem;
+    }
+
+    #login-modal > div,
+    #reset-password-modal > div {
+        max-width: 100%;
     }
 }
 
@@ -1227,6 +1256,11 @@ select {
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    #login-modal,
+    #reset-password-modal {
+        padding: 1rem;
     }
 }
 
@@ -2120,8 +2154,9 @@ select {
 
     /* Make comment panel narrower in landscape */
     .comment-panel {
-        width: 60%;
-        right: -60%;
+        width: calc(100vw - 3rem);
+        max-width: 320px;
+        right: -340px;
     }
 
     .comment-panel.active {
@@ -2132,8 +2167,9 @@ select {
 /* Very narrow landscape screens (phones) */
 @media (max-width: 667px) and (orientation: landscape) {
     .comment-panel {
-        width: 75%;
-        right: -75%;
+        width: calc(100vw - 2.5rem);
+        max-width: 300px;
+        right: -320px;
     }
 
     header h1 {
