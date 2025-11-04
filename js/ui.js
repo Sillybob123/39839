@@ -723,25 +723,18 @@ function buildPresenceTooltip(user) {
         return 'No recent activity yet';
     }
 
-    const parts = [];
-    const loginDate = convertToDate(user.lastLogin);
-    const seenDate = convertToDate(user.lastSeen);
+    const seenTimestamp = user.lastSeen || user.lastLogin || null;
+    const seenDate = convertToDate(seenTimestamp);
 
-    if (loginDate) {
-        const relative = formatRelativeTime(user.lastLogin);
-        parts.push(`Logged in: ${loginDate.toLocaleString()} (${relative})`);
-    }
-
-    if (seenDate) {
-        const relative = isUserActive(user) ? 'Online now' : formatRelativeTime(user.lastSeen);
-        parts.push(`Last seen: ${seenDate.toLocaleString()} (${relative})`);
-    }
-
-    if (parts.length === 0) {
+    if (!seenDate) {
         return 'No recent activity yet';
     }
 
-    return parts.join(' • ');
+    const relative = isUserActive(user)
+        ? 'Online now'
+        : formatRelativeTime(seenTimestamp);
+
+    return `Last seen: ${seenDate.toLocaleString()} (${relative})`;
 }
 
 /**
@@ -828,9 +821,9 @@ export function displayOnlineUsers(onlineUsers = []) {
         const badge = document.createElement('span');
         badge.classList.add('status-badge', 'status-badge--presence', appearance.badgeClass, 'status-tooltip');
         badge.setAttribute('aria-label', tooltip);
-        badge.setAttribute('title', tooltip);
         badge.dataset.tooltip = tooltip;
         badge.dataset.statusTone = appearance.tone;
+        badge.setAttribute('tabindex', '0');
         if (activeNow) {
             badge.classList.add('status-badge--active');
         }
