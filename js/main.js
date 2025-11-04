@@ -26,8 +26,6 @@ import {
     setCurrentUserEmail,
     displayOnlineUsers,
     hideOnlineUsers,
-    displayRecentLogins,
-    hideRecentLogins,
     displayLastLogin,
     hideLastLogin
 } from './ui.js';
@@ -60,7 +58,7 @@ import {
     listenForOnlineUsers,
     stopListeningForOnlineUsers,
     getUserInfo,
-    getUsersSortedByLogin
+    getUsersWithinThreeWeeks
 } from './firebase.js';
 
 import { collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
@@ -78,8 +76,11 @@ let lastUserId = null;
 let presenceIntervalId = null;
 const PRESENCE_UPDATE_INTERVAL = 30000; // Update every 30 seconds
 let currentUserProfile = null;
-const RECENT_LOGINS_REFRESH_INTERVAL = 60000;
-let recentLoginsRefreshIntervalId = null;
+const FRIEND_LOGINS_REFRESH_INTERVAL = 90000; // Update every 90 seconds for 3-week window
+let friendLoginsRefreshIntervalId = null;
+const FRIEND_PRESENCE_WINDOW_MS = 21 * 24 * 60 * 60 * 1000; // 3 weeks
+let trackedOnlineFriends = [];
+let trackedRecentFriendLogins = [];
 
 function escapeForAttributeSelector(value) {
     if (typeof value !== 'string') {
@@ -853,7 +854,6 @@ async function handleAuthStateChange(user) {
             refreshCurrentUserProfile();
         }, 2000);
 
-        startRecentLoginsPolling();
     } else {
         setCurrentUserEmail(null);
         updateUsernameDisplay();
@@ -1727,6 +1727,350 @@ window.loadVerseFromBookmark = async function(verseRef) {
 // PRESENCE TRACKING FUNCTIONS
 // ========================================
 
+function timestampToMillis(timestamp) {
+    if (!timestamp) {
+        return null;
+    }
+
+    try {
+        if (typeof timestamp.toMillis === 'function') {
+            return timestamp.toMillis();
+        }
+
+        if (typeof timestamp.toDate === 'function') {
+            const dateValue = timestamp.toDate();
+            return dateValue instanceof Date ? dateValue.getTime() : null;
+        }
+
+        if (timestamp instanceof Date) {
+            return timestamp.getTime();
+        }
+
+        if (typeof timestamp === 'number') {
+            return Number.isFinite(timestamp) ? timestamp : null;
+        }
+
+        if (typeof timestamp === 'string') {
+            const parsed = Date.parse(timestamp);
+            return Number.isNaN(parsed) ? null : parsed;
+        }
+    } catch (error) {
+        console.warn('Unable to convert timestamp to millis:', error, timestamp);
+    }
+
+    return null;
+}
+
+function pickMostRecentTimestamp(existing, candidate) {
+    const existingMs = timestampToMillis(existing);
+    const candidateMs = timestampToMillis(candidate);
+
+    if (candidateMs !== null && (existingMs === null || candidateMs > existingMs)) {
+        return candidate;
+    }
+
+    if (existingMs !== null) {
+        return existing;
+    }
+
+    return candidateMs !== null ? candidate : null;
+}
+
+function normalizePresenceUser(user) {
+    if (!user) {
+        return null;
+    }
+
+    const rawEmails = [];
+    if (Array.isArray(user.emails)) {
+        rawEmails.push(...user.emails);
+    }
+    if (user.email) {
+        rawEmails.push(user.email);
+    }
+
+    const normalizedEmails = [];
+    const seenEmails = new Set();
+
+    rawEmails.forEach((value) => {
+        if (typeof value !== 'string') {
+            return;
+        }
+        const trimmed = value.trim().toLowerCase();
+        if (!trimmed || seenEmails.has(trimmed)) {
+            return;
+        }
+        seenEmails.add(trimmed);
+        normalizedEmails.push(trimmed);
+    });
+
+    const primaryEmail = normalizedEmails[0] || null;
+    const username = user.username || (primaryEmail ? getDisplayNameFromEmail(primaryEmail) : null);
+    const authIds = Array.isArray(user.authUserIds)
+        ? Array.from(new Set(user.authUserIds.filter((value) => typeof value === 'string')))
+        : [];
+    const canonicalUserId = user.canonicalUserId || user.userId || (authIds.length > 0 ? authIds[0] : null);
+
+    return {
+        docId: user.docId || null,
+        userId: canonicalUserId,
+        canonicalUserId,
+        authUserIds: authIds,
+        email: primaryEmail,
+        emails: normalizedEmails,
+        username: username || 'Friend',
+        lastLogin: user.lastLogin || null,
+        lastSeen: user.lastSeen || null,
+        isAlias: Boolean(user.isAlias)
+    };
+}
+
+function preparePresenceCandidates(users = []) {
+    if (!Array.isArray(users)) {
+        return [];
+    }
+
+    const currentUserId = getCurrentUserId();
+    let currentUserEmail = null;
+    try {
+        currentUserEmail = getCurrentUserEmail ? getCurrentUserEmail() : null;
+    } catch {
+        currentUserEmail = null;
+    }
+    const currentEmails = new Set();
+    if (typeof currentUserEmail === 'string' && currentUserEmail.trim()) {
+        currentEmails.add(currentUserEmail.trim().toLowerCase());
+    }
+
+    if (currentUserProfile && Array.isArray(currentUserProfile.emails)) {
+        currentUserProfile.emails.forEach((value) => {
+            if (typeof value !== 'string') {
+                return;
+            }
+            const normalized = value.trim().toLowerCase();
+            if (normalized) {
+                currentEmails.add(normalized);
+            }
+        });
+    }
+
+    return users
+        .map(normalizePresenceUser)
+        .filter((user) => {
+            if (!user) {
+                return false;
+            }
+            if (user.isAlias) {
+                return false;
+            }
+            if (currentUserId && user.userId && user.userId === currentUserId) {
+                return false;
+            }
+            if (currentUserId && Array.isArray(user.authUserIds) && user.authUserIds.includes(currentUserId)) {
+                return false;
+            }
+            if (currentEmails.size > 0) {
+                const userEmails = Array.isArray(user.emails) && user.emails.length > 0
+                    ? user.emails
+                    : (user.email ? [user.email.toLowerCase()] : []);
+                const overlaps = userEmails.some((email) => {
+                    if (typeof email !== 'string') {
+                        return false;
+                    }
+                    return currentEmails.has(email.toLowerCase());
+                });
+                if (overlaps) {
+                    return false;
+                }
+            }
+            return true;
+        });
+}
+
+function combinePresenceSources(onlineUsers = [], recentUsers = []) {
+    const presenceMap = new Map();
+
+    [...onlineUsers, ...recentUsers].forEach((user) => {
+        if (!user) {
+            return;
+        }
+        const primaryEmail = Array.isArray(user.emails) && user.emails.length > 0
+            ? user.emails[0]
+            : (typeof user.email === 'string' ? user.email : null);
+        const canonicalKey = user.canonicalUserId || user.userId || primaryEmail;
+        const key = canonicalKey || primaryEmail;
+        if (!key) {
+            return;
+        }
+
+        const existing = presenceMap.get(key);
+        if (!existing) {
+            const emails = Array.isArray(user.emails) ? [...user.emails] : (primaryEmail ? [primaryEmail] : []);
+            const authIds = Array.isArray(user.authUserIds)
+                ? user.authUserIds.filter((value) => typeof value === 'string' && value.trim())
+                : [];
+            if (user.userId && typeof user.userId === 'string') {
+                authIds.push(user.userId);
+            }
+            if (user.canonicalUserId && typeof user.canonicalUserId === 'string') {
+                authIds.push(user.canonicalUserId);
+            }
+            const uniqueAuthIds = Array.from(new Set(authIds));
+            presenceMap.set(key, {
+                ...user,
+                emails,
+                authUserIds: uniqueAuthIds,
+                canonicalUserId: user.canonicalUserId || user.userId
+            });
+            return;
+        }
+
+        const merged = {
+            ...existing,
+            ...user,
+            lastLogin: pickMostRecentTimestamp(existing.lastLogin, user.lastLogin),
+            lastSeen: pickMostRecentTimestamp(existing.lastSeen, user.lastSeen)
+        };
+
+        const mergedEmailsSet = new Set();
+        if (Array.isArray(existing.emails)) {
+            existing.emails.forEach((emailValue) => {
+                if (typeof emailValue === 'string') {
+                    mergedEmailsSet.add(emailValue);
+                }
+            });
+        }
+        if (Array.isArray(user.emails)) {
+            user.emails.forEach((emailValue) => {
+                if (typeof emailValue === 'string') {
+                    mergedEmailsSet.add(emailValue);
+                }
+            });
+        }
+        if (typeof existing.email === 'string') {
+            mergedEmailsSet.add(existing.email);
+        }
+        if (typeof user.email === 'string') {
+            mergedEmailsSet.add(user.email);
+        }
+
+        const mergedEmails = Array.from(mergedEmailsSet);
+
+        let resolvedEmail = user.email || existing.email || mergedEmails[0] || null;
+        if (resolvedEmail) {
+            resolvedEmail = resolvedEmail.trim().toLowerCase();
+        }
+
+        if (resolvedEmail) {
+            mergedEmails.sort((a, b) => {
+                if (a === resolvedEmail) {
+                    return -1;
+                }
+                if (b === resolvedEmail) {
+                    return 1;
+                }
+                return a.localeCompare(b);
+            });
+        } else {
+            mergedEmails.sort();
+        }
+
+        merged.emails = mergedEmails;
+        merged.email = resolvedEmail || null;
+        merged.userId = user.canonicalUserId || user.userId || existing.userId;
+        merged.canonicalUserId = user.canonicalUserId || existing.canonicalUserId || merged.userId;
+
+        const mergedAuthIdsSet = new Set();
+        if (Array.isArray(existing.authUserIds)) {
+            existing.authUserIds.forEach((id) => {
+                if (typeof id === 'string' && id.trim()) {
+                    mergedAuthIdsSet.add(id);
+                }
+            });
+        }
+        if (Array.isArray(user.authUserIds)) {
+            user.authUserIds.forEach((id) => {
+                if (typeof id === 'string' && id.trim()) {
+                    mergedAuthIdsSet.add(id);
+                }
+            });
+        }
+        if (typeof existing.userId === 'string') {
+            mergedAuthIdsSet.add(existing.userId);
+        }
+        if (typeof user.userId === 'string') {
+            mergedAuthIdsSet.add(user.userId);
+        }
+        if (merged.canonicalUserId) {
+            mergedAuthIdsSet.add(merged.canonicalUserId);
+        }
+        const mergedAuthIds = Array.from(mergedAuthIdsSet);
+        if (merged.canonicalUserId) {
+            mergedAuthIds.sort((a, b) => {
+                if (a === merged.canonicalUserId) {
+                    return -1;
+                }
+                if (b === merged.canonicalUserId) {
+                    return 1;
+                }
+                return a.localeCompare(b);
+            });
+        } else {
+            mergedAuthIds.sort();
+        }
+        merged.authUserIds = mergedAuthIds;
+        merged.isAlias = Boolean(existing.isAlias && user.isAlias);
+        const candidateUsername = user.username || existing.username;
+        const fallbackUsername = merged.email ? getDisplayNameFromEmail(merged.email) : candidateUsername;
+        const sanitizedUsername = candidateUsername && typeof candidateUsername === 'string'
+            ? candidateUsername.trim()
+            : '';
+        if (!sanitizedUsername || sanitizedUsername.includes('@') || sanitizedUsername.toLowerCase() === 'friend') {
+            merged.username = fallbackUsername || sanitizedUsername || 'Friend';
+        } else {
+            merged.username = sanitizedUsername;
+        }
+
+        presenceMap.set(key, merged);
+    });
+
+    const now = Date.now();
+
+    const combined = Array.from(presenceMap.values()).filter((user) => {
+        const referenceTimestamp = user.lastLogin || user.lastSeen;
+        const millis = timestampToMillis(referenceTimestamp);
+        if (millis === null) {
+            return false;
+        }
+        return (now - millis) <= FRIEND_PRESENCE_WINDOW_MS;
+    }).sort((a, b) => {
+        const aLogin = timestampToMillis(a.lastLogin);
+        const aSeen = timestampToMillis(a.lastSeen);
+        const bLogin = timestampToMillis(b.lastLogin);
+        const bSeen = timestampToMillis(b.lastSeen);
+        const aRecent = Math.max(aLogin ?? -Infinity, aSeen ?? -Infinity);
+        const bRecent = Math.max(bLogin ?? -Infinity, bSeen ?? -Infinity);
+        return bRecent - aRecent;
+    });
+
+    return combined.slice(0, 10);
+}
+
+function updateFriendPresenceView() {
+    const combined = combinePresenceSources(trackedOnlineFriends, trackedRecentFriendLogins);
+    if (combined.length === 0) {
+        hideOnlineUsers();
+        return;
+    }
+    displayOnlineUsers(combined);
+}
+
+function clearFriendPresence() {
+    trackedOnlineFriends = [];
+    trackedRecentFriendLogins = [];
+    hideOnlineUsers();
+}
+
 // Start tracking user presence (updates every 30 seconds)
 function startPresenceTracking(userId) {
     lastUserId = userId;
@@ -1748,18 +2092,81 @@ function startPresenceTracking(userId) {
 
     // Set up listener for online users
     listenForOnlineUsers((onlineUsers) => {
-        displayOnlineUsers(onlineUsers);
+        trackedOnlineFriends = preparePresenceCandidates(onlineUsers);
+        updateFriendPresenceView();
     });
+
+    // Also fetch and display users from last 3 weeks
+    startFriendLoginsPolling();
+}
+
+// Start polling for friend logins in last 3 weeks
+function startFriendLoginsPolling() {
+    stopFriendLoginsPolling();
+    refreshFriendLogins();
+    friendLoginsRefreshIntervalId = setInterval(() => {
+        refreshFriendLogins();
+    }, FRIEND_LOGINS_REFRESH_INTERVAL);
+}
+
+// Stop polling for friend logins
+function stopFriendLoginsPolling() {
+    if (friendLoginsRefreshIntervalId) {
+        clearInterval(friendLoginsRefreshIntervalId);
+        friendLoginsRefreshIntervalId = null;
+    }
+    trackedRecentFriendLogins = [];
+    updateFriendPresenceView();
+}
+
+// Refresh and display friends who logged in within last 3 weeks (up to 10)
+async function refreshFriendLogins() {
+    const currentUserId = getCurrentUserId();
+    if (!currentUserId) {
+        trackedRecentFriendLogins = [];
+        updateFriendPresenceView();
+        return;
+    }
+
+    try {
+        const users = await getUsersWithinThreeWeeks(10);
+        if (!Array.isArray(users) || users.length === 0) {
+            trackedRecentFriendLogins = [];
+            updateFriendPresenceView();
+            return;
+        }
+
+        const friendsList = preparePresenceCandidates(users);
+        trackedRecentFriendLogins = friendsList;
+        updateFriendPresenceView();
+    } catch (error) {
+        console.error('Error loading friends from last 3 weeks:', error);
+        trackedRecentFriendLogins = [];
+        updateFriendPresenceView();
+    }
 }
 
 function updateCurrentUserStatusDisplay(userProfile, fallbackEmail) {
     const defaultName = getSavedUsername();
+    const profileEmails = Array.isArray(userProfile?.emails) ? userProfile.emails : [];
+    const primaryProfileEmail = profileEmails.length > 0
+        ? profileEmails[0]
+        : (typeof userProfile?.email === 'string' ? userProfile.email : null);
+    const normalizedFallbackEmail = typeof fallbackEmail === 'string' && fallbackEmail.trim()
+        ? fallbackEmail.trim().toLowerCase()
+        : null;
     const fallbackName = defaultName !== 'Anonymous'
         ? defaultName
-        : (fallbackEmail ? getDisplayNameFromEmail(fallbackEmail) : 'Friend');
+        : (primaryProfileEmail
+            ? getDisplayNameFromEmail(primaryProfileEmail)
+            : (normalizedFallbackEmail ? getDisplayNameFromEmail(normalizedFallbackEmail) : 'Friend'));
     let displayName = userProfile?.username;
     if (!displayName || (typeof displayName === 'string' && displayName.includes('@'))) {
-        displayName = userProfile?.email ? getDisplayNameFromEmail(userProfile.email) : fallbackName;
+        if (primaryProfileEmail) {
+            displayName = getDisplayNameFromEmail(primaryProfileEmail);
+        } else {
+            displayName = fallbackName;
+        }
     }
     displayName = displayName || fallbackName;
     const loginTime = userProfile?.lastLogin || userProfile?.lastSeen || new Date();
@@ -1784,68 +2191,6 @@ async function refreshCurrentUserProfile() {
     }
 }
 
-async function refreshRecentLogins() {
-    const currentUserId = getCurrentUserId();
-    if (!currentUserId) {
-        hideRecentLogins();
-        return;
-    }
-
-    try {
-        const users = await getUsersSortedByLogin(8);
-        if (!Array.isArray(users) || users.length === 0) {
-            hideRecentLogins();
-            return;
-        }
-
-        const seenKeys = new Set();
-        const uniqueUsers = [];
-
-        users.forEach((user) => {
-            if (!user) {
-                return;
-            }
-            const key = user.userId || user.email;
-            if (!key || seenKeys.has(key)) {
-                return;
-            }
-            seenKeys.add(key);
-            uniqueUsers.push(user);
-        });
-
-        const candidates = uniqueUsers.filter((user) => user.userId !== currentUserId);
-        const prioritizedUsers = (candidates.length > 0 ? candidates : uniqueUsers)
-            .filter((user) => user.lastLogin || user.lastSeen)
-            .slice(0, 4);
-
-        if (prioritizedUsers.length === 0) {
-            hideRecentLogins();
-            return;
-        }
-
-        displayRecentLogins(prioritizedUsers);
-    } catch (error) {
-        console.error('Error loading recent logins:', error);
-        hideRecentLogins();
-    }
-}
-
-function startRecentLoginsPolling() {
-    stopRecentLoginsPolling();
-    refreshRecentLogins();
-    recentLoginsRefreshIntervalId = setInterval(() => {
-        refreshRecentLogins();
-    }, RECENT_LOGINS_REFRESH_INTERVAL);
-}
-
-function stopRecentLoginsPolling() {
-    if (recentLoginsRefreshIntervalId) {
-        clearInterval(recentLoginsRefreshIntervalId);
-        recentLoginsRefreshIntervalId = null;
-    }
-    hideRecentLogins();
-}
-
 // Stop tracking user presence
 function stopPresenceTracking() {
     if (presenceIntervalId) {
@@ -1854,9 +2199,9 @@ function stopPresenceTracking() {
     }
 
     stopListeningForOnlineUsers();
-    hideOnlineUsers();
+    stopFriendLoginsPolling();
+    clearFriendPresence();
     hideLastLogin();
-    stopRecentLoginsPolling();
 }
 
 document.addEventListener('DOMContentLoaded', init);

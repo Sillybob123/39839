@@ -20,6 +20,11 @@ const EMAIL_NAME_MAPPINGS = {
   'loripreci': 'Lori Preci',
   'lorip': 'Lori Preci',
   'lorraine': 'Lori Preci',
+  'lpreci1': 'Lori Preci',
+  'loripreci03': 'Lori Preci',
+
+  'aidanitaischurr': 'Aidan Schurr',
+  'aidan.schurr': 'Aidan Schurr',
 
   'stone': 'Daniel Stone',
   'daniel': 'Daniel Stone',
@@ -132,4 +137,3 @@ export function getDisplayNameFromEmail(email) {
 
   return capitalizeWord(localPart);
 }
-

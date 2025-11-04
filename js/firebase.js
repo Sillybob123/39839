@@ -29,6 +29,15 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 import { getDisplayNameFromEmail } from './name-utils.js';
 
+// Known email aliases that should resolve to the same canonical account.
+// Extend this map as needed to keep multi-email friends unified.
+const EMAIL_ALIAS_MAP = {
+  'loripreci03@gmail.com': 'lpreci1@jh.edu',
+  'lpreci1@jh.edu': 'lpreci1@jh.edu',
+  'aidan.schurr@gwmail.gwu.edu': 'aidanitaischurr@gmail.com',
+  'aidanitaischurr@gmail.com': 'aidanitaischurr@gmail.com'
+};
+
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyC3KsU8fdztSCQ5b7sgMUWWbDDJVrQ0ymU",
@@ -631,29 +640,353 @@ async function sendPasswordReset(email) {
 // USER TRACKING FUNCTIONS (Login & Online Status)
 // ========================================
 
-// Record user login time and update online status
+function normalizeEmailsField(record = {}) {
+  const raw = [];
+
+  if (Array.isArray(record.emails)) {
+    raw.push(...record.emails);
+  }
+
+  if (record.email) {
+    raw.push(record.email);
+  }
+
+  const seen = new Set();
+  const normalized = [];
+
+  raw.forEach((value) => {
+    if (typeof value !== 'string') {
+      return;
+    }
+    const trimmed = value.trim().toLowerCase();
+    if (!trimmed || seen.has(trimmed)) {
+      return;
+    }
+    seen.add(trimmed);
+    normalized.push(trimmed);
+  });
+
+  return normalized;
+}
+
+function resolveCanonicalEmail(email) {
+  if (!email || typeof email !== 'string') {
+    return null;
+  }
+
+  const normalized = email.trim().toLowerCase();
+  return EMAIL_ALIAS_MAP[normalized] || normalized;
+}
+
+function mapUserDocument(data = {}, docId = null) {
+  const emailSet = new Set(normalizeEmailsField(data));
+  if (typeof data.email === 'string') {
+    emailSet.add(data.email.trim().toLowerCase());
+  }
+
+  const emails = Array.from(emailSet).filter(Boolean);
+  const canonicalUserId = data.canonicalUserId || data.userId || docId || null;
+  const primaryEmail = data.email
+    ? data.email.trim().toLowerCase()
+    : (emails.length > 0 ? emails[0] : null);
+
+  const orderedEmails = Array.from(
+    new Set(
+      [primaryEmail, ...emails].filter(Boolean).map((value) => value.trim().toLowerCase())
+    )
+  );
+
+  if (primaryEmail) {
+    orderedEmails.sort((a, b) => {
+      if (a === primaryEmail) {
+        return -1;
+      }
+      if (b === primaryEmail) {
+        return 1;
+      }
+      return a.localeCompare(b);
+    });
+  } else {
+    orderedEmails.sort();
+  }
+
+  const usernameCandidate = typeof data.username === 'string' ? data.username.trim() : '';
+  const usernameResolved = usernameCandidate && !usernameCandidate.includes('@')
+    ? usernameCandidate
+    : (primaryEmail ? getDisplayNameFromEmail(primaryEmail) : 'Friend');
+
+  const authIdsSet = new Set(
+    Array.isArray(data.authUserIds)
+      ? data.authUserIds.map((value) => (typeof value === 'string' ? value : null)).filter(Boolean)
+      : []
+  );
+  if (docId) {
+    authIdsSet.add(docId);
+  }
+  if (typeof data.userId === 'string') {
+    authIdsSet.add(data.userId);
+  }
+  if (canonicalUserId) {
+    authIdsSet.add(canonicalUserId);
+  }
+
+  const isAlias = Boolean(
+    (data.isAlias || (canonicalUserId && docId && canonicalUserId !== docId))
+    && canonicalUserId
+    && docId
+    && canonicalUserId !== docId
+  );
+
+  return {
+    docId: docId || null,
+    userId: canonicalUserId,
+    canonicalUserId,
+    authUserIds: Array.from(authIdsSet),
+    email: primaryEmail || orderedEmails[0] || null,
+    emails: orderedEmails,
+    username: usernameResolved || 'Friend',
+    lastLogin: data.lastLogin || null,
+    isOnline: !!data.isOnline,
+    lastSeen: data.lastSeen || null,
+    isAlias
+  };
+}
+
 async function recordUserLogin(userId, email) {
   if (!userId || !email) {
     console.error('Cannot record login: missing userId or email');
     return null;
   }
 
+  const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : null;
+  const fallbackEmail = typeof email === 'string' ? email.trim() : '';
+  const canonicalEmailKey = resolveCanonicalEmail(normalizedEmail || fallbackEmail);
+
   try {
     const userDocRef = doc(db, 'users', userId);
-    const username = getDisplayNameFromEmail(email);
+    const existingSnapshot = await getDoc(userDocRef);
+    const candidateMap = new Map();
 
-    const userData = {
-      userId: userId,
-      email: email,
-      username: username,
-      lastLogin: serverTimestamp(),
+    const emailVariants = new Set(
+      [normalizedEmail, canonicalEmailKey, fallbackEmail?.toLowerCase?.()].filter(Boolean)
+    );
+
+    const addCandidate = (docId, data, force = false) => {
+      if (!docId || !data) {
+        return;
+      }
+
+      const entry = candidateMap.get(docId) || {
+        data: {},
+        emails: new Set(),
+        authIds: new Set(),
+        force: false
+      };
+
+      entry.data = { ...entry.data, ...data };
+
+      normalizeEmailsField(data).forEach((value) => {
+        if (value) {
+          entry.emails.add(value);
+        }
+      });
+
+      if (typeof data.email === 'string') {
+        entry.emails.add(data.email.trim().toLowerCase());
+      }
+
+      const authIds = Array.isArray(data.authUserIds)
+        ? data.authUserIds.map((value) => (typeof value === 'string' ? value : null)).filter(Boolean)
+        : [];
+      authIds.forEach((id) => entry.authIds.add(id));
+
+      entry.authIds.add(docId);
+      if (typeof data.userId === 'string') {
+        entry.authIds.add(data.userId);
+      }
+
+      entry.force = entry.force || force;
+      candidateMap.set(docId, entry);
+    };
+
+    if (existingSnapshot.exists()) {
+      addCandidate(existingSnapshot.id, existingSnapshot.data(), true);
+    }
+
+    const queryPromises = [];
+
+    emailVariants.forEach((variant) => {
+      const trimmed = variant?.trim();
+      if (!trimmed) {
+        return;
+      }
+      queryPromises.push(
+        getDocs(query(collection(db, 'users'), where('emails', 'array-contains', trimmed)))
+      );
+      queryPromises.push(
+        getDocs(query(collection(db, 'users'), where('email', '==', trimmed)))
+      );
+    });
+
+    const displayNameLookup = getDisplayNameFromEmail(canonicalEmailKey || normalizedEmail || fallbackEmail);
+    if (displayNameLookup && displayNameLookup !== 'Anonymous' && displayNameLookup !== 'Friend') {
+      queryPromises.push(
+        getDocs(query(collection(db, 'users'), where('username', '==', displayNameLookup)))
+      );
+    }
+
+    const querySnapshots = await Promise.all(queryPromises);
+    querySnapshots.forEach((snapshot) => {
+      snapshot.forEach((docSnapshot) => {
+        addCandidate(docSnapshot.id, docSnapshot.data());
+      });
+    });
+
+    const candidateEntries = Array.from(candidateMap.entries()).map(([docId, entry]) => ({
+      id: docId,
+      data: entry.data || {},
+      emails: entry.emails || new Set(),
+      authIds: entry.authIds || new Set(),
+      force: entry.force || false
+    }));
+
+    const relevantEntries = candidateEntries.filter((entry) => {
+      if (entry.force) {
+        return true;
+      }
+      return Array.from(emailVariants).some((emailValue) => entry.emails.has(emailValue));
+    });
+
+    const effectiveEntries = relevantEntries.length > 0 ? relevantEntries : candidateEntries;
+
+    let canonicalEntry = effectiveEntries.find(
+      (entry) => entry.data && entry.data.canonicalUserId && entry.data.canonicalUserId === entry.id
+    );
+
+    if (!canonicalEntry && canonicalEmailKey) {
+      canonicalEntry = effectiveEntries.find((entry) => entry.emails.has(canonicalEmailKey));
+    }
+
+    if (!canonicalEntry) {
+      canonicalEntry = effectiveEntries.find((entry) => entry.id === userId);
+    }
+
+    if (!canonicalEntry && effectiveEntries.length > 0) {
+      canonicalEntry = effectiveEntries[0];
+    }
+
+    const canonicalId = canonicalEntry ? canonicalEntry.id : userId;
+    const canonicalData = canonicalEntry ? canonicalEntry.data : {};
+
+    const mergedEmailsSet = new Set();
+    effectiveEntries.forEach((entry) => entry.emails.forEach((value) => mergedEmailsSet.add(value)));
+    emailVariants.forEach((value) => mergedEmailsSet.add(value));
+
+    const consolidatedEmails = Array.from(mergedEmailsSet)
+      .filter(Boolean)
+      .map((value) => value.trim().toLowerCase());
+
+    const uniqueEmails = Array.from(new Set(consolidatedEmails));
+    const canonicalEmail = canonicalEmailKey && uniqueEmails.includes(canonicalEmailKey)
+      ? canonicalEmailKey
+      : (typeof canonicalData.email === 'string'
+          ? canonicalData.email.trim().toLowerCase()
+          : (uniqueEmails[0] || null));
+
+    if (canonicalEmail) {
+      uniqueEmails.sort((a, b) => {
+        if (a === canonicalEmail) {
+          return -1;
+        }
+        if (b === canonicalEmail) {
+          return 1;
+        }
+        return a.localeCompare(b);
+      });
+    } else {
+      uniqueEmails.sort();
+    }
+
+    const authIdsSet = new Set();
+    effectiveEntries.forEach((entry) => entry.authIds.forEach((id) => authIdsSet.add(id)));
+    authIdsSet.add(userId);
+    authIdsSet.add(canonicalId);
+
+    let username = typeof canonicalData.username === 'string'
+      ? canonicalData.username.trim()
+      : '';
+    const fallbackName = getDisplayNameFromEmail(canonicalEmail || normalizedEmail || fallbackEmail);
+
+    if (!username || username.includes('@') || username.toLowerCase() === 'friend') {
+      username = fallbackName;
+    }
+
+    const allDocIds = new Set(effectiveEntries.map((entry) => entry.id));
+    allDocIds.add(userId);
+    allDocIds.add(canonicalId);
+    allDocIds.forEach((id) => {
+      if (id) {
+        authIdsSet.add(id);
+      }
+    });
+    const orderedAuthUserIds = Array.from(new Set(authIdsSet)).filter(Boolean);
+    if (canonicalId) {
+      orderedAuthUserIds.sort((a, b) => {
+        if (a === canonicalId) {
+          return -1;
+        }
+        if (b === canonicalId) {
+          return 1;
+        }
+        return a.localeCompare(b);
+      });
+    } else {
+      orderedAuthUserIds.sort();
+    }
+
+    const canonicalPayload = {
+      userId: canonicalId,
+      canonicalUserId: canonicalId,
+      authUserIds: orderedAuthUserIds,
+      username,
+      email: canonicalEmail || null,
+      emails: uniqueEmails,
+      isAlias: false,
       isOnline: true,
+      lastLogin: serverTimestamp(),
       lastSeen: serverTimestamp()
     };
 
-    await setDoc(userDocRef, userData, { merge: true });
-    console.log(`User login recorded for ${email}`);
-    return userData;
+    await setDoc(doc(db, 'users', canonicalId), canonicalPayload, { merge: true });
+
+    for (const docId of allDocIds) {
+      if (!docId) {
+        continue;
+      }
+
+      if (docId === canonicalId) {
+        continue;
+      }
+
+      const aliasPayload = {
+        userId: canonicalId,
+        canonicalUserId: canonicalId,
+        authUserIds: orderedAuthUserIds,
+        username,
+        email: canonicalEmail || null,
+        emails: uniqueEmails,
+        isAlias: true,
+        aliasOf: canonicalId,
+        isOnline: true,
+        lastLogin: serverTimestamp(),
+        lastSeen: serverTimestamp()
+      };
+
+      await setDoc(doc(db, 'users', docId), aliasPayload, { merge: true });
+    }
+
+    console.log(`User login recorded for ${email} (canonical ID: ${canonicalId})`);
+    return canonicalPayload;
   } catch (error) {
     console.error('Error recording user login:', error);
     throw error;
@@ -668,6 +1001,9 @@ async function updateUserPresence(userId) {
 
   try {
     const userDocRef = doc(db, 'users', userId);
+    const snapshot = await getDoc(userDocRef);
+    const canonicalId = snapshot.exists() ? snapshot.data()?.canonicalUserId : null;
+
     await setDoc(
       userDocRef,
       {
@@ -676,6 +1012,17 @@ async function updateUserPresence(userId) {
       },
       { merge: true }
     );
+
+    if (canonicalId && canonicalId !== userId) {
+      await setDoc(
+        doc(db, 'users', canonicalId),
+        {
+          isOnline: true,
+          lastSeen: serverTimestamp()
+        },
+        { merge: true }
+      );
+    }
   } catch (error) {
     console.error('Error updating user presence:', error);
   }
@@ -689,6 +1036,9 @@ async function markUserOffline(userId) {
 
   try {
     const userDocRef = doc(db, 'users', userId);
+    const snapshot = await getDoc(userDocRef);
+    const canonicalId = snapshot.exists() ? snapshot.data()?.canonicalUserId : null;
+
     await setDoc(
       userDocRef,
       {
@@ -698,6 +1048,17 @@ async function markUserOffline(userId) {
       { merge: true }
     );
     console.log('User marked as offline');
+
+    if (canonicalId && canonicalId !== userId) {
+      await setDoc(
+        doc(db, 'users', canonicalId),
+        {
+          isOnline: false,
+          lastSeen: serverTimestamp()
+        },
+        { merge: true }
+      );
+    }
   } catch (error) {
     console.error('Error marking user offline:', error);
   }
@@ -714,14 +1075,13 @@ async function getOnlineUsers() {
     const querySnapshot = await getDocs(usersQuery);
     const onlineUsers = [];
 
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      onlineUsers.push({
-        userId: data.userId,
-        email: data.email,
-        username: data.username || getDisplayNameFromEmail(data.email),
-        lastSeen: data.lastSeen
-      });
+    querySnapshot.forEach((docSnapshot) => {
+      const data = docSnapshot.data();
+      const mapped = mapUserDocument(data, docSnapshot.id);
+      if (mapped.isAlias && mapped.canonicalUserId && mapped.docId && mapped.canonicalUserId !== mapped.docId) {
+        return;
+      }
+      onlineUsers.push(mapped);
     });
 
     return onlineUsers;
@@ -731,13 +1091,17 @@ async function getOnlineUsers() {
   }
 }
 
-// Get all users sorted by last login (most recent first)
-async function getUsersSortedByLogin(limitCount = 10) {
+// Get users with logins in the last 3 weeks, sorted by most recent first
+async function getUsersWithinThreeWeeks(limitCount = 10) {
   try {
+    const threeWeeksAgo = new Date();
+    threeWeeksAgo.setDate(threeWeeksAgo.getDate() - 21); // 3 weeks = 21 days
+    const threeWeeksAgoTimestamp = threeWeeksAgo.getTime();
+
     const usersQuery = query(
       collection(db, 'users'),
       orderBy('lastLogin', 'desc'),
-      limit(limitCount)
+      limit(limitCount * 2) // Fetch more to account for filtering
     );
 
     const querySnapshot = await getDocs(usersQuery);
@@ -745,19 +1109,23 @@ async function getUsersSortedByLogin(limitCount = 10) {
 
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      users.push({
-        userId: data.userId,
-        email: data.email,
-        username: data.username || getDisplayNameFromEmail(data.email),
-        lastLogin: data.lastLogin,
-        isOnline: data.isOnline || false,
-        lastSeen: data.lastSeen
-      });
+      const record = mapUserDocument(data, doc.id);
+      const lastLoginSource = record.lastLogin || data.lastLogin;
+      const lastLoginTimestamp = lastLoginSource?.toMillis?.()
+        || (lastLoginSource instanceof Date ? lastLoginSource.getTime() : null);
+
+      if (lastLoginTimestamp && lastLoginTimestamp > threeWeeksAgoTimestamp && !record.isAlias) {
+        users.push(record);
+      }
+
+      if (users.length >= limitCount) {
+        return;
+      }
     });
 
-    return users;
+    return users.slice(0, limitCount);
   } catch (error) {
-    console.error('Error getting users by login:', error);
+    console.error('Error getting users within 3 weeks:', error);
     return [];
   }
 }
@@ -773,15 +1141,7 @@ async function getUserInfo(userId) {
     const docSnap = await getDoc(userDocRef);
 
     if (docSnap.exists()) {
-      const data = docSnap.data();
-      return {
-        userId: data.userId,
-        email: data.email,
-        username: data.username || getDisplayNameFromEmail(data.email),
-        lastLogin: data.lastLogin,
-        isOnline: data.isOnline || false,
-        lastSeen: data.lastSeen
-      };
+      return mapUserDocument(docSnap.data(), docSnap.id);
     }
 
     return null;
@@ -810,14 +1170,13 @@ function listenForOnlineUsers(callback) {
     onlineUsersUnsubscribe = onSnapshot(usersQuery,
       (querySnapshot) => {
         const onlineUsers = [];
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          onlineUsers.push({
-            userId: data.userId,
-            email: data.email,
-            username: data.username || getDisplayNameFromEmail(data.email),
-            lastSeen: data.lastSeen
-          });
+        querySnapshot.forEach((docSnapshot) => {
+          const data = docSnapshot.data();
+          const mapped = mapUserDocument(data, docSnapshot.id);
+          if (mapped.isAlias && mapped.canonicalUserId && mapped.docId && mapped.canonicalUserId !== mapped.docId) {
+            return;
+          }
+          onlineUsers.push(mapped);
         });
 
         callback(onlineUsers);
@@ -897,7 +1256,7 @@ export {
   updateUserPresence,
   markUserOffline,
   getOnlineUsers,
-  getUsersSortedByLogin,
+  getUsersWithinThreeWeeks,
   getUserInfo,
   listenForOnlineUsers,
   stopListeningForOnlineUsers,

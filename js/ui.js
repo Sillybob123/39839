@@ -444,11 +444,10 @@ function formatText(text) {
 
 let lastLoginIntervalId = null;
 let lastLoginTimestamp = null;
-let recentLoginsIntervalId = null;
-let recentLoginEntries = [];
 
 const THIRTY_MINUTES_MS = 30 * 60 * 1000;
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+const THREE_WEEKS_MS = 21 * ONE_DAY_MS;
 const ONLINE_STALE_THRESHOLD_MS = 2 * 60 * 1000;
 
 const BADGE_STATUS_CLASSES = ['status-badge--green', 'status-badge--yellow', 'status-badge--gray'];
@@ -463,7 +462,6 @@ function updateCommunityStatusLayout() {
 
     const sections = [
         document.getElementById('header-online-section'),
-        document.getElementById('header-last-login-section'),
         document.getElementById('header-your-status')
     ];
 
@@ -537,6 +535,35 @@ function formatRelativeTime(timestamp) {
     return date.toLocaleDateString();
 }
 
+function formatPresenceBadgeValue(date) {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+        return '';
+    }
+
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMinutes = Math.floor(diffMs / (60 * 1000));
+
+    if (diffMinutes < 1) {
+        return '1m ago';
+    }
+    if (diffMinutes < 60) {
+        return `${diffMinutes}m ago`;
+    }
+
+    const diffHours = Math.floor(diffMinutes / 60);
+    if (diffHours < 24) {
+        return `${diffHours || 1}h ago`;
+    }
+
+    const options = { month: 'short', day: 'numeric' };
+    if (now.getFullYear() !== date.getFullYear()) {
+        options.year = 'numeric';
+    }
+
+    return date.toLocaleDateString(undefined, options);
+}
+
 function getStatusAppearance(timestamp) {
     const date = convertToDate(timestamp);
 
@@ -603,8 +630,12 @@ function resolveDisplayName(user) {
         return candidate;
     }
 
-    if (user.email) {
-        return getDisplayNameFromEmail(user.email);
+    const primaryEmail = Array.isArray(user.emails) && user.emails.length > 0
+        ? user.emails[0]
+        : (typeof user.email === 'string' ? user.email : null);
+
+    if (primaryEmail) {
+        return getDisplayNameFromEmail(primaryEmail);
     }
 
     return 'Friend';
@@ -625,50 +656,216 @@ function isUserActive(user) {
     return (Date.now() - date.getTime()) <= ONLINE_STALE_THRESHOLD_MS;
 }
 
+function getPrimaryPresenceDetails(user) {
+    if (!user) {
+        return { timestamp: null, date: null, source: null };
+    }
+
+    const seenDate = convertToDate(user.lastSeen);
+    const loginDate = convertToDate(user.lastLogin);
+
+    if (seenDate && loginDate) {
+        if (seenDate.getTime() >= loginDate.getTime()) {
+            return { timestamp: user.lastSeen, date: seenDate, source: 'seen' };
+        }
+        return { timestamp: user.lastLogin, date: loginDate, source: 'login' };
+    }
+
+    if (seenDate) {
+        return { timestamp: user.lastSeen, date: seenDate, source: 'seen' };
+    }
+
+    if (loginDate) {
+        return { timestamp: user.lastLogin, date: loginDate, source: 'login' };
+    }
+
+    const fallbackTimestamp = user.lastLogin || user.lastSeen || null;
+    const fallbackDate = convertToDate(fallbackTimestamp);
+
+    if (fallbackDate) {
+        const source = (user.lastSeen && fallbackTimestamp === user.lastSeen) ? 'seen' : 'login';
+        return { timestamp: fallbackTimestamp, date: fallbackDate, source };
+    }
+
+    return { timestamp: null, date: null, source: null };
+}
+
+function buildPresenceSubtitle(user, primaryDetails) {
+    if (!user) {
+        return 'No recent activity yet';
+    }
+
+    const isActive = isUserActive(user);
+    if (isActive) {
+        return 'Online now';
+    }
+
+    const details = primaryDetails || getPrimaryPresenceDetails(user);
+    const referenceDate = details.date
+        || convertToDate(details.timestamp)
+        || convertToDate(user.lastLogin)
+        || convertToDate(user.lastSeen);
+
+    if (!referenceDate) {
+        return 'No recent activity yet';
+    }
+
+    const summary = formatPresenceBadgeValue(referenceDate);
+    if (!summary) {
+        return 'No recent activity yet';
+    }
+
+    return `Seen ${summary}`;
+}
+
+function buildPresenceTooltip(user) {
+    if (!user) {
+        return 'No recent activity yet';
+    }
+
+    const parts = [];
+    const loginDate = convertToDate(user.lastLogin);
+    const seenDate = convertToDate(user.lastSeen);
+
+    if (loginDate) {
+        const relative = formatRelativeTime(user.lastLogin);
+        parts.push(`Logged in: ${loginDate.toLocaleString()} (${relative})`);
+    }
+
+    if (seenDate) {
+        const relative = isUserActive(user) ? 'Online now' : formatRelativeTime(user.lastSeen);
+        parts.push(`Last seen: ${seenDate.toLocaleString()} (${relative})`);
+    }
+
+    if (parts.length === 0) {
+        return 'No recent activity yet';
+    }
+
+    return parts.join(' • ');
+}
+
 /**
- * Display currently online users in header status bar
+ * Display friends who logged in within last 3 weeks (up to 10 users)
+ * Shows their names with subtle last login time indicators
  */
 export function displayOnlineUsers(onlineUsers = []) {
     const onlineSection = document.getElementById('header-online-section');
     const usersList = document.getElementById('header-online-users-list');
+    const concurrencyIndicator = document.getElementById('header-online-concurrency');
 
     if (!onlineSection || !usersList) {
         return;
     }
 
-    const activeUsers = Array.isArray(onlineUsers)
-        ? onlineUsers.filter((user) => isUserActive(user))
-        : [];
+    // Filter and limit to 10 users
+    const safeUsers = Array.isArray(onlineUsers) ? onlineUsers : [];
+    const now = Date.now();
 
-    if (activeUsers.length === 0) {
+    const entries = safeUsers
+        .map((user) => {
+            const primary = getPrimaryPresenceDetails(user);
+            if (primary.date) {
+                return { user, primary };
+            }
+
+            const fallbackTimestamp = primary.timestamp || user.lastLogin || user.lastSeen || null;
+            const fallbackDate = convertToDate(fallbackTimestamp);
+            const fallbackSource = (user.lastSeen && fallbackTimestamp === user.lastSeen) ? 'seen' : 'login';
+
+            return {
+                user,
+                primary: {
+                    timestamp: fallbackTimestamp,
+                    date: fallbackDate,
+                    source: primary.source || fallbackSource
+                }
+            };
+        })
+        .filter(({ primary }) => {
+            if (!(primary.date instanceof Date) || Number.isNaN(primary.date.getTime())) {
+                return false;
+            }
+            return (now - primary.date.getTime()) <= THREE_WEEKS_MS;
+        })
+        .sort((a, b) => b.primary.date.getTime() - a.primary.date.getTime())
+        .slice(0, 10);
+
+    if (entries.length === 0) {
         hideOnlineUsers();
         return;
     }
 
     usersList.innerHTML = '';
 
-    activeUsers.forEach((user) => {
-        const timestamp = user.lastSeen || user.lastLogin;
-        const appearance = getStatusAppearance(timestamp);
+    if (concurrencyIndicator) {
+        const activeIds = new Set();
+        entries.forEach((entry) => {
+            if (isUserActive(entry.user)) {
+                const id = entry.user?.canonicalUserId || entry.user?.userId || entry.user?.email;
+                if (id) {
+                    activeIds.add(id);
+                }
+            }
+        });
+        const activeCount = activeIds.size;
+
+        if (activeCount >= 2) {
+            const label = `• ${activeCount} friends online now`;
+            concurrencyIndicator.textContent = label;
+            concurrencyIndicator.classList.remove('hidden');
+        } else {
+            concurrencyIndicator.textContent = '';
+            concurrencyIndicator.classList.add('hidden');
+        }
+    }
+
+    entries.forEach(({ user, primary }) => {
+        const appearance = getStatusAppearance(primary.timestamp || primary.date);
+        const tooltip = buildPresenceTooltip(user);
+        const activeNow = isUserActive(user);
+
+        // Create badge container
         const badge = document.createElement('span');
-        badge.classList.add('status-badge', appearance.badgeClass);
-
-        const tooltip = buildStatusTooltip('Last seen', appearance, timestamp);
+        badge.classList.add('status-badge', 'status-badge--presence', appearance.badgeClass, 'status-tooltip');
         badge.setAttribute('aria-label', tooltip);
-        badge.classList.add('status-tooltip');
+        badge.setAttribute('title', tooltip);
         badge.dataset.tooltip = tooltip;
+        badge.dataset.statusTone = appearance.tone;
+        if (activeNow) {
+            badge.classList.add('status-badge--active');
+        }
 
+        // Create status dot
         const dot = document.createElement('span');
-        dot.classList.add('status-dot', appearance.dotClass);
-        if (appearance.tone === 'green') {
+        dot.classList.add('status-dot', 'status-dot--compact', appearance.dotClass);
+        if (appearance.tone === 'green' && activeNow) {
             dot.classList.add('status-dot--pulse');
         }
 
+        // Wrap name and subtitle
+        const infoWrapper = document.createElement('span');
+        infoWrapper.classList.add('status-badge__info');
+
+        // Create name
         const nameSpan = document.createElement('span');
+        nameSpan.classList.add('status-name', 'status-name--presence');
         nameSpan.textContent = resolveDisplayName(user);
 
+        // Create time indicator (subtle, minimal)
+        const timeSpan = document.createElement('span');
+        timeSpan.classList.add('status-time', 'status-time--detail');
+        timeSpan.textContent = buildPresenceSubtitle(user, primary);
+        if (appearance.textClass) {
+            nameSpan.classList.add(appearance.textClass);
+            timeSpan.classList.add(appearance.textClass);
+        }
+
+        infoWrapper.appendChild(nameSpan);
+        infoWrapper.appendChild(timeSpan);
+
+        // Assemble badge structure: dot + info
         badge.appendChild(dot);
-        badge.appendChild(nameSpan);
+        badge.appendChild(infoWrapper);
 
         usersList.appendChild(badge);
     });
@@ -683,6 +880,7 @@ export function displayOnlineUsers(onlineUsers = []) {
 export function hideOnlineUsers() {
     const onlineSection = document.getElementById('header-online-section');
     const usersList = document.getElementById('header-online-users-list');
+    const concurrencyIndicator = document.getElementById('header-online-concurrency');
 
     if (!onlineSection) {
         return;
@@ -692,135 +890,13 @@ export function hideOnlineUsers() {
         usersList.innerHTML = '';
     }
 
+    if (concurrencyIndicator) {
+        concurrencyIndicator.textContent = '';
+        concurrencyIndicator.classList.add('hidden');
+    }
+
     onlineSection.classList.add('hidden');
     onlineSection.classList.remove('status-section--with-divider');
-    updateCommunityStatusLayout();
-}
-
-/**
- * Display recent logins in header status bar
- */
-export function displayRecentLogins(recentUsers = []) {
-    const lastLoginSection = document.getElementById('header-last-login-section');
-    const list = document.getElementById('header-last-login-list');
-
-    if (!lastLoginSection || !list) {
-        return;
-    }
-
-    const safeUsers = Array.isArray(recentUsers) ? recentUsers : [];
-
-    if (safeUsers.length === 0) {
-        hideRecentLogins();
-        return;
-    }
-
-    list.innerHTML = '';
-    recentLoginEntries = [];
-
-    safeUsers.forEach((user) => {
-        const timestamp = user.lastLogin || user.lastSeen;
-        const appearance = getStatusAppearance(timestamp);
-
-        const badge = document.createElement('span');
-        badge.classList.add('status-badge', appearance.badgeClass);
-
-        const tooltip = buildStatusTooltip('Last logged on', appearance, timestamp);
-        badge.setAttribute('aria-label', tooltip);
-        badge.classList.add('status-tooltip');
-        badge.dataset.tooltip = tooltip;
-
-        const dot = document.createElement('span');
-        dot.classList.add('status-dot', appearance.dotClass);
-        if (appearance.tone === 'green') {
-            dot.classList.add('status-dot--pulse');
-        }
-        badge.appendChild(dot);
-
-        const nameSpan = document.createElement('span');
-        nameSpan.textContent = resolveDisplayName(user);
-        badge.appendChild(nameSpan);
-
-        const timeSpan = document.createElement('span');
-        timeSpan.classList.add('status-time', appearance.textClass);
-        timeSpan.textContent = appearance.date ? appearance.relative : 'No recent activity';
-        badge.appendChild(timeSpan);
-
-        list.appendChild(badge);
-
-        recentLoginEntries.push({
-            badge,
-            dot,
-            timeEl: timeSpan,
-            timestamp,
-            prefix: 'Last logged on'
-        });
-    });
-
-    if (recentLoginsIntervalId) {
-        clearInterval(recentLoginsIntervalId);
-    }
-
-    recentLoginsIntervalId = setInterval(() => {
-        updateRecentLoginTimes();
-    }, 60000);
-
-    lastLoginSection.classList.remove('hidden');
-    updateCommunityStatusLayout();
-}
-
-function updateRecentLoginTimes() {
-    if (!recentLoginEntries.length) {
-        return;
-    }
-
-    recentLoginEntries.forEach((entry) => {
-        if (!entry || !entry.timeEl) {
-            return;
-        }
-        const appearance = getStatusAppearance(entry.timestamp);
-        entry.timeEl.textContent = appearance.date ? appearance.relative : 'No recent activity';
-
-        applyStatusClasses(entry.badge, BADGE_STATUS_CLASSES, appearance.badgeClass);
-        applyStatusClasses(entry.dot, DOT_STATUS_CLASSES, appearance.dotClass);
-        applyStatusClasses(entry.timeEl, TEXT_STATUS_CLASSES, appearance.textClass);
-
-        if (appearance.tone === 'green') {
-            entry.dot.classList.add('status-dot--pulse');
-        } else {
-            entry.dot.classList.remove('status-dot--pulse');
-        }
-
-        const tooltip = buildStatusTooltip(entry.prefix || 'Last logged on', appearance, entry.timestamp);
-        entry.badge.setAttribute('aria-label', tooltip);
-        entry.badge.dataset.tooltip = tooltip;
-    });
-}
-
-/**
- * Hide recent logins section
- */
-export function hideRecentLogins() {
-    const lastLoginSection = document.getElementById('header-last-login-section');
-    const list = document.getElementById('header-last-login-list');
-
-    if (list) {
-        list.innerHTML = '';
-    }
-
-    if (recentLoginsIntervalId) {
-        clearInterval(recentLoginsIntervalId);
-        recentLoginsIntervalId = null;
-    }
-
-    recentLoginEntries = [];
-
-    if (!lastLoginSection) {
-        return;
-    }
-
-    lastLoginSection.classList.add('hidden');
-    lastLoginSection.classList.remove('status-section--with-divider');
     updateCommunityStatusLayout();
 }
 
