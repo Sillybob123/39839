@@ -1,6 +1,6 @@
 // Main Application Entry Point - QUERY FIX FOR COMMENT BADGES + GENERAL PARSHA CHAT
 import { TORAH_PARSHAS } from './config.js';
-import { fetchCurrentParsha, fetchParshaText, loadCommentaryData } from './api.js';
+import { fetchCurrentParsha, fetchParshaText, loadCommentaryData, loadMitzvahChallenges } from './api.js';
 import { state, setState } from './state.js';
 import { getDisplayNameFromEmail } from './name-utils.js';
 import {
@@ -58,7 +58,16 @@ import {
     listenForOnlineUsers,
     stopListeningForOnlineUsers,
     getUserInfo,
-    getUsersWithinThreeWeeks
+    getUsersWithinThreeWeeks,
+    listenForMitzvahReflections,
+    stopListeningForMitzvahReflections,
+    submitMitzvahReflection,
+    submitMitzvahReflectionReaction,
+    getMitzvahCompletionStatus,
+    setMitzvahCompletionStatus,
+    updateMitzvahLeaderboard,
+    getMitzvahLeaderboard,
+    formatTimeAgo
 } from './firebase.js';
 
 import { collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
@@ -81,6 +90,18 @@ let friendLoginsRefreshIntervalId = null;
 const FRIEND_PRESENCE_WINDOW_MS = 21 * 24 * 60 * 60 * 1000; // 3 weeks
 let trackedOnlineFriends = [];
 let trackedRecentFriendLogins = [];
+
+// Weekly mitzvah challenge tracking
+let currentMitzvahChallengeId = null;
+let currentMitzvahCompletion = false;
+let mitzvahChatMessages = [];
+let isSubmittingMitzvahReflection = false;
+let mitzvahCountdownIntervalId = null;
+let mitzvahModalWasShown = false;
+const MITZVAH_MODAL_DISMISS_KEY_PREFIX = 'mitzvahModalDismissed:';
+const MITZVAH_LEADERBOARD_LIMIT = 10;
+let isLoadingMitzvahLeaderboard = false;
+let currentMitzvahChallengeMode = 'none';
 
 function escapeForAttributeSelector(value) {
     if (typeof value !== 'string') {
@@ -212,56 +233,95 @@ async function init() {
             let initialResolved = false;
             initAuth(async (user) => {
                 isAuthReady = true;
-                await handleAuthStateChange(user);
+                try {
+                    await handleAuthStateChange(user);
+                } catch (error) {
+                    console.error('Error in auth state change handler:', error);
+                }
                 if (!initialResolved) {
                     initialResolved = true;
                     resolve();
                 }
             });
         });
-        
-        const commentaryData = await loadCommentaryData();
-        setState({ commentaryData });
+
+        console.log('✅ Auth initialized');
+
+        const [commentaryData, mitzvahChallengeData] = await Promise.all([
+            loadCommentaryData(),
+            loadMitzvahChallenges()
+        ]);
+
+        console.log('✅ Data loaded');
+
+        setState({
+            commentaryData,
+            mitzvahChallenges: (mitzvahChallengeData && Array.isArray(mitzvahChallengeData.challenges))
+                ? mitzvahChallengeData.challenges
+                : []
+        });
         setState({ allParshas: TORAH_PARSHAS });
-        
+
         const currentParshaName = await fetchCurrentParsha();
-        
+
+        console.log('✅ Current parsha fetched:', currentParshaName);
+
         if (currentParshaName) {
-            const matchingParsha = TORAH_PARSHAS.find(p => 
+            const matchingParsha = TORAH_PARSHAS.find(p =>
                 p.name.toLowerCase() === currentParshaName.toLowerCase() ||
                 currentParshaName.toLowerCase().includes(p.name.toLowerCase())
             );
-            
+
             if (matchingParsha) {
+                const matchingIndex = TORAH_PARSHAS.indexOf(matchingParsha);
                 setState({
                     currentParshaRef: matchingParsha.reference,
-                    currentParshaIndex: TORAH_PARSHAS.indexOf(matchingParsha)
+                    currentParshaIndex: matchingIndex,
+                    weeklyParshaRef: matchingParsha.reference,
+                    weeklyParshaIndex: matchingIndex
                 });
+                console.log('✅ Matched current parsha:', matchingParsha.name);
             }
         }
-        
+
         if (!state.currentParshaRef && TORAH_PARSHAS.length > 0) {
             setState({
                 currentParshaRef: TORAH_PARSHAS[0].reference,
                 currentParshaIndex: 0
             });
+            console.log('✅ Set to first parsha');
         }
-        
+
+        if ((state.weeklyParshaIndex == null || state.weeklyParshaIndex < 0) && state.currentParshaRef) {
+            const fallbackIndex = state.currentParshaIndex >= 0 ? state.currentParshaIndex : 0;
+            setState({
+                weeklyParshaRef: state.currentParshaRef,
+                weeklyParshaIndex: fallbackIndex
+            });
+        }
+
         populateParshaSelector();
         updateNavigationButtons();
         setupEventListeners();
-        
+
+        console.log('✅ Setup complete, loading parsha:', state.currentParshaRef);
+
         if (state.currentParshaRef) {
             await loadParsha(state.currentParshaRef);
         }
-        
+
+        console.log('✅ Application initialized successfully');
+
     } catch (error) {
         console.error('❌ Initialization error:', error);
         showError('Failed to initialize the application. Please refresh the page.');
+        hideLoading();
     }
 }
 
 function setupEventListeners() {
+    setupMitzvahChallengeEventListeners();
+
     // Add change listener to ALL parsha selector elements (desktop and mobile)
     document.querySelectorAll('select#parsha-selector').forEach((selector) => {
         selector.addEventListener('change', async (e) => {
@@ -386,6 +446,970 @@ function setupEventListeners() {
             }
         }
     });
+}
+
+function setupMitzvahChallengeEventListeners() {
+    const checklistInput = document.getElementById('mitzvah-challenge-checkbox');
+    if (checklistInput) {
+        checklistInput.addEventListener('click', handleMitzvahChecklistToggle);
+        checklistInput.addEventListener('change', handleMitzvahChecklistToggle);
+    }
+
+    const chatSubmitButton = document.getElementById('mitzvah-chat-submit');
+    if (chatSubmitButton) {
+        chatSubmitButton.addEventListener('click', handleMitzvahChatSubmit);
+    }
+
+    const chatInput = document.getElementById('mitzvah-chat-input');
+    if (chatInput) {
+        chatInput.addEventListener('keydown', (event) => {
+            if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                event.preventDefault();
+                handleMitzvahChatSubmit();
+            }
+        });
+    }
+
+    const modalClose = document.getElementById('mitzvah-modal-close');
+    if (modalClose) {
+        modalClose.addEventListener('click', () => dismissMitzvahModal(true));
+    }
+
+    const modalOverlay = document.getElementById('mitzvah-modal-overlay');
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', () => dismissMitzvahModal(false));
+    }
+
+    const modalRemind = document.getElementById('mitzvah-modal-remind');
+    if (modalRemind) {
+        modalRemind.addEventListener('click', () => dismissMitzvahModal(false));
+    }
+
+    const modalOpen = document.getElementById('mitzvah-modal-open');
+    if (modalOpen) {
+        modalOpen.addEventListener('click', () => {
+            scrollToMitzvahChallenge();
+            dismissMitzvahModal(true);
+        });
+    }
+}
+
+function getMitzvahChallengeId(parshaName) {
+    if (!parshaName || typeof parshaName !== 'string') {
+        return null;
+    }
+    return `mitzvah-${parshaName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+}
+
+function getMitzvahChallengeByParsha(parshaName) {
+    if (!parshaName || !state.mitzvahChallenges || !Array.isArray(state.mitzvahChallenges)) {
+        return null;
+    }
+    return state.mitzvahChallenges.find((challenge) => {
+        return challenge?.parsha && challenge.parsha.toLowerCase() === parshaName.toLowerCase();
+    }) || null;
+}
+
+function updateMitzvahChallengeForParsha(parshaName) {
+    if (!parshaName) {
+        teardownMitzvahChallenge();
+        setState({
+            currentMitzvahChallenge: null,
+            currentMitzvahChallengeId: null
+        });
+        return;
+    }
+    renderMitzvahChallengeSection(parshaName);
+}
+
+function renderMitzvahChallengeSection(parshaName, providedChallenge = null) {
+    const section = document.getElementById('mitzvah-challenge-section');
+    const lockedContainer = document.getElementById('mitzvah-challenge-locked');
+    const lockedHeading = document.getElementById('mitzvah-locked-heading');
+    const lockedMessage = document.getElementById('mitzvah-locked-message');
+    if (!section) {
+        return;
+    }
+
+    const challenge = providedChallenge || getMitzvahChallengeByParsha(parshaName);
+
+    if (!challenge) {
+        teardownMitzvahChallenge();
+        if (lockedContainer) {
+            lockedContainer.classList.add('hidden');
+        }
+        return;
+    }
+
+    if (lockedContainer) {
+        lockedContainer.classList.add('hidden');
+    }
+
+    const parshaIndex = state.allParshas.findIndex((parsha) => parsha.name === parshaName);
+    const weeklyIndex = (typeof state.weeklyParshaIndex === 'number' && state.weeklyParshaIndex >= 0)
+        ? state.weeklyParshaIndex
+        : ((typeof state.currentParshaIndex === 'number' && state.currentParshaIndex >= 0)
+            ? state.currentParshaIndex
+            : parshaIndex);
+
+    let challengeMode = 'current';
+    if (weeklyIndex != null && weeklyIndex >= 0 && parshaIndex >= 0) {
+        if (parshaIndex > weeklyIndex) {
+            challengeMode = 'future';
+        } else if (parshaIndex < weeklyIndex) {
+            challengeMode = 'past';
+        }
+    }
+
+    if (challengeMode === 'future') {
+        teardownMitzvahChallenge();
+        currentMitzvahChallengeMode = 'future';
+        if (lockedContainer) {
+            if (lockedHeading) {
+                lockedHeading.textContent = `${parshaName} Challenge Unlocks Soon`;
+            }
+            if (lockedMessage) {
+                lockedMessage.textContent = 'Return during this parsha’s week to read the mitzvah challenge and share reflections.';
+            }
+            lockedContainer.classList.remove('hidden');
+        }
+        return;
+    }
+
+    const challengeId = getMitzvahChallengeId(parshaName);
+    currentMitzvahChallengeId = challengeId;
+    currentMitzvahCompletion = false;
+    currentMitzvahChallengeMode = challengeMode;
+
+    const titleEl = document.getElementById('mitzvah-challenge-heading');
+    const mitzvahEl = document.getElementById('mitzvah-challenge-mitzvah');
+    const explanationEl = document.getElementById('mitzvah-challenge-explanation');
+    const connectionEl = document.getElementById('mitzvah-challenge-connection');
+    const actionEl = document.getElementById('mitzvah-challenge-action');
+    const countdownEl = document.getElementById('mitzvah-countdown');
+    const chatStatusEl = document.getElementById('mitzvah-chat-status');
+
+    if (chatStatusEl) {
+        chatStatusEl.textContent = '';
+        chatStatusEl.classList.remove('mitzvah-chat-status--success');
+    }
+
+    if (countdownEl) {
+        countdownEl.textContent = '';
+        countdownEl.classList.remove('is-closed');
+    }
+
+    if (titleEl) {
+        titleEl.textContent = `Weekly Mitzvah Challenge — ${parshaName}`;
+    }
+    if (mitzvahEl) {
+        mitzvahEl.textContent = challenge.mitzvah || '';
+    }
+    if (explanationEl) {
+        explanationEl.innerHTML = formatText(challenge.explanation || '');
+    }
+    if (connectionEl) {
+        connectionEl.innerHTML = formatText(challenge.connection || '');
+    }
+    if (actionEl) {
+        actionEl.innerHTML = formatText(challenge.challenge || '');
+    }
+
+    const weekWindow = getWeekWindowForParsha(parshaIndex);
+    const weekStart = weekWindow.weekStart;
+    const deadline = weekWindow.deadline;
+
+    setState({
+        currentMitzvahChallenge: { ...challenge, parsha: parshaName },
+        currentMitzvahChallengeId: challengeId,
+        currentMitzvahWeekStart: weekStart ? weekStart.toISOString() : null,
+        currentMitzvahDeadline: deadline ? deadline.toISOString() : null
+    });
+
+    mitzvahModalWasShown = false;
+
+    section.classList.remove('hidden');
+
+    const card = section.querySelector('.mitzvah-card');
+    if (card) {
+        card.classList.toggle('mitzvah-card--closed', challengeMode !== 'current');
+    }
+
+    clearMitzvahCountdown();
+    startMitzvahCountdown(deadline);
+
+    stopListeningForMitzvahReflections();
+    mitzvahChatMessages = [];
+    renderMitzvahChatMessages([]);
+
+    listenForMitzvahReflections(challengeId, (reflections) => {
+        mitzvahChatMessages = Array.isArray(reflections) ? reflections : [];
+        renderMitzvahChatMessages(mitzvahChatMessages);
+    });
+
+    refreshMitzvahCompletionStatus(challengeId);
+    updateMitzvahAuthState();
+    refreshMitzvahLeaderboardDisplay();
+
+    if (challengeMode === 'current') {
+        populateMitzvahModalContent(challenge, parshaName);
+        maybeShowMitzvahModal();
+    } else {
+        hideMitzvahModal(false);
+    }
+}
+
+function teardownMitzvahChallenge() {
+    const section = document.getElementById('mitzvah-challenge-section');
+    if (section) {
+        section.classList.add('hidden');
+    }
+    stopListeningForMitzvahReflections();
+    currentMitzvahChallengeId = null;
+    currentMitzvahCompletion = false;
+    mitzvahChatMessages = [];
+    clearMitzvahCountdown();
+    mitzvahModalWasShown = false;
+    currentMitzvahChallengeMode = 'none';
+
+    const chatContainer = document.getElementById('mitzvah-chat-messages');
+    if (chatContainer) {
+        chatContainer.innerHTML = '<p class="mitzvah-chat-empty">Weekly mitzvah reflections will appear here.</p>';
+    }
+
+    const chatStatus = document.getElementById('mitzvah-chat-status');
+    if (chatStatus) {
+        chatStatus.textContent = '';
+        chatStatus.classList.remove('mitzvah-chat-status--success');
+    }
+
+    const checklistHelper = document.getElementById('mitzvah-checklist-helper');
+    if (checklistHelper) {
+        checklistHelper.textContent = '';
+        checklistHelper.dataset.state = '';
+    }
+
+    const countdownEl = document.getElementById('mitzvah-countdown');
+    if (countdownEl) {
+        countdownEl.textContent = '';
+        countdownEl.classList.remove('is-closed');
+    }
+
+    const modalCountdownEl = document.getElementById('mitzvah-modal-countdown');
+    if (modalCountdownEl) {
+        modalCountdownEl.textContent = '';
+    }
+
+    const leaderboardList = document.getElementById('mitzvah-leaderboard-list');
+    if (leaderboardList) {
+        leaderboardList.innerHTML = '<p class="mitzvah-leaderboard__empty">Complete mitzvah challenges to appear on the leaderboard.</p>';
+    }
+
+    hideMitzvahModal(false);
+
+    const lockedContainer = document.getElementById('mitzvah-challenge-locked');
+    if (lockedContainer) {
+        lockedContainer.classList.add('hidden');
+    }
+
+    const card = section ? section.querySelector('.mitzvah-card') : null;
+    if (card) {
+        card.classList.remove('mitzvah-card--closed');
+    }
+
+    setState({
+        currentMitzvahChallenge: null,
+        currentMitzvahChallengeId: null,
+        currentMitzvahWeekStart: null,
+        currentMitzvahDeadline: null,
+        mitzvahLeaderboard: []
+    });
+}
+
+function updateMitzvahAuthState() {
+    const checkbox = document.getElementById('mitzvah-challenge-checkbox');
+    const chatInput = document.getElementById('mitzvah-chat-input');
+    const chatSubmit = document.getElementById('mitzvah-chat-submit');
+    const authMessage = document.getElementById('mitzvah-chat-auth');
+    const chatStatus = document.getElementById('mitzvah-chat-status');
+    const userId = getCurrentUserId();
+    const windowOpen = isMitzvahWindowOpen();
+
+    if (checkbox) {
+        checkbox.disabled = true;
+        checkbox.checked = Boolean(userId && currentMitzvahCompletion);
+    }
+
+    if (chatInput && chatSubmit) {
+        if (!windowOpen) {
+            chatInput.value = '';
+            chatInput.placeholder = 'Reflection sharing for this mitzvah is closed.';
+            chatInput.disabled = true;
+            chatSubmit.disabled = true;
+        } else if (!userId) {
+            chatInput.value = '';
+            chatInput.placeholder = 'Sign in to share how your mitzvah went.';
+            chatInput.disabled = true;
+            chatSubmit.disabled = true;
+        } else {
+            chatInput.disabled = false;
+            chatSubmit.disabled = false;
+            chatInput.placeholder = 'How did the mitzvah go for you this week?';
+        }
+    }
+
+    if (authMessage) {
+        if (!userId && windowOpen) {
+            authMessage.classList.remove('hidden');
+        } else {
+            authMessage.classList.add('hidden');
+        }
+    }
+
+    if (chatStatus && !isSubmittingMitzvahReflection) {
+        if (!windowOpen) {
+            chatStatus.textContent = 'The reflection window for this mitzvah has closed.';
+            chatStatus.classList.remove('mitzvah-chat-status--success');
+        } else if (!userId) {
+            chatStatus.textContent = '';
+            chatStatus.classList.remove('mitzvah-chat-status--success');
+        }
+    }
+
+    updateMitzvahChecklistUI();
+}
+
+function updateMitzvahChecklistUI(statusMessage = null) {
+    const checkbox = document.getElementById('mitzvah-challenge-checkbox');
+    const helper = document.getElementById('mitzvah-checklist-helper');
+    const userId = getCurrentUserId();
+    const windowOpen = isMitzvahWindowOpen();
+
+    if (!checkbox || !helper) {
+        return;
+    }
+
+    checkbox.disabled = true;
+    checkbox.checked = Boolean(userId && currentMitzvahCompletion);
+
+    if (!windowOpen) {
+        helper.textContent = 'This challenge window has closed. Join us for next week\'s mitzvah!';
+        helper.dataset.state = 'status';
+        return;
+    }
+
+    if (!userId) {
+        checkbox.checked = false;
+        helper.textContent = 'Sign in to track your challenge progress.';
+        helper.dataset.state = '';
+        return;
+    }
+
+    if (statusMessage) {
+        helper.textContent = statusMessage;
+        helper.dataset.state = 'status';
+    } else if (currentMitzvahCompletion) {
+        helper.textContent = 'Completed! Feel free to revisit or share how it went.';
+        helper.dataset.state = 'success';
+    } else {
+        helper.textContent = 'Share your reflection below to mark this challenge complete.';
+        helper.dataset.state = 'status';
+    }
+}
+
+async function refreshMitzvahCompletionStatus(challengeId) {
+    const checkbox = document.getElementById('mitzvah-challenge-checkbox');
+    const helper = document.getElementById('mitzvah-checklist-helper');
+
+    currentMitzvahCompletion = false;
+
+    if (!challengeId || !checkbox || !helper) {
+        updateMitzvahChecklistUI();
+        return;
+    }
+
+    const userId = getCurrentUserId();
+    if (!userId) {
+        updateMitzvahAuthState();
+        return;
+    }
+
+    checkbox.dataset.loading = 'true';
+    checkbox.disabled = true;
+    helper.textContent = 'Checking your progress...';
+    helper.dataset.state = '';
+
+    let hadError = false;
+    try {
+        const status = await getMitzvahCompletionStatus(userId, challengeId);
+        currentMitzvahCompletion = Boolean(status.completed);
+    } catch (error) {
+        console.error('Unable to load mitzvah completion status:', error);
+        helper.textContent = 'Unable to load your progress right now.';
+        helper.dataset.state = 'error';
+        hadError = true;
+    } finally {
+        checkbox.dataset.loading = 'false';
+        if (hadError) {
+            checkbox.disabled = true;
+        } else {
+            updateMitzvahAuthState();
+        }
+    }
+}
+
+async function handleMitzvahChecklistToggle(event) {
+    event.preventDefault();
+    const checkbox = event.target;
+    const helper = document.getElementById('mitzvah-checklist-helper');
+
+    if (!checkbox) {
+        return;
+    }
+
+    checkbox.checked = Boolean(currentMitzvahCompletion && getCurrentUserId());
+
+    // Show red error if user tries to check without sharing reflection
+    if (!currentMitzvahCompletion && getCurrentUserId()) {
+        helper.textContent = 'You must first share the reflection to mark as complete';
+        helper.dataset.state = 'error';
+        // Clear the error after 3 seconds
+        setTimeout(() => {
+            updateMitzvahChecklistUI();
+        }, 3000);
+    } else {
+        updateMitzvahChecklistUI(currentMitzvahCompletion
+            ? 'You\'ve already marked this challenge complete by sharing a reflection.'
+            : 'Share your reflection below to mark this challenge complete.');
+    }
+}
+
+function renderMitzvahChatMessages(messages = []) {
+    const messagesContainer = document.getElementById('mitzvah-chat-messages');
+    if (!messagesContainer) {
+        return;
+    }
+
+    messagesContainer.innerHTML = '';
+
+    if (!messages || messages.length === 0) {
+        const emptyMessage = currentMitzvahChallengeMode === 'past'
+            ? 'No reflections were shared during this mitzvah week.'
+            : 'Share how the mitzvah went this week.';
+        messagesContainer.innerHTML = `<p class="mitzvah-chat-empty">${emptyMessage}</p>`;
+        return;
+    }
+
+    const currentUserId = getCurrentUserId();
+    messages.forEach((message) => {
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('mitzvah-chat-message');
+        if (message.userId && currentUserId && message.userId === currentUserId) {
+            wrapper.classList.add('mitzvah-chat-message--self');
+        }
+
+        const meta = document.createElement('div');
+        meta.classList.add('mitzvah-chat-message__meta');
+
+        const author = document.createElement('span');
+        author.classList.add('mitzvah-chat-message__author');
+        author.textContent = message.username || 'Friend';
+
+        const time = document.createElement('span');
+        time.classList.add('mitzvah-chat-message__time');
+        time.textContent = formatTimeAgo(message.createdAt || message.updatedAt);
+
+        meta.appendChild(author);
+        meta.appendChild(time);
+
+        const body = document.createElement('div');
+        body.classList.add('mitzvah-chat-message__body');
+        body.innerHTML = convertMitzvahMessageText(message.message || '');
+
+        wrapper.appendChild(meta);
+        wrapper.appendChild(body);
+
+        // Add reaction buttons for each reflection
+        const reactionsSection = document.createElement('div');
+        reactionsSection.classList.add('mitzvah-message-reactions');
+
+        const reactions = message.reactions || {};
+        const emphasizes = reactions.emphasize || [];
+        const hearts = reactions.heart || [];
+
+        // Emphasize reaction button (matching verse reaction style)
+        const emphasizeBtn = document.createElement('button');
+        emphasizeBtn.className = 'reaction-btn emphasize-btn';
+        if (currentUserId && emphasizes.includes(currentUserId)) {
+            emphasizeBtn.classList.add('active');
+        }
+        emphasizeBtn.setAttribute('aria-label', 'Emphasize this reflection');
+        emphasizeBtn.innerHTML = `
+            <span class="reaction-icon emphasize-icon"></span>
+            <span class="reaction-count">${emphasizes.length > 0 ? emphasizes.length : ''}</span>
+        `;
+        emphasizeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (currentUserId && message.id) {
+                handleMitzvahReflectionReaction(message.id, 'emphasize', currentUserId);
+            }
+        });
+
+        // Heart reaction button (matching verse reaction style)
+        const heartBtn = document.createElement('button');
+        heartBtn.className = 'reaction-btn heart-btn';
+        if (currentUserId && hearts.includes(currentUserId)) {
+            heartBtn.classList.add('active');
+        }
+        heartBtn.setAttribute('aria-label', 'Heart this reflection');
+        heartBtn.innerHTML = `
+            <span class="reaction-icon heart-icon"></span>
+            <span class="reaction-count">${hearts.length > 0 ? hearts.length : ''}</span>
+        `;
+        heartBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (currentUserId && message.id) {
+                handleMitzvahReflectionReaction(message.id, 'heart', currentUserId);
+            }
+        });
+
+        reactionsSection.appendChild(emphasizeBtn);
+        reactionsSection.appendChild(heartBtn);
+        wrapper.appendChild(reactionsSection);
+
+        messagesContainer.appendChild(wrapper);
+    });
+
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function convertMitzvahMessageText(text) {
+    if (!text) {
+        return '';
+    }
+    return escapeHtml(text).replace(/\n/g, '<br>');
+}
+
+function calculateMitzvahWeekWindow(referenceDate = new Date()) {
+    const now = new Date(referenceDate);
+    const weekStart = new Date(now);
+    const day = weekStart.getDay();
+    const diffToSaturday = (day - 6 + 7) % 7;
+    weekStart.setDate(weekStart.getDate() - diffToSaturday);
+    weekStart.setHours(0, 0, 0, 0);
+
+    const deadline = new Date(weekStart);
+    deadline.setDate(weekStart.getDate() + 7);
+    deadline.setHours(0, 0, 0, 0);
+
+    return { weekStart, deadline };
+}
+
+function getWeekWindowForParsha(parshaIndex) {
+    const { weekStart, deadline } = calculateMitzvahWeekWindow();
+    const weeklyIndex = (typeof state.weeklyParshaIndex === 'number' && state.weeklyParshaIndex >= 0)
+        ? state.weeklyParshaIndex
+        : ((typeof state.currentParshaIndex === 'number' && state.currentParshaIndex >= 0)
+            ? state.currentParshaIndex
+            : parshaIndex);
+
+    if (weeklyIndex == null || weeklyIndex < 0 || parshaIndex == null || parshaIndex < 0) {
+        return { weekStart, deadline };
+    }
+
+    const diff = weeklyIndex - parshaIndex;
+    if (diff !== 0) {
+        weekStart.setDate(weekStart.getDate() - diff * 7);
+        deadline.setDate(deadline.getDate() - diff * 7);
+    }
+
+    return { weekStart, deadline };
+}
+
+function isMitzvahWindowOpen() {
+    const deadline = state.currentMitzvahDeadline;
+    if (!deadline) {
+        return true;
+    }
+    return Date.now() < new Date(deadline).getTime();
+}
+
+function startMitzvahCountdown(deadline) {
+    clearMitzvahCountdown();
+    if (!deadline) {
+        updateCountdownDisplays('', false, null);
+        return;
+    }
+
+    const target = new Date(deadline);
+
+    const update = () => {
+        const now = Date.now();
+        const diff = target.getTime() - now;
+        if (diff <= 0) {
+            updateCountdownDisplays('', true, target);
+            handleMitzvahWindowClosed();
+            clearMitzvahCountdown();
+            return;
+        }
+
+        updateCountdownDisplays(`Time remaining: ${formatCountdown(diff)}`, false, target);
+    };
+
+    update();
+    mitzvahCountdownIntervalId = setInterval(update, 1000);
+}
+
+function clearMitzvahCountdown() {
+    if (mitzvahCountdownIntervalId) {
+        clearInterval(mitzvahCountdownIntervalId);
+        mitzvahCountdownIntervalId = null;
+    }
+}
+
+function updateCountdownDisplays(text, isClosed, deadlineDate) {
+    const countdownEl = document.getElementById('mitzvah-countdown');
+    const displayText = isClosed
+        ? (deadlineDate ? `Challenge window closed on ${formatDeadlineDisplay(deadlineDate)}` : 'Challenge window closed')
+        : text;
+    if (countdownEl) {
+        countdownEl.textContent = displayText || '';
+        countdownEl.classList.toggle('is-closed', Boolean(displayText && isClosed));
+    }
+
+    const modalCountdownEl = document.getElementById('mitzvah-modal-countdown');
+    if (modalCountdownEl) {
+        if (isClosed) {
+            modalCountdownEl.textContent = deadlineDate ? `Closed ${formatDeadlineDisplayShort(deadlineDate)}` : 'Closed';
+        } else {
+            modalCountdownEl.textContent = text ? text.replace('Time remaining: ', '') : '';
+        }
+    }
+}
+
+function formatCountdown(diffMs) {
+    const totalSeconds = Math.max(0, Math.floor(diffMs / 1000));
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    const segments = [];
+    if (days > 0) {
+        segments.push(`${days}d`);
+    }
+    if (hours > 0 || days > 0) {
+        segments.push(`${hours}h`);
+    }
+    if (minutes > 0 || hours > 0 || days > 0) {
+        segments.push(`${minutes}m`);
+    }
+    segments.push(`${seconds}s`);
+
+    return segments.join(' ');
+}
+
+function formatDeadlineDisplay(date) {
+    return date.toLocaleString(undefined, {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+    });
+}
+
+function formatDeadlineDisplayShort(date) {
+    return date.toLocaleString(undefined, {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+    });
+}
+
+function handleMitzvahWindowClosed() {
+    if (currentMitzvahChallengeMode === 'current') {
+        hideMitzvahModal(true);
+    }
+    updateMitzvahAuthState();
+}
+
+function maybeShowMitzvahModal(force = false) {
+    const modal = document.getElementById('mitzvah-modal');
+    const challenge = state.currentMitzvahChallenge;
+    const challengeId = currentMitzvahChallengeId;
+    const windowOpen = isMitzvahWindowOpen();
+    const userId = getCurrentUserId();
+
+    if (currentMitzvahChallengeMode !== 'current') {
+        return;
+    }
+
+    if (!modal || !challenge || !challengeId || !windowOpen || !userId) {
+        return;
+    }
+
+    if (!force) {
+        if (mitzvahModalWasShown) {
+            return;
+        }
+        const dismissedKey = localStorage.getItem(`${MITZVAH_MODAL_DISMISS_KEY_PREFIX}${challengeId}`);
+        if (dismissedKey) {
+            return;
+        }
+    }
+
+    populateMitzvahModalContent(challenge, challenge.parsha || state.allParshas[state.currentParshaIndex]?.name || 'This Week');
+    showMitzvahModal();
+}
+
+function showMitzvahModal() {
+    const modal = document.getElementById('mitzvah-modal');
+    if (!modal) {
+        return;
+    }
+    modal.classList.remove('hidden');
+    modal.setAttribute('aria-hidden', 'false');
+    mitzvahModalWasShown = true;
+}
+
+function hideMitzvahModal(persist = false) {
+    const modal = document.getElementById('mitzvah-modal');
+    if (!modal) {
+        return;
+    }
+    modal.classList.add('hidden');
+    modal.setAttribute('aria-hidden', 'true');
+
+    if (persist && currentMitzvahChallengeId) {
+        localStorage.setItem(`${MITZVAH_MODAL_DISMISS_KEY_PREFIX}${currentMitzvahChallengeId}`, '1');
+    }
+
+    mitzvahModalWasShown = persist;
+}
+
+function dismissMitzvahModal(persist) {
+    hideMitzvahModal(persist);
+}
+
+function populateMitzvahModalContent(challenge, parshaName) {
+    const titleEl = document.getElementById('mitzvah-modal-title');
+    const mitzvahEl = document.getElementById('mitzvah-modal-mitzvah');
+    const summaryEl = document.getElementById('mitzvah-modal-summary');
+
+    if (titleEl) {
+        titleEl.textContent = `${parshaName || 'This Week'} — Weekly Challenge`;
+    }
+    if (mitzvahEl) {
+        mitzvahEl.textContent = challenge?.mitzvah || '';
+    }
+    if (summaryEl) {
+        const pieces = [];
+        if (challenge?.explanation) {
+            pieces.push(`<div class="mitzvah-modal__paragraph">${formatText(challenge.explanation)}</div>`);
+        }
+        if (challenge?.connection) {
+            pieces.push(`<div class="mitzvah-modal__paragraph">${formatText(challenge.connection)}</div>`);
+        }
+        if (challenge?.challenge) {
+            pieces.push(`<div class="mitzvah-modal__paragraph mitzvah-modal__callout">${formatText(challenge.challenge)}</div>`);
+        }
+        summaryEl.innerHTML = pieces.join('');
+    }
+}
+
+function scrollToMitzvahChallenge() {
+    const section = document.getElementById('mitzvah-challenge-section');
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+function renderMitzvahLeaderboard(leaderboard = []) {
+    const listEl = document.getElementById('mitzvah-leaderboard-list');
+    if (!listEl) {
+        return;
+    }
+
+    if (!leaderboard || leaderboard.length === 0) {
+        const emptyText = currentMitzvahChallengeMode === 'past'
+            ? 'No completions were recorded during this mitzvah week.'
+            : 'Be the first to complete this week’s mitzvah!';
+        listEl.innerHTML = `<p class="mitzvah-leaderboard__empty">${emptyText}</p>`;
+        return;
+    }
+
+    const currentUserId = getCurrentUserId();
+    listEl.innerHTML = '';
+
+    leaderboard.forEach((entry, index) => {
+        const item = document.createElement('div');
+        item.className = 'mitzvah-leaderboard__item';
+        if (entry.userId && currentUserId && entry.userId === currentUserId) {
+            item.classList.add('is-self');
+        }
+
+        const rank = document.createElement('span');
+        rank.className = 'mitzvah-leaderboard__rank';
+        rank.textContent = `#${index + 1}`;
+
+        // Create a flex container for name and badge to keep them together
+        const nameContainer = document.createElement('div');
+        nameContainer.className = 'mitzvah-leaderboard__name-container';
+
+        const name = document.createElement('span');
+        name.className = 'mitzvah-leaderboard__name';
+        name.textContent = entry.username || 'Friend';
+        nameContainer.appendChild(name);
+
+        const count = document.createElement('span');
+        count.className = 'mitzvah-leaderboard__count';
+        count.textContent = `${entry.totalCompleted}`;
+
+        item.appendChild(rank);
+        item.appendChild(nameContainer);
+        item.appendChild(count);
+
+        listEl.appendChild(item);
+    });
+}
+
+async function refreshMitzvahLeaderboardDisplay() {
+    const listEl = document.getElementById('mitzvah-leaderboard-list');
+    const challengeActive = Boolean(state.currentMitzvahChallengeId);
+    if (!listEl || !challengeActive) {
+        return;
+    }
+
+    if (isLoadingMitzvahLeaderboard) {
+        return;
+    }
+
+    isLoadingMitzvahLeaderboard = true;
+    listEl.innerHTML = '<p class="mitzvah-leaderboard__empty">Loading leaderboard…</p>';
+
+    try {
+        const leaderboard = await getMitzvahLeaderboard(MITZVAH_LEADERBOARD_LIMIT);
+        setState({ mitzvahLeaderboard: leaderboard });
+        renderMitzvahLeaderboard(leaderboard);
+    } catch (error) {
+        console.error('Unable to load mitzvah leaderboard:', error);
+        listEl.innerHTML = '<p class="mitzvah-leaderboard__error">Unable to load leaderboard right now.</p>';
+    } finally {
+        isLoadingMitzvahLeaderboard = false;
+    }
+}
+
+async function handleMitzvahChatSubmit() {
+    const input = document.getElementById('mitzvah-chat-input');
+    const statusEl = document.getElementById('mitzvah-chat-status');
+    const submitButton = document.getElementById('mitzvah-chat-submit');
+
+    if (!input || !statusEl) {
+        return;
+    }
+
+    const challengeId = currentMitzvahChallengeId;
+    const userId = getCurrentUserId();
+    const windowOpen = isMitzvahWindowOpen();
+
+    if (!challengeId) {
+        statusEl.textContent = 'Select a parsha with a mitzvah challenge to share reflections.';
+        statusEl.classList.remove('mitzvah-chat-status--success');
+        return;
+    }
+
+    if (!windowOpen) {
+        statusEl.textContent = 'The reflection window for this mitzvah has closed.';
+        statusEl.classList.remove('mitzvah-chat-status--success');
+        return;
+    }
+
+    if (!userId) {
+        statusEl.textContent = 'Sign in to share your reflection.';
+        statusEl.classList.remove('mitzvah-chat-status--success');
+        return;
+    }
+
+    const message = input.value.trim();
+    if (!message) {
+        statusEl.textContent = 'Please write a reflection before sharing.';
+        statusEl.classList.remove('mitzvah-chat-status--success');
+        return;
+    }
+
+    if (isSubmittingMitzvahReflection) {
+        return;
+    }
+
+    isSubmittingMitzvahReflection = true;
+    statusEl.textContent = '';
+    statusEl.classList.remove('mitzvah-chat-status--success');
+
+    if (submitButton) {
+        submitButton.disabled = true;
+    }
+    input.disabled = true;
+
+    const wasCompleted = currentMitzvahCompletion;
+
+    try {
+        const username = (currentUserProfile && currentUserProfile.username && !currentUserProfile.username.includes('@'))
+            ? currentUserProfile.username
+            : getSavedUsername();
+
+        await submitMitzvahReflection(challengeId, message, userId, username);
+        input.value = '';
+
+        if (!wasCompleted) {
+            try {
+                await setMitzvahCompletionStatus(userId, challengeId, true);
+                currentMitzvahCompletion = true;
+                updateMitzvahChecklistUI('Challenge marked as completed!');
+                await updateMitzvahLeaderboard(userId, username, 1);
+                await refreshMitzvahLeaderboardDisplay();
+            } catch (error) {
+                console.error('Error finalizing mitzvah completion:', error);
+                updateMitzvahChecklistUI('Reflection saved, but we could not update completion status. Please try again later.');
+            }
+        } else {
+            updateMitzvahChecklistUI();
+        }
+
+        statusEl.textContent = 'Reflection shared!';
+        statusEl.classList.add('mitzvah-chat-status--success');
+    } catch (error) {
+        console.error('Error sharing mitzvah reflection:', error);
+        statusEl.textContent = 'Could not share reflection. Please try again.';
+    } finally {
+        isSubmittingMitzvahReflection = false;
+        if (submitButton) {
+            submitButton.disabled = false;
+        }
+        input.disabled = false;
+        input.focus();
+        updateMitzvahAuthState();
+        setTimeout(() => {
+            if (statusEl.classList.contains('mitzvah-chat-status--success')) {
+                statusEl.textContent = '';
+                statusEl.classList.remove('mitzvah-chat-status--success');
+            }
+        }, 2500);
+    }
+}
+
+async function handleMitzvahReflectionReaction(reflectionId, reactionType, userId) {
+    if (!userId) {
+        return;
+    }
+
+    try {
+        await submitMitzvahReflectionReaction(reflectionId, reactionType, userId);
+    } catch (error) {
+        console.error('Error submitting reflection reaction:', error);
+        // Optionally, show an error to the user
+    }
 }
 
 function setupCommentPanelListeners() {
@@ -854,6 +1878,13 @@ async function handleAuthStateChange(user) {
             refreshCurrentUserProfile();
         }, 2000);
 
+        if (currentMitzvahChallengeId) {
+            await refreshMitzvahCompletionStatus(currentMitzvahChallengeId);
+        }
+        updateMitzvahAuthState();
+        refreshMitzvahLeaderboardDisplay();
+        maybeShowMitzvahModal();
+
     } else {
         setCurrentUserEmail(null);
         updateUsernameDisplay();
@@ -872,6 +1903,10 @@ async function handleAuthStateChange(user) {
 
         // Stop presence tracking
         stopPresenceTracking();
+
+        currentMitzvahCompletion = false;
+        updateMitzvahAuthState();
+        hideMitzvahModal(false);
     }
 }
 
@@ -1092,22 +2127,31 @@ async function loadParsha(parshaRef) {
     hideError();
 
     try {
+        console.log('📖 Fetching parsha text for:', parshaRef);
         const data = await fetchParshaText(parshaRef);
+        console.log('✅ Parsha text received');
 
+        console.log('🎨 Rendering parsha...');
         renderParsha(data, parshaRef);
+        console.log('✅ Parsha rendered');
+
         highlightCurrentParsha(parshaRef);
 
+        console.log('📊 Loading counts (comments, reactions, bookmarks)...');
         // Load both comments and reactions
         await Promise.all([
             loadCommentCounts(parshaRef),
             loadReactionCounts(parshaRef),
             loadBookmarkCounts(parshaRef)
         ]);
+        console.log('✅ Counts loaded');
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
+        console.log('✅ Parsha fully loaded');
+
     } catch (error) {
-        console.error('❌ Error loading parsha:', error);
+        console.error('❌ Error loading parsha:', error, error.stack);
         showError('Failed to load the Torah text. Please try again later.');
     } finally {
         hideLoading();
@@ -1161,13 +2205,14 @@ function renderParsha(data, parshaRef) {
 
     let significanceText = null;
     let significanceParshaName = null;
+    let activeParsha = null;
     try {
-        const currentParsha = state.allParshas.find(p => p.reference === parshaRef);
-        if (currentParsha && state.commentaryData && Array.isArray(state.commentaryData.parshas)) {
-            const parshaEntry = state.commentaryData.parshas.find(p => p.name === currentParsha.name);
+        activeParsha = state.allParshas.find(p => p.reference === parshaRef);
+        if (activeParsha && state.commentaryData && Array.isArray(state.commentaryData.parshas)) {
+            const parshaEntry = state.commentaryData.parshas.find(p => p.name === activeParsha.name);
             if (parshaEntry && parshaEntry.significance) {
                 significanceText = parshaEntry.significance;
-                significanceParshaName = currentParsha.name;
+                significanceParshaName = activeParsha.name;
                 // Significance will only display in modal when button is clicked
             }
         }
@@ -1198,6 +2243,8 @@ function renderParsha(data, parshaRef) {
         significanceButtonMobile.classList.toggle('cursor-not-allowed', !enabled);
         significanceButtonMobile.classList.toggle('pointer-events-none', !enabled);
     }
+
+    updateMitzvahChallengeForParsha(activeParsha?.name || null);
     
     const englishText = Array.isArray(data.text) ? data.text : [data.text];
     const hebrewText = Array.isArray(data.he) ? data.he : [data.he];

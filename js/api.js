@@ -31,14 +31,19 @@ export async function fetchParshaText(parshaRef) {
     try {
         // Use v3 API endpoint with text_only format to strip all annotations
         const apiUrl = `${API_CONFIG.SEFARIA_BASE}/v3/texts/${encodeURIComponent(parshaRef)}?version=english&version=hebrew&return_format=text_only`;
-        
-        const response = await fetch(apiUrl);
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
+        const response = await fetch(apiUrl, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
         if (!response.ok) {
             throw new Error(`API request failed: ${response.status}`);
         }
-        
+
         const data = await response.json();
-        
+
         // Transform v3 response to expected format
         return transformV3Response(data);
     } catch (error) {
@@ -53,20 +58,30 @@ export async function fetchParshaText(parshaRef) {
  */
 async function fetchParshaTextV1(parshaRef) {
     const apiUrl = `${API_CONFIG.SEFARIA_BASE}/texts/${encodeURIComponent(parshaRef)}?context=0&commentary=0`;
-    
-    const response = await fetch(apiUrl);
-    if (!response.ok) {
-        throw new Error(`API request failed: ${response.status}`);
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
+    try {
+        const response = await fetch(apiUrl, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            throw new Error(`API request failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Clean the v1 API response text as well
+        if (data.text) {
+            data.text = cleanTextArray(data.text);
+        }
+
+        return data;
+    } catch (error) {
+        clearTimeout(timeoutId);
+        throw error;
     }
-    
-    const data = await response.json();
-    
-    // Clean the v1 API response text as well
-    if (data.text) {
-        data.text = cleanTextArray(data.text);
-    }
-    
-    return data;
 }
 
 /**
@@ -153,5 +168,25 @@ export async function loadCommentaryData() {
     } catch (error) {
         console.error('Error loading commentary data:', error);
         return { parshas: [] };
+    }
+}
+
+/**
+ * Load mitzvah challenge data
+ */
+export async function loadMitzvahChallenges() {
+    try {
+        const response = await fetch('mitzvah-challenges.json');
+        if (!response.ok) {
+            throw new Error('Failed to load mitzvah challenge data');
+        }
+        const data = await response.json();
+        if (!data || !Array.isArray(data.challenges)) {
+            return { challenges: [] };
+        }
+        return data;
+    } catch (error) {
+        console.error('Error loading mitzvah challenges:', error);
+        return { challenges: [] };
     }
 }

@@ -1,12 +1,20 @@
 // State Management Module
 export const state = {
     commentaryData: null,
+    mitzvahChallenges: null,
     currentParshaRef: null,
     currentParshaIndex: -1,
+    weeklyParshaRef: null,
+    weeklyParshaIndex: -1,
     allParshas: [],
     isLoading: false,
     currentParshaSignificance: null,
-    currentParshaSignificanceName: null
+    currentParshaSignificanceName: null,
+    currentMitzvahChallenge: null,
+    currentMitzvahChallengeId: null,
+    currentMitzvahWeekStart: null,
+    currentMitzvahDeadline: null,
+    mitzvahLeaderboard: []
 };
 
 export function setState(updates) {

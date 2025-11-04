@@ -25,7 +25,8 @@ import {
     setDoc,
     increment,
     orderBy,
-    limit
+    limit,
+    runTransaction
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 import { getDisplayNameFromEmail } from './name-utils.js';
 
@@ -1153,6 +1154,7 @@ async function getUserInfo(userId) {
 
 // Listen for online users in real-time
 let onlineUsersUnsubscribe = null;
+let mitzvahReflectionsUnsubscribe = null;
 
 function listenForOnlineUsers(callback) {
   // Stop previous listener if exists
@@ -1197,6 +1199,228 @@ function stopListeningForOnlineUsers() {
   if (onlineUsersUnsubscribe) {
     onlineUsersUnsubscribe();
     onlineUsersUnsubscribe = null;
+  }
+}
+
+function listenForMitzvahReflections(challengeId, callback) {
+  if (mitzvahReflectionsUnsubscribe) {
+    mitzvahReflectionsUnsubscribe();
+    mitzvahReflectionsUnsubscribe = null;
+  }
+
+  if (!challengeId) {
+    callback([]);
+    return;
+  }
+
+  try {
+    const reflectionsQuery = query(
+      collection(db, 'mitzvahReflections'),
+      where('challengeId', '==', challengeId),
+      orderBy('createdAt', 'asc'),
+      limit(100)
+    );
+
+    mitzvahReflectionsUnsubscribe = onSnapshot(reflectionsQuery,
+      (querySnapshot) => {
+        const reflections = [];
+        querySnapshot.forEach((docSnapshot) => {
+          const data = docSnapshot.data();
+          reflections.push({
+            id: docSnapshot.id,
+            challengeId: data.challengeId,
+            message: data.message,
+            userId: data.userId,
+            username: data.username,
+            createdAt: data.createdAt,
+            updatedAt: data.updatedAt,
+            reactions: data.reactions
+          });
+        });
+        callback(reflections);
+      },
+      (error) => {
+        console.error('Error listening to mitzvah reflections:', error);
+        callback([]);
+      }
+    );
+  } catch (error) {
+    console.error('Error setting up mitzvah reflections listener:', error);
+    callback([]);
+  }
+}
+
+function stopListeningForMitzvahReflections() {
+  if (mitzvahReflectionsUnsubscribe) {
+    mitzvahReflectionsUnsubscribe();
+    mitzvahReflectionsUnsubscribe = null;
+  }
+}
+
+async function submitMitzvahReflection(challengeId, message, userId, username) {
+  if (!challengeId || !message || !userId) {
+    throw new Error('Missing required fields to submit reflection');
+  }
+
+  const trimmedMessage = message.trim();
+  if (!trimmedMessage) {
+    throw new Error('Reflection message cannot be empty');
+  }
+
+  try {
+    const reflection = {
+      challengeId,
+      message: trimmedMessage,
+      userId,
+      username: username || getDisplayNameFromEmail(userId) || 'Friend',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    };
+
+    await addDoc(collection(db, 'mitzvahReflections'), reflection);
+    return reflection;
+  } catch (error) {
+    console.error('Error submitting mitzvah reflection:', error);
+    throw error;
+  }
+}
+
+async function submitMitzvahReflectionReaction(reflectionId, reactionType, userId) {
+  if (!reflectionId || !reactionType || !userId) {
+    throw new Error('Missing required fields for reaction');
+  }
+
+  const reflectionRef = doc(db, 'mitzvahReflections', reflectionId);
+
+  try {
+    await runTransaction(db, async (transaction) => {
+      const reflectionDoc = await transaction.get(reflectionRef);
+      if (!reflectionDoc.exists()) {
+        throw new Error('Reflection not found');
+      }
+
+      const reflectionData = reflectionDoc.data();
+      const reactions = reflectionData.reactions || {};
+      const reaction = reactions[reactionType] || [];
+
+      if (reaction.includes(userId)) {
+        // User has already reacted, so remove the reaction
+        const updatedReaction = reaction.filter((id) => id !== userId);
+        reactions[reactionType] = updatedReaction;
+      } else {
+        // User has not reacted, so add the reaction
+        reaction.push(userId);
+        reactions[reactionType] = reaction;
+      }
+
+      transaction.update(reflectionRef, { reactions });
+    });
+  } catch (error) {
+    console.error('Error submitting mitzvah reflection reaction:', error);
+    throw error;
+  }
+}
+
+async function getMitzvahCompletionStatus(userId, challengeId) {
+  if (!userId || !challengeId) {
+    return { completed: false };
+  }
+
+  try {
+    const statusDocRef = doc(db, 'users', userId, 'mitzvahProgress', challengeId);
+    const snapshot = await getDoc(statusDocRef);
+    if (snapshot.exists()) {
+      const data = snapshot.data();
+      return {
+        completed: Boolean(data.completed),
+        completedAt: data.completedAt || null,
+        updatedAt: data.updatedAt || null
+      };
+    }
+    return { completed: false };
+  } catch (error) {
+    console.error('Error fetching mitzvah completion status:', error);
+    return { completed: false };
+  }
+}
+
+async function setMitzvahCompletionStatus(userId, challengeId, completed) {
+  if (!userId || !challengeId) {
+    throw new Error('Missing required identifiers to update completion status');
+  }
+
+  try {
+    const statusDocRef = doc(db, 'users', userId, 'mitzvahProgress', challengeId);
+    const payload = {
+      completed: Boolean(completed),
+      updatedAt: serverTimestamp()
+    };
+    if (completed) {
+      payload.completedAt = serverTimestamp();
+    }
+    await setDoc(statusDocRef, payload, { merge: true });
+    return payload;
+  } catch (error) {
+    console.error('Error updating mitzvah completion status:', error);
+    throw error;
+  }
+}
+
+async function updateMitzvahLeaderboard(userId, username, delta) {
+  if (!userId || !delta) {
+    return;
+  }
+
+  try {
+    const leaderboardRef = doc(db, 'mitzvahLeaderboard', userId);
+    const displayName = username && typeof username === 'string' && !username.includes('@')
+      ? username
+      : getDisplayNameFromEmail(username || userId);
+
+    const updatePayload = {
+      userId,
+      username: displayName || 'Friend',
+      updatedAt: serverTimestamp(),
+      totalCompleted: increment(delta)
+    };
+
+    if (delta > 0) {
+      updatePayload.lastCompletedAt = serverTimestamp();
+    }
+
+    await setDoc(leaderboardRef, updatePayload, { merge: true });
+  } catch (error) {
+    console.error('Error updating mitzvah leaderboard:', error);
+  }
+}
+
+async function getMitzvahLeaderboard(limitCount = 10) {
+  try {
+    const leaderboardQuery = query(
+      collection(db, 'mitzvahLeaderboard'),
+      orderBy('totalCompleted', 'desc'),
+      limit(limitCount)
+    );
+
+    const snapshot = await getDocs(leaderboardQuery);
+    const results = [];
+    snapshot.forEach((docSnapshot) => {
+      const data = docSnapshot.data();
+      if (!data || typeof data.totalCompleted !== 'number' || data.totalCompleted <= 0) {
+        return;
+      }
+      results.push({
+        id: docSnapshot.id,
+        userId: data.userId || docSnapshot.id,
+        username: data.username || getDisplayNameFromEmail(docSnapshot.id),
+        totalCompleted: data.totalCompleted,
+        lastCompletedAt: data.lastCompletedAt || null
+      });
+    });
+    return results;
+  } catch (error) {
+    console.error('Error loading mitzvah leaderboard:', error);
+    return [];
   }
 }
 
@@ -1260,5 +1484,13 @@ export {
   getUserInfo,
   listenForOnlineUsers,
   stopListeningForOnlineUsers,
+  listenForMitzvahReflections,
+  stopListeningForMitzvahReflections,
+  submitMitzvahReflection,
+  submitMitzvahReflectionReaction,
+  getMitzvahCompletionStatus,
+  setMitzvahCompletionStatus,
+  updateMitzvahLeaderboard,
+  getMitzvahLeaderboard,
   formatTimeAgo
 };

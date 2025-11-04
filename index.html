@@ -117,12 +117,11 @@
     </div>
 
     <!-- Professional Responsive Header -->
-    <header class="header-main relative z-30 text-blue-950">
+    <header class="header-main relative z-30">
         <div class="header-container">
             <!-- Logo/Title Section -->
             <div class="header-branding-section">
                 <button id="home-branding" type="button" aria-label="Return to this week's parsha" class="header-branding-button">
-                    <img src="Icon.png" alt="A Letter in the Scroll Logo" class="header-logo">
                     <div class="header-text">
                         <h1 class="header-title">A Letter in the Scroll</h1>
                         <p class="header-subtitle">Interactive Weekly Portion Study & Discussion</p>
@@ -302,9 +301,105 @@
             </div>
 
             <!-- Text Display -->
+            <div id="mitzvah-challenge-section" class="mitzvah-challenge hidden">
+                <div class="mitzvah-card">
+                    <div class="mitzvah-card__header">
+                        <div class="mitzvah-card__title-row">
+                            <h2 id="mitzvah-challenge-heading" class="mitzvah-card__title">Weekly Mitzvah Challenge</h2>
+                            <span id="mitzvah-countdown" class="mitzvah-card__countdown"></span>
+                        </div>
+                        <p id="mitzvah-challenge-mitzvah" class="mitzvah-card__mitzvah"></p>
+                    </div>
+
+                    <div class="mitzvah-card__body">
+                        <section class="mitzvah-card__section">
+                            <h3 class="mitzvah-card__section-title">The Mitzvah</h3>
+                            <div id="mitzvah-challenge-explanation" class="mitzvah-card__text"></div>
+                        </section>
+                        <section class="mitzvah-card__section">
+                            <h3 class="mitzvah-card__section-title">Why It Connects to This Parsha</h3>
+                            <div id="mitzvah-challenge-connection" class="mitzvah-card__text"></div>
+                        </section>
+                        <section class="mitzvah-card__section">
+                            <h3 class="mitzvah-card__section-title">Your Weekly Challenge</h3>
+                            <div id="mitzvah-challenge-action" class="mitzvah-card__text"></div>
+                        </section>
+                    </div>
+
+                    <div class="mitzvah-card__divider"></div>
+
+                    <div class="mitzvah-card__grid">
+                        <div class="mitzvah-checklist">
+                            <h3 class="mitzvah-card__subheading">Checklist</h3>
+                            <label class="mitzvah-checklist__label">
+                                <input type="checkbox" id="mitzvah-challenge-checkbox" class="mitzvah-checklist__input" disabled>
+                                <span class="mitzvah-checklist__text">I completed this week’s mitzvah challenge</span>
+                            </label>
+                            <p id="mitzvah-checklist-helper" class="mitzvah-checklist__helper"></p>
+                        </div>
+
+                        <div class="mitzvah-chat">
+                            <div class="mitzvah-chat__header">
+                                <h3 class="mitzvah-card__subheading">Reflection Chat</h3>
+                                <p id="mitzvah-chat-auth" class="mitzvah-chat__auth">Sign in to share your reflection.</p>
+                            </div>
+                            <div id="mitzvah-chat-messages" class="mitzvah-chat__messages">
+                                <p class="mitzvah-chat-empty">Share how the mitzvah went this week.</p>
+                            </div>
+                            <div class="mitzvah-chat__composer">
+                                <textarea id="mitzvah-chat-input" class="mitzvah-chat__input" rows="3" placeholder="How did the mitzvah go for you this week?" disabled></textarea>
+                                <div class="mitzvah-chat__actions">
+                                    <button id="mitzvah-chat-submit" class="mitzvah-chat__submit" disabled>Share Reflection</button>
+                                    <span class="mitzvah-chat__hint">Press Ctrl/Cmd + Enter to submit</span>
+                                </div>
+                                <p id="mitzvah-chat-status" class="mitzvah-chat__status"></p>
+                            </div>
+                        </div>
+
+                        <div class="mitzvah-leaderboard">
+                            <div class="mitzvah-leaderboard__header">
+                                <h3 class="mitzvah-card__subheading">Mitzvah Leaderboard</h3>
+                                <p class="mitzvah-leaderboard__subtitle">Most weekly challenges completed</p>
+                            </div>
+                            <div id="mitzvah-leaderboard-list" class="mitzvah-leaderboard__list">
+                                <p class="mitzvah-leaderboard__empty">Loading leaderboard…</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="mitzvah-challenge-locked" class="mitzvah-locked hidden">
+                <div class="mitzvah-locked__card">
+                    <h3 id="mitzvah-locked-heading" class="mitzvah-locked__title">Weekly Challenge Locked</h3>
+                    <p id="mitzvah-locked-message" class="mitzvah-locked__text">Return when this parsha arrives to unlock its mitzvah challenge.</p>
+                </div>
+            </div>
+
             <div id="parsha-text" class="space-y-4"></div>
         </div>
     </main>
+
+    <!-- Weekly Mitzvah Spotlight Modal -->
+    <div id="mitzvah-modal" class="mitzvah-modal hidden" aria-hidden="true" role="dialog" aria-labelledby="mitzvah-modal-title">
+        <div class="mitzvah-modal__overlay" id="mitzvah-modal-overlay"></div>
+        <div class="mitzvah-modal__panel" role="document">
+            <button id="mitzvah-modal-close" class="mitzvah-modal__close" aria-label="Close mitzvah spotlight">
+                &times;
+            </button>
+            <div class="mitzvah-modal__content">
+                <p class="mitzvah-modal__eyebrow">This Week's Mitzvah</p>
+                <h2 id="mitzvah-modal-title" class="mitzvah-modal__title">Weekly Challenge</h2>
+                <p id="mitzvah-modal-mitzvah" class="mitzvah-modal__mitzvah"></p>
+                <p id="mitzvah-modal-countdown" class="mitzvah-modal__countdown"></p>
+                <div id="mitzvah-modal-summary" class="mitzvah-modal__summary"></div>
+                <div class="mitzvah-modal__actions">
+                    <button id="mitzvah-modal-open" class="mitzvah-modal__primary">Go to Challenge</button>
+                    <button id="mitzvah-modal-remind" class="mitzvah-modal__secondary">Remind me later</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Info Panel (Modal) -->
     <div id="info-panel" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">

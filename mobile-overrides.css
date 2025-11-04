@@ -3,6 +3,15 @@
    ======================================== */
 
 @media (max-width: 768px) {
+    /* HIDE online friends section on mobile to save space */
+    #community-status-bar {
+        display: none !important;
+    }
+
+    #header-online-section {
+        display: none !important;
+    }
+
     /* Make the status bar compact on mobile */
     #community-status-bar {
         min-height: 48px;
@@ -77,8 +86,8 @@
         box-shadow: none;
         border-color: rgba(148, 163, 184, 0.24);
         background: rgba(255, 255, 255, 0.82);
-        flex: 1 1 calc(50% - 0.35rem);
-        min-width: 9.5rem;
+        flex: 1 1 100%;
+        min-width: 100%;
         max-width: 100%;
         align-items: center;
         justify-content: center;
@@ -124,6 +133,87 @@
         white-space: normal;
         width: 100%;
         text-align: center;
+    }
+
+    .mitzvah-card {
+        padding: 1.5rem;
+        gap: 1.5rem;
+    }
+
+    .mitzvah-card__body {
+        grid-template-columns: 1fr;
+        gap: 1.1rem;
+    }
+
+    .mitzvah-card__section {
+        padding: 1rem 1.1rem;
+    }
+
+    .mitzvah-card__title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+    }
+
+    .mitzvah-card__countdown {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .mitzvah-card__grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .mitzvah-card__subheading {
+        text-align: center;
+    }
+
+    .mitzvah-checklist {
+        align-items: center;
+        text-align: center;
+    }
+
+    .mitzvah-checklist__label {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .mitzvah-checklist__input {
+        margin-top: 0;
+    }
+
+    .mitzvah-chat {
+        padding: 1.25rem;
+    }
+
+    .mitzvah-chat__header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .mitzvah-chat__messages {
+        max-height: 220px;
+    }
+
+    .mitzvah-chat__actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .mitzvah-chat__submit {
+        width: 100%;
+    }
+
+    .mitzvah-chat__hint {
+        text-align: center;
+    }
+
+    .mitzvah-locked__card {
+        padding: 1.35rem;
     }
 
     #header-online-users-list .status-dot--compact {
