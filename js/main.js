@@ -522,6 +522,21 @@ function updateMitzvahChallengeForParsha(parshaName) {
     renderMitzvahChallengeSection(parshaName);
 }
 
+function startMitzvahReflectionsListener(challengeId) {
+    stopListeningForMitzvahReflections();
+    mitzvahChatMessages = [];
+    renderMitzvahChatMessages([]);
+
+    if (!challengeId) {
+        return;
+    }
+
+    listenForMitzvahReflections(challengeId, (reflections) => {
+        mitzvahChatMessages = Array.isArray(reflections) ? reflections : [];
+        renderMitzvahChatMessages(mitzvahChatMessages);
+    });
+}
+
 function renderMitzvahChallengeSection(parshaName, providedChallenge = null) {
     const section = document.getElementById('mitzvah-challenge-section');
     const lockedContainer = document.getElementById('mitzvah-challenge-locked');
@@ -638,14 +653,7 @@ function renderMitzvahChallengeSection(parshaName, providedChallenge = null) {
     clearMitzvahCountdown();
     startMitzvahCountdown(deadline);
 
-    stopListeningForMitzvahReflections();
-    mitzvahChatMessages = [];
-    renderMitzvahChatMessages([]);
-
-    listenForMitzvahReflections(challengeId, (reflections) => {
-        mitzvahChatMessages = Array.isArray(reflections) ? reflections : [];
-        renderMitzvahChatMessages(mitzvahChatMessages);
-    });
+    startMitzvahReflectionsListener(challengeId);
 
     refreshMitzvahCompletionStatus(challengeId);
     updateMitzvahAuthState();
@@ -1882,6 +1890,9 @@ async function handleAuthStateChange(user) {
             await refreshMitzvahCompletionStatus(currentMitzvahChallengeId);
         }
         updateMitzvahAuthState();
+        if (currentMitzvahChallengeId) {
+            startMitzvahReflectionsListener(currentMitzvahChallengeId);
+        }
         refreshMitzvahLeaderboardDisplay();
         maybeShowMitzvahModal();
 
@@ -1907,6 +1918,7 @@ async function handleAuthStateChange(user) {
         currentMitzvahCompletion = false;
         updateMitzvahAuthState();
         hideMitzvahModal(false);
+        startMitzvahReflectionsListener(null);
     }
 }
 
