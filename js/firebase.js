@@ -35,8 +35,8 @@ import { getDisplayNameFromEmail } from './name-utils.js';
 const EMAIL_ALIAS_MAP = {
   'loripreci03@gmail.com': 'lpreci1@jh.edu',
   'lpreci1@jh.edu': 'lpreci1@jh.edu',
-  'aidan.schurr@gwmail.gwu.edu': 'aidanitaischurr@gmail.com',
-  'aidanitaischurr@gmail.com': 'aidanitaischurr@gmail.com'
+  'aidanitaischurr@gmail.com': 'aidan.schurr@gwmail.gwu.edu',
+  'aidan.schurr@gwmail.gwu.edu': 'aidan.schurr@gwmail.gwu.edu'
 };
 
 // Firebase configuration
@@ -1257,7 +1257,7 @@ function stopListeningForMitzvahReflections() {
   }
 }
 
-async function submitMitzvahReflection(challengeId, message, userId, username) {
+async function submitMitzvahReflection(challengeId, message, userId, username, userEmail = null) {
   if (!challengeId || !message || !userId) {
     throw new Error('Missing required fields to submit reflection');
   }
@@ -1268,11 +1268,23 @@ async function submitMitzvahReflection(challengeId, message, userId, username) {
   }
 
   try {
+    const normalizedEmail = typeof userEmail === 'string' ? userEmail.trim().toLowerCase() : null;
+    const canonicalEmail = normalizedEmail ? resolveCanonicalEmail(normalizedEmail) : null;
+    const effectiveEmail = canonicalEmail || normalizedEmail || null;
+    const providedUsername = typeof username === 'string' ? username.trim() : '';
+    const useProvidedUsername = providedUsername
+      && !providedUsername.includes('@')
+      && providedUsername.toLowerCase() !== 'friend'
+      ? providedUsername
+      : '';
+    const fallbackUsername = effectiveEmail ? getDisplayNameFromEmail(effectiveEmail) : null;
+    const resolvedUsername = useProvidedUsername || fallbackUsername || 'Friend';
+
     const reflection = {
       challengeId,
       message: trimmedMessage,
       userId,
-      username: username || getDisplayNameFromEmail(userId) || 'Friend',
+      username: resolvedUsername,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     };
@@ -1366,29 +1378,53 @@ async function setMitzvahCompletionStatus(userId, challengeId, completed) {
   }
 }
 
-async function updateMitzvahLeaderboard(userId, username, delta) {
-  if (!userId || !delta) {
+async function updateMitzvahLeaderboard(userId, username, delta, userEmail = null) {
+  if (!userId) {
+    return;
+  }
+
+  const deltaNumber = Number(delta);
+  if (!Number.isFinite(deltaNumber) || deltaNumber === 0) {
+    return;
+  }
+
+  const normalizedUserId = typeof userId === 'string' ? userId.trim() : String(userId);
+  if (!normalizedUserId) {
     return;
   }
 
   try {
-    const leaderboardRef = doc(db, 'mitzvahLeaderboard', userId);
-    const displayName = username && typeof username === 'string' && !username.includes('@')
-      ? username
-      : getDisplayNameFromEmail(username || userId);
+    const leaderboardRef = doc(db, 'mitzvahLeaderboard', normalizedUserId);
+    const normalizedUsername = typeof username === 'string' ? username.trim() : '';
+    const sanitizedUsername = normalizedUsername
+      && !normalizedUsername.includes('@')
+      && normalizedUsername.toLowerCase() !== 'friend'
+      ? normalizedUsername
+      : '';
 
-    const updatePayload = {
-      userId,
-      username: displayName || 'Friend',
-      updatedAt: serverTimestamp(),
-      totalCompleted: increment(delta)
-    };
+    const normalizedEmail = typeof userEmail === 'string' ? userEmail.trim().toLowerCase() : '';
+    const canonicalEmail = normalizedEmail ? resolveCanonicalEmail(normalizedEmail) : null;
+    const emailForFallback = canonicalEmail || normalizedEmail || '';
+    const fallbackUsername = emailForFallback ? getDisplayNameFromEmail(emailForFallback) : '';
+    const resolvedUsername = sanitizedUsername || fallbackUsername || 'Friend';
 
-    if (delta > 0) {
-      updatePayload.lastCompletedAt = serverTimestamp();
-    }
+    await runTransaction(db, async (transaction) => {
+      const snapshot = await transaction.get(leaderboardRef);
+      const existingData = snapshot.exists() ? snapshot.data() : {};
+      const currentTotal = typeof existingData.totalCompleted === 'number'
+        ? existingData.totalCompleted
+        : 0;
+      const newTotal = Math.max(0, currentTotal + deltaNumber);
 
-    await setDoc(leaderboardRef, updatePayload, { merge: true });
+      const payload = {
+        userId: normalizedUserId,
+        username: resolvedUsername,
+        totalCompleted: newTotal,
+        updatedAt: serverTimestamp()
+      };
+
+      transaction.set(leaderboardRef, payload, { merge: true });
+    });
   } catch (error) {
     console.error('Error updating mitzvah leaderboard:', error);
   }

@@ -20,6 +20,7 @@ const EMAIL_NAME_MAPPINGS = {
   'loripreci': 'Lori Preci',
   'lorip': 'Lori Preci',
   'lorraine': 'Lori Preci',
+  'lpreci': 'Lori Preci',
   'lpreci1': 'Lori Preci',
   'loripreci03': 'Lori Preci',
 

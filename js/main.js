@@ -537,7 +537,7 @@ function startMitzvahReflectionsListener(challengeId) {
     });
 }
 
-function renderMitzvahChallengeSection(parshaName, providedChallenge = null) {
+async function renderMitzvahChallengeSection(parshaName, providedChallenge = null) {
     const section = document.getElementById('mitzvah-challenge-section');
     const lockedContainer = document.getElementById('mitzvah-challenge-locked');
     const lockedHeading = document.getElementById('mitzvah-locked-heading');
@@ -655,7 +655,7 @@ function renderMitzvahChallengeSection(parshaName, providedChallenge = null) {
 
     startMitzvahReflectionsListener(challengeId);
 
-    refreshMitzvahCompletionStatus(challengeId);
+    await refreshMitzvahCompletionStatus(challengeId);
     updateMitzvahAuthState();
     refreshMitzvahLeaderboardDisplay();
 
@@ -851,6 +851,12 @@ async function refreshMitzvahCompletionStatus(challengeId) {
     try {
         const status = await getMitzvahCompletionStatus(userId, challengeId);
         currentMitzvahCompletion = Boolean(status.completed);
+        console.log('[Mitzvah Completion] Status loaded:', {
+            userId,
+            challengeId,
+            completed: status.completed,
+            currentMitzvahCompletion
+        });
     } catch (error) {
         console.error('Unable to load mitzvah completion status:', error);
         helper.textContent = 'Unable to load your progress right now.';
@@ -892,6 +898,116 @@ async function handleMitzvahChecklistToggle(event) {
     }
 }
 
+function sanitizeReflectionUsername(value) {
+    if (typeof value !== 'string') {
+        return '';
+    }
+    const trimmed = value.trim();
+    if (!trimmed || trimmed.includes('@') || trimmed.toLowerCase() === 'friend') {
+        return '';
+    }
+    return trimmed;
+}
+
+function candidateMatchesReflectionUser(candidate, userId) {
+    if (!candidate || !userId) {
+        return false;
+    }
+    if (candidate.userId && candidate.userId === userId) {
+        return true;
+    }
+    if (candidate.canonicalUserId && candidate.canonicalUserId === userId) {
+        return true;
+    }
+    if (Array.isArray(candidate.authUserIds) && candidate.authUserIds.includes(userId)) {
+        return true;
+    }
+    return false;
+}
+
+function deriveDisplayNameFromCandidate(candidate) {
+    const candidateUsername = sanitizeReflectionUsername(candidate?.username);
+    if (candidateUsername) {
+        return candidateUsername;
+    }
+
+    const emailCandidates = [];
+    if (typeof candidate?.email === 'string') {
+        emailCandidates.push(candidate.email);
+    }
+    if (Array.isArray(candidate?.emails)) {
+        candidate.emails.forEach((value) => {
+            if (typeof value === 'string') {
+                emailCandidates.push(value);
+            }
+        });
+    }
+
+    for (const email of emailCandidates) {
+        const trimmed = email && typeof email === 'string' ? email.trim() : '';
+        if (!trimmed) {
+            continue;
+        }
+        const displayName = getDisplayNameFromEmail(trimmed);
+        if (displayName && displayName !== 'Anonymous' && displayName !== 'Friend') {
+            return displayName;
+        }
+    }
+
+    return '';
+}
+
+function findDisplayNameForReflectionUserId(userId) {
+    if (!userId) {
+        return '';
+    }
+
+    if (currentUserProfile && candidateMatchesReflectionUser(currentUserProfile, userId)) {
+        const name = deriveDisplayNameFromCandidate(currentUserProfile);
+        if (name) {
+            return name;
+        }
+    }
+
+    const presenceSources = [trackedOnlineFriends, trackedRecentFriendLogins];
+    for (const list of presenceSources) {
+        if (!Array.isArray(list)) {
+            continue;
+        }
+        for (const candidate of list) {
+            if (candidateMatchesReflectionUser(candidate, userId)) {
+                const name = deriveDisplayNameFromCandidate(candidate);
+                if (name) {
+                    return name;
+                }
+            }
+        }
+    }
+
+    return '';
+}
+
+function getMitzvahReflectionDisplayName(message) {
+    if (!message || typeof message !== 'object') {
+        return 'Friend';
+    }
+
+    const initialName = sanitizeReflectionUsername(message.username);
+    if (initialName) {
+        return initialName;
+    }
+
+    const userId = typeof message.userId === 'string' ? message.userId : '';
+    if (userId) {
+        const lookupName = findDisplayNameForReflectionUserId(userId);
+        if (lookupName) {
+            return lookupName;
+        }
+    }
+
+    return 'Friend';
+}
+
 function renderMitzvahChatMessages(messages = []) {
     const messagesContainer = document.getElementById('mitzvah-chat-messages');
     if (!messagesContainer) {
@@ -921,7 +1037,7 @@ function renderMitzvahChatMessages(messages = []) {
 
         const author = document.createElement('span');
         author.classList.add('mitzvah-chat-message__author');
-        author.textContent = message.username || 'Friend';
+        author.textContent = getMitzvahReflectionDisplayName(message);
 
         const time = document.createElement('span');
         time.classList.add('mitzvah-chat-message__time');
@@ -1367,21 +1483,42 @@ async function handleMitzvahChatSubmit() {
             ? currentUserProfile.username
             : getSavedUsername();
 
-        await submitMitzvahReflection(challengeId, message, userId, username);
+        const profilePrimaryEmail = (currentUserProfile && typeof currentUserProfile.email === 'string')
+            ? currentUserProfile.email
+            : null;
+        const profileAlternateEmail = (currentUserProfile && Array.isArray(currentUserProfile.emails))
+            ? currentUserProfile.emails.find((value) => typeof value === 'string' && value.trim())
+            : null;
+        const accountEmail = typeof getCurrentUserEmail === 'function' ? getCurrentUserEmail() : null;
+        const submissionEmail = profilePrimaryEmail || profileAlternateEmail || accountEmail || null;
+
+        console.log('[Mitzvah Reflection] Submitting reflection:', {
+            challengeId,
+            userId,
+            username,
+            submissionEmail,
+            wasCompleted,
+            currentMitzvahCompletion
+        });
+
+        await submitMitzvahReflection(challengeId, message, userId, username, submissionEmail);
         input.value = '';
 
         if (!wasCompleted) {
             try {
+                console.log('[Mitzvah Reflection] First completion! Updating leaderboard...');
                 await setMitzvahCompletionStatus(userId, challengeId, true);
                 currentMitzvahCompletion = true;
                 updateMitzvahChecklistUI('Challenge marked as completed!');
-                await updateMitzvahLeaderboard(userId, username, 1);
+                await updateMitzvahLeaderboard(userId, username, 1, submissionEmail);
+                console.log('[Mitzvah Reflection] Leaderboard updated successfully');
                 await refreshMitzvahLeaderboardDisplay();
             } catch (error) {
                 console.error('Error finalizing mitzvah completion:', error);
                 updateMitzvahChecklistUI('Reflection saved, but we could not update completion status. Please try again later.');
             }
         } else {
+            console.log('[Mitzvah Reflection] Already completed - skipping leaderboard update');
             updateMitzvahChecklistUI();
         }
 
