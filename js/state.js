@@ -6,6 +6,7 @@ export const state = {
     currentParshaIndex: -1,
     weeklyParshaRef: null,
     weeklyParshaIndex: -1,
+    weeklyParshaWeekStart: null,
     allParshas: [],
     isLoading: false,
     currentParshaSignificance: null,

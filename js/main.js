@@ -102,6 +102,11 @@ const MITZVAH_MODAL_DISMISS_KEY_PREFIX = 'mitzvahModalDismissed:';
 const MITZVAH_LEADERBOARD_LIMIT = 10;
 let isLoadingMitzvahLeaderboard = false;
 let currentMitzvahChallengeMode = 'none';
+const WEEKLY_PARSHA_CHECK_INTERVAL = 15 * 60 * 1000; // 15 minutes
+let weeklyParshaCheckIntervalId = null;
+let isWeeklyParshaCheckRunning = false;
+let pendingWeeklyParshaCheck = false;
+let pendingWeeklyParshaForceAdvance = false;
 
 function escapeForAttributeSelector(value) {
     if (typeof value !== 'string') {
@@ -141,6 +146,48 @@ function getVerseTextSnippet(verseRef) {
     }
 
     return '';
+}
+
+function addDays(date, days) {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
+
+function getWeekStartForDate(referenceDate = new Date()) {
+    const weekStart = new Date(referenceDate);
+    weekStart.setHours(0, 0, 0, 0);
+    const day = weekStart.getDay(); // 0 = Sunday
+    weekStart.setDate(weekStart.getDate() - day);
+    return weekStart;
+}
+
+function getStoredWeeklyWeekWindow() {
+    if (state.weeklyParshaWeekStart) {
+        const weekStart = new Date(state.weeklyParshaWeekStart);
+        if (!Number.isNaN(weekStart.getTime())) {
+            const deadline = addDays(weekStart, 7);
+            return { weekStart, deadline };
+        }
+    }
+    return calculateMitzvahWeekWindow();
+}
+
+function getNextWeeklyParshaInfo() {
+    if (!Array.isArray(state.allParshas) || state.allParshas.length === 0) {
+        return null;
+    }
+    const currentIndex = (typeof state.weeklyParshaIndex === 'number' && state.weeklyParshaIndex >= 0)
+        ? state.weeklyParshaIndex
+        : (typeof state.currentParshaIndex === 'number' && state.currentParshaIndex >= 0
+            ? state.currentParshaIndex
+            : 0);
+    const nextIndex = (currentIndex + 1) % state.allParshas.length;
+    const parsha = state.allParshas[nextIndex];
+    if (!parsha) {
+        return null;
+    }
+    return { parsha, index: nextIndex };
 }
 
 function parseVerseReference(verseRef) {
@@ -274,11 +321,13 @@ async function init() {
 
             if (matchingParsha) {
                 const matchingIndex = TORAH_PARSHAS.indexOf(matchingParsha);
+                const initialWeekStart = getWeekStartForDate();
                 setState({
                     currentParshaRef: matchingParsha.reference,
                     currentParshaIndex: matchingIndex,
                     weeklyParshaRef: matchingParsha.reference,
-                    weeklyParshaIndex: matchingIndex
+                    weeklyParshaIndex: matchingIndex,
+                    weeklyParshaWeekStart: initialWeekStart.toISOString()
                 });
                 console.log('✅ Matched current parsha:', matchingParsha.name);
             }
@@ -294,9 +343,11 @@ async function init() {
 
         if ((state.weeklyParshaIndex == null || state.weeklyParshaIndex < 0) && state.currentParshaRef) {
             const fallbackIndex = state.currentParshaIndex >= 0 ? state.currentParshaIndex : 0;
+            const initialWeekStart = getWeekStartForDate();
             setState({
                 weeklyParshaRef: state.currentParshaRef,
-                weeklyParshaIndex: fallbackIndex
+                weeklyParshaIndex: fallbackIndex,
+                weeklyParshaWeekStart: state.weeklyParshaWeekStart || initialWeekStart.toISOString()
             });
         }
 
@@ -309,6 +360,8 @@ async function init() {
         if (state.currentParshaRef) {
             await loadParsha(state.currentParshaRef);
         }
+
+        startWeeklyParshaMonitor();
 
         console.log('✅ Application initialized successfully');
 
@@ -327,7 +380,10 @@ function setupEventListeners() {
         selector.addEventListener('change', async (e) => {
             const selectedRef = e.target.value;
             const index = state.allParshas.findIndex(p => p.reference === selectedRef);
-            setState({ currentParshaIndex: index });
+            setState({
+                currentParshaIndex: index,
+                currentParshaRef: selectedRef
+            });
             await loadParsha(selectedRef);
             updateNavigationButtons();
             // Update the selected value in ALL select elements to keep them in sync
@@ -340,8 +396,11 @@ function setupEventListeners() {
     document.getElementById('prev-parsha').addEventListener('click', async () => {
         if (state.currentParshaIndex > 0) {
             const newIndex = state.currentParshaIndex - 1;
-            setState({ currentParshaIndex: newIndex });
             const prevParsha = state.allParshas[newIndex];
+            setState({
+                currentParshaIndex: newIndex,
+                currentParshaRef: prevParsha.reference
+            });
             // Update ALL select elements to keep them in sync
             document.querySelectorAll('select#parsha-selector').forEach((s) => {
                 s.value = prevParsha.reference;
@@ -354,8 +413,11 @@ function setupEventListeners() {
     document.getElementById('next-parsha').addEventListener('click', async () => {
         if (state.currentParshaIndex < state.allParshas.length - 1) {
             const newIndex = state.currentParshaIndex + 1;
-            setState({ currentParshaIndex: newIndex });
             const nextParsha = state.allParshas[newIndex];
+            setState({
+                currentParshaIndex: newIndex,
+                currentParshaRef: nextParsha.reference
+            });
             // Update ALL select elements to keep them in sync
             document.querySelectorAll('select#parsha-selector').forEach((s) => {
                 s.value = nextParsha.reference;
@@ -368,17 +430,25 @@ function setupEventListeners() {
     const weeklyButton = document.getElementById('go-to-weekly');
     if (weeklyButton) {
         weeklyButton.addEventListener('click', async () => {
-            if (state.currentParshaRef) {
-                const index = state.allParshas.findIndex(p => p.reference === state.currentParshaRef);
-                setState({ currentParshaIndex: index });
-                // Update ALL select elements to keep them in sync
-                document.querySelectorAll('select#parsha-selector').forEach((s) => {
-                    s.value = state.currentParshaRef;
-                });
-                await loadParsha(state.currentParshaRef);
-                updateNavigationButtons();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+            const weeklyRef = state.weeklyParshaRef || state.currentParshaRef;
+            if (!weeklyRef) {
+                return;
             }
+            const index = state.allParshas.findIndex(p => p.reference === weeklyRef);
+            if (index < 0) {
+                return;
+            }
+            setState({
+                currentParshaIndex: index,
+                currentParshaRef: weeklyRef
+            });
+            // Update ALL select elements to keep them in sync
+            document.querySelectorAll('select#parsha-selector').forEach((s) => {
+                s.value = weeklyRef;
+            });
+            await loadParsha(weeklyRef);
+            updateNavigationButtons();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 
@@ -431,6 +501,8 @@ function setupEventListeners() {
     
     setupCommentPanelListeners();
     setupLoginListeners();
+
+    window.addEventListener('focus', () => scheduleImmediateWeeklyParshaCheck());
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
@@ -492,6 +564,201 @@ function setupMitzvahChallengeEventListeners() {
             dismissMitzvahModal(true);
         });
     }
+}
+
+function normalizeParshaName(rawName) {
+    if (!rawName || typeof rawName !== 'string') {
+        return '';
+    }
+    return rawName
+        .toLowerCase()
+        .replace(/parashat|parshat|parasha|parshah|parsha/gi, '')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+}
+
+function findMatchingParshaByName(rawName) {
+    if (!rawName || !Array.isArray(state.allParshas) || state.allParshas.length === 0) {
+        return null;
+    }
+    const normalizedTarget = normalizeParshaName(rawName);
+    if (!normalizedTarget) {
+        return null;
+    }
+
+    let fallbackMatch = null;
+
+    for (let i = 0; i < state.allParshas.length; i++) {
+        const parsha = state.allParshas[i];
+        if (!parsha?.name) continue;
+        const normalizedCandidate = normalizeParshaName(parsha.name);
+        if (!normalizedCandidate) continue;
+
+        if (normalizedCandidate === normalizedTarget) {
+            return { parsha, index: i };
+        }
+
+        if (!fallbackMatch && (normalizedTarget.includes(normalizedCandidate) || normalizedCandidate.includes(normalizedTarget))) {
+            fallbackMatch = { parsha, index: i };
+        }
+    }
+
+    return fallbackMatch;
+}
+
+function startWeeklyParshaMonitor() {
+    stopWeeklyParshaMonitor();
+    weeklyParshaCheckIntervalId = setInterval(() => {
+        runWeeklyParshaCheck();
+    }, WEEKLY_PARSHA_CHECK_INTERVAL);
+    runWeeklyParshaCheck();
+}
+
+function stopWeeklyParshaMonitor() {
+    if (weeklyParshaCheckIntervalId) {
+        clearInterval(weeklyParshaCheckIntervalId);
+        weeklyParshaCheckIntervalId = null;
+    }
+}
+
+function scheduleImmediateWeeklyParshaCheck(options = {}) {
+    const forceAdvance = Boolean(options.forceAdvance);
+    if (forceAdvance) {
+        pendingWeeklyParshaForceAdvance = true;
+    }
+    if (isWeeklyParshaCheckRunning) {
+        pendingWeeklyParshaCheck = true;
+        return;
+    }
+    runWeeklyParshaCheck({ forceAdvance: forceAdvance || pendingWeeklyParshaForceAdvance });
+}
+
+async function runWeeklyParshaCheck(options = {}) {
+    const pendingForce = pendingWeeklyParshaForceAdvance;
+    pendingWeeklyParshaForceAdvance = false;
+    const forceAdvance = Boolean(options.forceAdvance || pendingForce);
+
+    if (isWeeklyParshaCheckRunning) {
+        pendingWeeklyParshaCheck = true;
+        pendingWeeklyParshaForceAdvance = pendingWeeklyParshaForceAdvance || forceAdvance;
+        return;
+    }
+    isWeeklyParshaCheckRunning = true;
+    try {
+        await checkAndApplyWeeklyParsha({ forceAdvance });
+    } catch (error) {
+        console.warn('Unable to refresh weekly parsha from calendar:', error);
+    } finally {
+        isWeeklyParshaCheckRunning = false;
+        if (pendingWeeklyParshaCheck) {
+            const shouldForce = pendingWeeklyParshaForceAdvance;
+            pendingWeeklyParshaCheck = false;
+            pendingWeeklyParshaForceAdvance = false;
+            runWeeklyParshaCheck({ forceAdvance: shouldForce });
+        }
+    }
+}
+
+async function checkAndApplyWeeklyParsha({ forceAdvance = false } = {}) {
+    if (!Array.isArray(state.allParshas) || state.allParshas.length === 0) {
+        return;
+    }
+
+    const storedWeekStart = state.weeklyParshaWeekStart ? new Date(state.weeklyParshaWeekStart) : null;
+    const hasStoredWeekStart = storedWeekStart instanceof Date && !Number.isNaN(storedWeekStart.getTime());
+    const expectedNextWeekStart = hasStoredWeekStart ? addDays(storedWeekStart, 7) : null;
+    const hasWeekExpired = expectedNextWeekStart ? Date.now() >= expectedNextWeekStart.getTime() : false;
+
+    const prevWeeklyRef = state.weeklyParshaRef;
+
+    let latestParshaName = null;
+    try {
+        latestParshaName = await fetchCurrentParsha();
+    } catch (error) {
+        latestParshaName = null;
+    }
+
+    let match = null;
+    if (latestParshaName) {
+        match = findMatchingParshaByName(latestParshaName);
+        if (!match) {
+            console.warn('Calendar parsha not found in local list:', latestParshaName);
+        }
+    }
+
+    if (match && (forceAdvance || hasWeekExpired) && prevWeeklyRef && match.parsha.reference === prevWeeklyRef) {
+        const nextMatch = getNextWeeklyParshaInfo();
+        if (nextMatch) {
+            match = nextMatch;
+        }
+    }
+
+    if (!match && (forceAdvance || hasWeekExpired)) {
+        match = getNextWeeklyParshaInfo();
+    }
+
+    if (!match) {
+        return;
+    }
+
+    const alreadyCurrent = prevWeeklyRef === match.parsha.reference && state.weeklyParshaIndex === match.index;
+    if (alreadyCurrent && !hasWeekExpired && !forceAdvance) {
+        return;
+    }
+
+    const wasViewingWeekly = Boolean(prevWeeklyRef && state.currentParshaRef === prevWeeklyRef);
+
+    let newWeekStart = null;
+    const shouldUpdateWeekStart = !alreadyCurrent || !state.weeklyParshaWeekStart;
+    if (shouldUpdateWeekStart) {
+        if ((forceAdvance || hasWeekExpired) && hasStoredWeekStart) {
+            newWeekStart = addDays(storedWeekStart, 7);
+        } else {
+            newWeekStart = getWeekStartForDate();
+        }
+    }
+
+    setState({
+        weeklyParshaRef: match.parsha.reference,
+        weeklyParshaIndex: match.index,
+        ...(newWeekStart ? { weeklyParshaWeekStart: newWeekStart.toISOString() } : {})
+    });
+
+    if (wasViewingWeekly || !state.currentParshaRef) {
+        await goToParshaAfterWeeklyChange(match.parsha.reference, match.index);
+    } else {
+        const activeParshaName = state.allParshas[state.currentParshaIndex]?.name || null;
+        if (activeParshaName) {
+            updateMitzvahChallengeForParsha(activeParshaName);
+        }
+    }
+}
+
+async function goToParshaAfterWeeklyChange(reference, index) {
+    if (!reference) {
+        return;
+    }
+
+    const resolvedIndex = (typeof index === 'number' && index >= 0)
+        ? index
+        : state.allParshas.findIndex(p => p.reference === reference);
+
+    if (resolvedIndex < 0) {
+        return;
+    }
+
+    setState({
+        currentParshaIndex: resolvedIndex,
+        currentParshaRef: reference
+    });
+
+    document.querySelectorAll('select#parsha-selector').forEach((selector) => {
+        selector.value = reference;
+    });
+
+    await loadParsha(reference);
+    updateNavigationButtons();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function getMitzvahChallengeId(parshaName) {
@@ -1115,22 +1382,15 @@ function convertMitzvahMessageText(text) {
 }
 
 function calculateMitzvahWeekWindow(referenceDate = new Date()) {
-    const now = new Date(referenceDate);
-    const weekStart = new Date(now);
-    const day = weekStart.getDay();
-    const diffToSaturday = (day - 6 + 7) % 7;
-    weekStart.setDate(weekStart.getDate() - diffToSaturday);
-    weekStart.setHours(0, 0, 0, 0);
-
-    const deadline = new Date(weekStart);
-    deadline.setDate(weekStart.getDate() + 7);
-    deadline.setHours(0, 0, 0, 0);
-
+    const weekStart = getWeekStartForDate(referenceDate);
+    const deadline = addDays(weekStart, 7);
     return { weekStart, deadline };
 }
 
 function getWeekWindowForParsha(parshaIndex) {
-    const { weekStart, deadline } = calculateMitzvahWeekWindow();
+    const baseWindow = getStoredWeeklyWeekWindow();
+    const weekStart = new Date(baseWindow.weekStart);
+    const deadline = new Date(baseWindow.deadline);
     const weeklyIndex = (typeof state.weeklyParshaIndex === 'number' && state.weeklyParshaIndex >= 0)
         ? state.weeklyParshaIndex
         : ((typeof state.currentParshaIndex === 'number' && state.currentParshaIndex >= 0)
@@ -1255,6 +1515,7 @@ function formatDeadlineDisplayShort(date) {
 function handleMitzvahWindowClosed() {
     if (currentMitzvahChallengeMode === 'current') {
         hideMitzvahModal(true);
+        scheduleImmediateWeeklyParshaCheck({ forceAdvance: true });
     }
     updateMitzvahAuthState();
 }
@@ -2272,6 +2533,9 @@ function updateAllCommentBadges() {
 }
 
 async function loadParsha(parshaRef) {
+    if (parshaRef && state.currentParshaRef !== parshaRef) {
+        setState({ currentParshaRef: parshaRef });
+    }
     showLoading();
     hideError();
 
