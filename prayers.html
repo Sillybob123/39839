@@ -180,34 +180,20 @@
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8">
-        <!-- Prayer List Navigation -->
-        <section class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8 border border-gray-200">
-            <div class="md:flex md:items-center md:justify-between gap-6 mb-6">
-                <div>
-                    <h2 class="text-2xl md:text-3xl font-bold text-blue-900">Important Prayers & Readings</h2>
-                    <p class="text-blue-800 mt-2 max-w-2xl">
-                        Choose a focus area to quickly find the prayer you need. Every entry links straight to the
-                        full English, Hebrew, and transliteration text below.
-                    </p>
-                </div>
-            </div>
-            <div id="category-cards" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-        </section>
-
-        <!-- Prayer Finder -->
+        <!-- Prayer Finder (moved to top) -->
         <section id="prayer-finder" class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8 border border-blue-100">
             <div class="finder-header">
                 <div>
-                    <h3 class="text-xl font-semibold text-blue-900">Prayer Finder</h3>
+                    <h3 class="text-xl font-semibold text-blue-900">Find a Prayer</h3>
                     <p class="text-blue-800 text-sm">
-                        Search, filter by focus area, and choose the text you want to view. Everything updates in real time.
+                        Search, filter by focus area, and choose the text you want to view.
                     </p>
                 </div>
             </div>
             <div class="finder-grid">
                 <label class="filter-field" aria-label="Search prayers">
                     <span class="filter-label">Search</span>
-                    <input type="search" id="prayer-search" class="filter-input" placeholder="Search by title, theme, Hebrew, or English text">
+                    <input type="search" id="prayer-search" class="filter-input" placeholder="Search by title: Shabbat, Shema, Modeh Ani…">
                     <span class="filter-helper">Live results update as you type.</span>
                 </label>
                 <label class="filter-field" aria-label="Filter prayers by focus area">
@@ -239,6 +225,35 @@
                 <p id="prayer-count" class="prayer-count text-blue-900 font-semibold">Showing 0 prayers</p>
                 <button type="button" id="reset-prayer-filters" class="reset-button" data-reset-filters>Reset filters</button>
             </div>
+        </section>
+
+        <!-- Quick Access: Frequently Used -->
+        <section class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8 border border-gray-200">
+            <div class="flex flex-col gap-2 mb-4">
+                <h3 class="text-xl font-semibold text-blue-900">Frequently Used</h3>
+                <p class="text-blue-800 text-sm">Jump straight to the most common prayers.</p>
+            </div>
+            <div class="quick-links-grid">
+                <a href="#shabbat-candles" class="quick-link">Shabbat Candle Lighting</a>
+                <a href="#havdalah" class="quick-link">Havdalah</a>
+                <a href="#modeh-ani" class="quick-link">Modeh Ani</a>
+                <a href="#shema" class="quick-link">Shema Yisrael</a>
+                <a href="#birkat-hatorah" class="quick-link">Birkat HaTorah</a>
+            </div>
+        </section>
+
+        <!-- Prayer List Navigation -->
+        <section class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8 border border-gray-200">
+            <div class="md:flex md:items-center md:justify-between gap-6 mb-6">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-bold text-blue-900">Important Prayers & Readings</h2>
+                    <p class="text-blue-800 mt-2 max-w-2xl">
+                        Choose a focus area to quickly find the prayer you need. Every entry links straight to the
+                        full English, Hebrew, and transliteration text below.
+                    </p>
+                </div>
+            </div>
+            <div id="category-cards" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
         </section>
 
         <section class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8 border border-gray-200">

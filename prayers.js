@@ -343,6 +343,15 @@ function initializePrayersPage() {
   setupBackToTop();
   setupSmoothScroll();
   setupPrayerFinder(allPrayers);
+
+  // Light usability: focus search on first load if present
+  const searchInput = document.getElementById('prayer-search');
+  if (searchInput) {
+    // Defer focus to avoid layout shift
+    setTimeout(() => {
+      try { searchInput.focus({ preventScroll: true }); } catch (_) {}
+    }, 50);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", initializePrayersPage);
