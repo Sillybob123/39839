@@ -801,6 +801,10 @@ function startMitzvahReflectionsListener(challengeId) {
     listenForMitzvahReflections(challengeId, (reflections) => {
         mitzvahChatMessages = Array.isArray(reflections) ? reflections : [];
         renderMitzvahChatMessages(mitzvahChatMessages);
+        // Re-render leaderboard so tie-breaking by earliest reflection applies
+        if (Array.isArray(state.mitzvahLeaderboard) && state.mitzvahLeaderboard.length > 0) {
+            renderMitzvahLeaderboard(state.mitzvahLeaderboard);
+        }
     });
 }
 
@@ -1656,7 +1660,45 @@ function renderMitzvahLeaderboard(leaderboard = []) {
     const currentUserId = getCurrentUserId();
     listEl.innerHTML = '';
 
-    leaderboard.forEach((entry, index) => {
+    // For tie-breaking: earliest reflection in the current challenge wins
+    const earliestReflectionByUser = {};
+    if (Array.isArray(mitzvahChatMessages) && mitzvahChatMessages.length > 0) {
+        mitzvahChatMessages.forEach((msg) => {
+            const uid = msg && msg.userId;
+            const ts = msg && msg.createdAt;
+            const t = ts && typeof ts.toMillis === 'function' ? ts.toMillis() : (ts ? new Date(ts).getTime() : NaN);
+            if (uid && Number.isFinite(t)) {
+                if (!(uid in earliestReflectionByUser)) {
+                    earliestReflectionByUser[uid] = t;
+                } else if (t < earliestReflectionByUser[uid]) {
+                    earliestReflectionByUser[uid] = t;
+                }
+            }
+        });
+    }
+
+    // Sort by total desc, then earliest reflection asc, then username for stability
+    const sorted = [...leaderboard].sort((a, b) => {
+        const aScore = Number(a?.totalCompleted) || 0;
+        const bScore = Number(b?.totalCompleted) || 0;
+        if (bScore !== aScore) return bScore - aScore;
+
+        const aTie = earliestReflectionByUser[a?.userId] ?? (a?.firstCompletedAt?.toMillis ? a.firstCompletedAt.toMillis() : (a?.firstCompletedAt ? new Date(a.firstCompletedAt).getTime() : Number.POSITIVE_INFINITY));
+        const bTie = earliestReflectionByUser[b?.userId] ?? (b?.firstCompletedAt?.toMillis ? b.firstCompletedAt.toMillis() : (b?.firstCompletedAt ? new Date(b.firstCompletedAt).getTime() : Number.POSITIVE_INFINITY));
+        if (aTie !== bTie) return aTie - bTie;
+
+        const an = (a?.username || '').toLowerCase();
+        const bn = (b?.username || '').toLowerCase();
+        if (an < bn) return -1;
+        if (an > bn) return 1;
+        return (a?.userId || '').localeCompare(b?.userId || '');
+    });
+
+    // Compute ranks with tie handling (standard competition ranking)
+    let lastScore = null;
+    let lastRank = 0;
+
+    sorted.forEach((entry, index) => {
         const item = document.createElement('div');
         item.className = 'mitzvah-leaderboard__item';
         if (entry.userId && currentUserId && entry.userId === currentUserId) {
@@ -1665,7 +1707,25 @@ function renderMitzvahLeaderboard(leaderboard = []) {
 
         const rank = document.createElement('span');
         rank.className = 'mitzvah-leaderboard__rank';
-        rank.textContent = `#${index + 1}`;
+        if (entry && typeof entry.totalCompleted === 'number') {
+            if (lastScore === null) {
+                // First row always rank 1
+                lastRank = 1;
+                lastScore = entry.totalCompleted;
+            } else if (entry.totalCompleted === lastScore) {
+                // Same score → same rank
+                // lastRank remains unchanged
+            } else {
+                // New lower score → rank equals current position (1-based)
+                lastRank = index + 1;
+                lastScore = entry.totalCompleted;
+            }
+        } else {
+            // Fallback if score missing
+            lastRank = index + 1;
+            lastScore = entry?.totalCompleted ?? null;
+        }
+        rank.textContent = `#${lastRank}`;
 
         // Create a flex container for name and badge to keep them together
         const nameContainer = document.createElement('div');

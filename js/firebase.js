@@ -1416,12 +1416,20 @@ async function updateMitzvahLeaderboard(userId, username, delta, userEmail = nul
         : 0;
       const newTotal = Math.max(0, currentTotal + deltaNumber);
 
+      const now = serverTimestamp();
       const payload = {
         userId: normalizedUserId,
         username: resolvedUsername,
         totalCompleted: newTotal,
-        updatedAt: serverTimestamp()
+        updatedAt: now
       };
+
+      if (deltaNumber > 0) {
+        payload.lastCompletedAt = now;
+        if (!existingData.firstCompletedAt || currentTotal <= 0) {
+          payload.firstCompletedAt = now;
+        }
+      }
 
       transaction.set(leaderboardRef, payload, { merge: true });
     });
@@ -1450,7 +1458,9 @@ async function getMitzvahLeaderboard(limitCount = 10) {
         userId: data.userId || docSnapshot.id,
         username: data.username || getDisplayNameFromEmail(docSnapshot.id),
         totalCompleted: data.totalCompleted,
-        lastCompletedAt: data.lastCompletedAt || null
+        firstCompletedAt: data.firstCompletedAt || null,
+        lastCompletedAt: data.lastCompletedAt || null,
+        updatedAt: data.updatedAt || null
       });
     });
     return results;
