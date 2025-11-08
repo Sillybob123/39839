@@ -885,7 +885,7 @@ async function renderMitzvahChallengeSection(parshaName, providedChallenge = nul
         titleEl.textContent = `Weekly Mitzvah Challenge — ${parshaName}`;
     }
     if (mitzvahEl) {
-        mitzvahEl.textContent = challenge.mitzvah || '';
+        mitzvahEl.innerHTML = buildMitzvahLabel(challenge);
     }
     if (explanationEl) {
         explanationEl.innerHTML = formatText(challenge.explanation || '');
@@ -932,6 +932,34 @@ async function renderMitzvahChallengeSection(parshaName, providedChallenge = nul
     } else {
         hideMitzvahModal(false);
     }
+}
+
+function buildMitzvahLabel(challenge) {
+    if (!challenge || typeof challenge !== 'object') {
+        return '';
+    }
+    const heb = challenge.mitzvahHebrew;
+    const translit = challenge.mitzvahTransliteration;
+    const english = challenge.mitzvahEnglish;
+    const legacy = challenge.mitzvah;
+
+    if (heb || translit || english) {
+        const hebrewLine = heb
+            ? `<span class=\"mitzvah-label__he\" dir=\"rtl\" lang=\"he\">${escapeHtml(heb)}</span>`
+            : '';
+        const subParts = [];
+        if (translit) {
+            subParts.push(`<span class=\"mitzvah-label__translit\">${escapeHtml(translit)}</span>`);
+        }
+        if (english) {
+            subParts.push(`<span class=\"mitzvah-label__eng\">${escapeHtml(english)}</span>`);
+        }
+        const subLine = subParts.length
+            ? `<span class=\"mitzvah-label__sub\">${subParts.join('<span class=\"mitzvah-label__divider\">•</span>')}</span>`
+            : '';
+        return `<span class=\"mitzvah-label\">${hebrewLine}${subLine}</span>`;
+    }
+    return escapeHtml(legacy || '');
 }
 
 function teardownMitzvahChallenge() {
@@ -1587,7 +1615,7 @@ function populateMitzvahModalContent(challenge, parshaName) {
         titleEl.textContent = `${parshaName || 'This Week'} — Weekly Challenge`;
     }
     if (mitzvahEl) {
-        mitzvahEl.textContent = challenge?.mitzvah || '';
+        mitzvahEl.innerHTML = buildMitzvahLabel(challenge || {});
     }
     if (summaryEl) {
         const pieces = [];
@@ -3056,21 +3084,55 @@ function escapeHtml(text) {
 function formatText(text) {
     if (!text) return '';
 
-    let escaped = escapeHtml(text);
+    const blocks = text.split(/\n\s*\n/).map(block => block.trim()).filter(Boolean);
+    const headerPatterns = [
+        /Parsha Summary:/g,
+        /Significance &amp; Takeaway:/g,
+        /Name Meaning:/g,
+        /Significance:/g,
+        /Context:/g,
+        /The takeaway:/gi
+    ];
+    const labelReplacements = [
+        { regex: /<strong>Name Meaning:<\/strong>/g, replacement: '<span class="sig-label sig-label-name">Name Meaning</span>' },
+        { regex: /<strong>Context:<\/strong>/g, replacement: '<span class="sig-label sig-label-context">Context</span>' },
+        { regex: /<strong>Parsha Summary:<\/strong>/g, replacement: '<span class="sig-label sig-label-summary">Parsha Summary</span>' },
+        { regex: /<strong>Significance:<\/strong>/g, replacement: '<span class="sig-label sig-label-core">Significance</span>' },
+        { regex: /<strong>The takeaway:<\/strong>/gi, replacement: '<span class="sig-label sig-label-takeaway">The takeaway</span>' }
+    ];
 
-    // Make specific section headers bold
-    escaped = escaped.replace(/Parsha Summary:/g, '<strong>Parsha Summary:</strong>');
-    escaped = escaped.replace(/Significance &amp; Takeaway:/g, '<strong>Significance &amp; Takeaway:</strong>');
+    const sectionHtml = blocks.map(block => {
+        let escaped = escapeHtml(block);
 
-    // Handle both ** and * for bold (markdown style)
-    escaped = escaped.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    escaped = escaped.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
+        headerPatterns.forEach(pattern => {
+            escaped = escaped.replace(pattern, match => `<strong>${match}</strong>`);
+        });
 
-    // Handle line breaks
-    escaped = escaped.replace(/\n\n/g, '</p><p class="mt-4">');
-    escaped = '<p>' + escaped + '</p>';
+        escaped = escaped.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        escaped = escaped.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
 
-    return escaped;
+        labelReplacements.forEach(({ regex, replacement }) => {
+            escaped = escaped.replace(regex, replacement);
+        });
+
+        const labelMatch = escaped.match(/^(<span class="sig-label [^>]+>.*?<\/span>)/);
+        let label = '';
+        if (labelMatch) {
+            label = labelMatch[1];
+            escaped = escaped.slice(label.length).trim();
+        }
+
+        escaped = escaped.replace(/\n/g, '<br>');
+
+        return `
+            <section class="sig-section">
+                ${label ? `<div class="sig-section-label">${label}</div>` : ''}
+                <div class="sig-section-text">${escaped}</div>
+            </section>
+        `;
+    });
+
+    return sectionHtml.join('');
 }
 
 function escapeRegex(str) {

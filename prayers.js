@@ -11,16 +11,59 @@ const RAW_CATEGORY_DATA = typeof window !== "undefined" ? window.PRAYER_CATEGORI
 const DEFAULT_DATA = Array.isArray(RAW_PRAYER_DATA) ? [...RAW_PRAYER_DATA] : [];
 const CATEGORY_DATA = Array.isArray(RAW_CATEGORY_DATA) ? [...RAW_CATEGORY_DATA] : [];
 const PRAYER_MAP = DEFAULT_DATA.reduce((map, entry) => map.set(entry.id, entry), new Map());
+const CATEGORY_TITLE_MAP = CATEGORY_DATA.reduce((map, category) => map.set(category.id, category.title), new Map());
+
+const VISIBLE_SECTIONS = new Set(TEXT_SECTIONS.map(section => section.key));
+let allPrayers = [];
+let currentPrayers = [];
 
 function formatParagraph(text = "") {
   return text.split("\n").join("<br>");
 }
 
+function titleCase(value = "") {
+  return value
+    .toLowerCase()
+    .split(/[\s-_]+/)
+    .filter(Boolean)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+function formatCategoryLabel(value = "") {
+  if (!value) return "";
+  return CATEGORY_TITLE_MAP.get(value) || titleCase(value);
+}
+
+function matchesQuery(prayer, query = "") {
+  if (!query) {
+    return true;
+  }
+  const haystack = [
+    prayer.title,
+    prayer.label,
+    prayer.summary,
+    prayer.english,
+    prayer.hebrew,
+    prayer.transliteration,
+    prayer.details?.significance,
+    prayer.details?.when,
+    formatCategoryLabel(prayer.category)
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return haystack.includes(query);
+}
+
 function buildPrayerSection(prayer) {
   return `
         <section id="${prayer.id}" class="prayer-section">
-            <div class="prayer-title">${prayer.order}. ${prayer.title}</div>
-            <p class="prayer-summary">${prayer.summary || ""}</p>
+            <div class="prayer-title"><span class="prayer-index">${prayer.order}.</span> ${prayer.title}</div>
+            ${buildPrayerMeta(prayer)}
+            ${prayer.summary ? `<p class="prayer-summary">${prayer.summary}</p>` : ""}
+            ${buildPrayerDetails(prayer)}
             <div class="prayer-content">
                 ${TEXT_SECTIONS.map(section => buildTextBlock(prayer, section)).join("")}
             </div>
@@ -28,7 +71,32 @@ function buildPrayerSection(prayer) {
     `;
 }
 
+function buildPrayerMeta(prayer) {
+  const label = formatCategoryLabel(prayer.category);
+  if (!label) return "";
+  return `<div class="prayer-meta"><span class="category-chip">${label}</span></div>`;
+}
+
+function buildPrayerDetails(prayer) {
+  const details = prayer.details || {};
+  const items = [
+    details.significance
+      ? `<div class="detail-item"><span class="detail-label">Significance</span><p>${details.significance}</p></div>`
+      : "",
+    details.when ? `<div class="detail-item"><span class="detail-label">When</span><p>${details.when}</p></div>` : ""
+  ].filter(Boolean);
+
+  if (!items.length) {
+    return "";
+  }
+
+  return `<div class="prayer-details">${items.join("")}</div>`;
+}
+
 function buildTextBlock(prayer, section) {
+  if (!VISIBLE_SECTIONS.has(section.key)) {
+    return "";
+  }
   const content = prayer[section.key];
   if (!content) {
     return "";
@@ -44,8 +112,24 @@ function buildTextBlock(prayer, section) {
 function renderPrayerSections(prayers) {
   const container = document.getElementById("prayers-container");
   if (!container) return;
+
+  if (!prayers.length) {
+    container.innerHTML = buildEmptyState();
+    return;
+  }
+
   const html = prayers.map(buildPrayerSection).join("\n");
   container.innerHTML = html;
+}
+
+function buildEmptyState() {
+  return `
+        <div class="empty-state">
+            <h4 class="empty-title">No prayers match yet</h4>
+            <p class="empty-copy">Try a different keyword or reset your filters to see everything again.</p>
+            <button type="button" class="reset-button ghost" data-reset-filters>Reset filters</button>
+        </div>
+    `;
 }
 
 function renderCategoryCards(categories) {
@@ -77,11 +161,45 @@ function renderPrayerDirectory(prayers) {
   const directory = document.getElementById("prayer-directory");
   if (!directory) return;
 
+  if (!prayers.length) {
+    directory.innerHTML = `<p class="directory-empty">No entries match your current filters.</p>`;
+    return;
+  }
+
   const links = prayers
-    .map(prayer => `<a href="#${prayer.id}" class="directory-link">${prayer.order}. ${prayer.label || prayer.title}</a>`)
+    .map(
+      prayer =>
+        `<a href="#${prayer.id}" class="directory-link"><span class="directory-index">${prayer.order}.</span> ${
+          prayer.label || prayer.title
+        }</a>`
+    )
     .join("\n");
 
   directory.innerHTML = links;
+}
+
+function updateResultCount(count) {
+  const label = document.getElementById("prayer-count");
+  if (!label) return;
+  label.textContent = count === 1 ? "Showing 1 prayer" : `Showing ${count} prayers`;
+}
+
+function populateCategoryFilter(prayers, selectElement) {
+  if (!selectElement) return;
+  const categories = getUniqueCategories(prayers)
+    .map(value => ({ value, label: formatCategoryLabel(value) }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+
+  categories.forEach(category => {
+    const option = document.createElement("option");
+    option.value = category.value;
+    option.textContent = category.label;
+    selectElement.appendChild(option);
+  });
+}
+
+function getUniqueCategories(prayers) {
+  return Array.from(new Set(prayers.map(prayer => prayer.category).filter(Boolean)));
 }
 
 function setupBackToTop() {
@@ -103,26 +221,128 @@ function setupBackToTop() {
 }
 
 function setupSmoothScroll() {
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener("click", event => {
-      const href = anchor.getAttribute("href");
-      if (!href || href === "#") return;
-      const target = document.querySelector(href);
-      if (!target) return;
-      event.preventDefault();
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+  document.addEventListener("click", event => {
+    const anchor = event.target.closest('a[href^="#"]');
+    if (!anchor) return;
+    const href = anchor.getAttribute("href");
+    if (!href || href === "#") return;
+    const target = document.querySelector(href);
+    if (!target) return;
+    event.preventDefault();
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
   });
+}
+
+function setupResetFilters(handler) {
+  if (typeof handler !== "function") return;
+  document.addEventListener("click", event => {
+    const trigger = event.target.closest("[data-reset-filters]");
+    if (!trigger) return;
+    event.preventDefault();
+    handler();
+  });
+}
+
+function setupPrayerFinder(prayers) {
+  const filterState = { query: "", category: "" };
+  const searchInput = document.getElementById("prayer-search");
+  const categorySelect = document.getElementById("prayer-category");
+  const toggleInputs = document.querySelectorAll("[data-language-toggle]");
+
+  populateCategoryFilter(prayers, categorySelect);
+
+  const applyFilters = () => {
+    const filtered = prayers.filter(prayer => {
+      if (filterState.category && prayer.category !== filterState.category) {
+        return false;
+      }
+      return matchesQuery(prayer, filterState.query);
+    });
+    refreshPrayers(filtered);
+  };
+
+  if (searchInput) {
+    searchInput.addEventListener("input", event => {
+      filterState.query = (event.target.value || "").trim().toLowerCase();
+      applyFilters();
+    });
+  }
+
+  if (categorySelect) {
+    categorySelect.addEventListener("change", event => {
+      filterState.category = event.target.value;
+      applyFilters();
+    });
+  }
+
+  const syncToggleState = input => {
+    const label = input.closest(".toggle-pill");
+    if (!label) return;
+    if (input.checked) {
+      label.classList.add("active");
+    } else {
+      label.classList.remove("active");
+    }
+  };
+
+  if (toggleInputs.length) {
+    toggleInputs.forEach(input => {
+      syncToggleState(input);
+      input.addEventListener("change", event => {
+        const key = event.target.getAttribute("data-language-toggle");
+        if (!key) return;
+
+        if (event.target.checked) {
+          VISIBLE_SECTIONS.add(key);
+        } else if (VISIBLE_SECTIONS.size > 1) {
+          VISIBLE_SECTIONS.delete(key);
+        } else {
+          // keep at least one section visible
+          event.target.checked = true;
+          return;
+        }
+        syncToggleState(event.target);
+        renderPrayerSections(currentPrayers);
+      });
+    });
+  }
+
+  const resetFilters = () => {
+    filterState.query = "";
+    filterState.category = "";
+    if (searchInput) searchInput.value = "";
+    if (categorySelect) categorySelect.value = "";
+
+    VISIBLE_SECTIONS.clear();
+    TEXT_SECTIONS.forEach(section => VISIBLE_SECTIONS.add(section.key));
+    toggleInputs.forEach(input => {
+      input.checked = true;
+      syncToggleState(input);
+    });
+
+    refreshPrayers(prayers);
+  };
+
+  setupResetFilters(resetFilters);
+}
+
+function refreshPrayers(prayers) {
+  currentPrayers = [...prayers];
+  renderPrayerDirectory(currentPrayers);
+  renderPrayerSections(currentPrayers);
+  updateResultCount(currentPrayers.length);
 }
 
 function initializePrayersPage() {
   if (!DEFAULT_DATA.length) return;
-  const sorted = DEFAULT_DATA.sort((a, b) => (a.order || 0) - (b.order || 0));
+  allPrayers = [...DEFAULT_DATA].sort((a, b) => (a.order || 0) - (b.order || 0));
+  currentPrayers = [...allPrayers];
+
   renderCategoryCards(CATEGORY_DATA);
-  renderPrayerDirectory(sorted);
-  renderPrayerSections(sorted);
+  refreshPrayers(currentPrayers);
   setupBackToTop();
   setupSmoothScroll();
+  setupPrayerFinder(allPrayers);
 }
 
 document.addEventListener("DOMContentLoaded", initializePrayersPage);

@@ -483,6 +483,36 @@ Nafshi y'shovev. Yancheni v'ma'aglei tzedek l'ma'an sh'mo.
 Gam ki eilech b'gei tzalmavet lo ira ra ki ata imadi. Shivt'cha u'mishantecha hemah y'nachamuni.
 Ta'aroch lefanai shulchan neged tzorerai. Dishanta vashemen roshi. Kosi revayah.
 Ach tov vachesed yird'funi kol y'mei chayai. V'shavti b'beit Adonai l'orech yamim.`
+  },
+  {
+    id: "shabbat-candles",
+    order: 18,
+    title: "Blessing for Lighting Shabbat Candles",
+    label: "Shabbat Candle Lighting",
+    summary: "Kindle the lights that usher peace and holiness into the home.",
+    category: "shabbat",
+    details: {
+      significance: "Recited (traditionally by the woman of the house) to formally usher in the holiness of Shabbat.",
+      when: "Friday evening, just before sunset."
+    },
+    english: `Blessed are You, Lord our God, King of the universe, who has sanctified us with His commandments and commanded us to kindle the lights of Shabbat.`,
+    hebrew: `בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֺתָיו וְצִוָּנוּ לְהַדְלִיק נֵר שֶׁל שַׁבָּת.`,
+    transliteration: `Baruch Atah Adonai Eloheinu Melech ha'olam, asher kid'shanu b'mitzvotav v'tzivanu l'hadlik ner shel Shabbat.`
+  },
+  {
+    id: "shehecheyanu",
+    order: 19,
+    title: "Shehecheyanu",
+    label: "Shehecheyanu",
+    summary: "Offer gratitude for being sustained to reach meaningful firsts and sacred occasions.",
+    category: "celebration",
+    details: {
+      significance: "A joyful blessing of thanks for being kept alive and sustained to reach a special or new occasion.",
+      when: "First night of most holidays, when enjoying a new seasonal fruit, acquiring new clothing, or performing a mitzvah for the first time."
+    },
+    english: `Blessed are You, Lord our God, King of the universe, who has granted us life, sustained us, and enabled us to reach this occasion.`,
+    hebrew: `בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁהֶחֱיָנוּ וְקִיְּמָנוּ וְהִגִּיעָנוּ לַזְּמַן הַזֶּה.`,
+    transliteration: `Baruch Atah Adonai Eloheinu Melech ha'olam, shehecheyanu v'kiy'manu v'higianu laz'man hazeh.`
   }
 ];
 
@@ -547,6 +577,23 @@ const PRAYER_CATEGORIES = [
     links: [
       { id: "kaddish", label: "Chatzi Kaddish" },
       { id: "havdalah", label: "Havdalah Blessings" }
+    ]
+  },
+  {
+    id: "shabbat",
+    title: "Shabbat Lights",
+    description: "Prepare for holy time with blessings that welcome and depart Shabbat.",
+    links: [
+      { id: "shabbat-candles", label: "Shabbat Candle Lighting" },
+      { id: "havdalah", label: "Havdalah Blessings" }
+    ]
+  },
+  {
+    id: "celebration",
+    title: "Joy & Gratitude",
+    description: "Mark milestones and new experiences with words of heartfelt thanks.",
+    links: [
+      { id: "shehecheyanu", label: "Shehecheyanu" }
     ]
   }
 ];

@@ -6,50 +6,177 @@
     <title>Important Prayers & Readings - A Letter in the Scroll</title>
     <link rel="icon" type="image/png" href="Icon.png">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile-overrides.css">
     <link rel="stylesheet" href="prayers-style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- Header -->
-    <header class="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white shadow-2xl border-b-4 border-blue-600">
-        <div class="container mx-auto px-6 py-8">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                <!-- Logo/Title Section -->
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-4 mb-2">
-                        <img src="Icon.png" alt="A Letter in the Scroll Logo" class="h-12 w-12 sm:h-16 sm:w-16 rounded-lg shadow-lg">
-                        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide leading-tight">A Letter in the Scroll</h1>
+<body class="bg-gray-50 min-h-screen" data-enable-text-size="true" data-header-fallback="true">
+    <!-- Professional Responsive Header -->
+    <header class="header-main relative z-30">
+        <div class="header-container">
+            <!-- Logo/Title Section -->
+            <div class="header-branding-section">
+                <button id="home-branding" type="button" aria-label="Return to this week's parsha" class="header-branding-button">
+                    <div class="header-text">
+                        <h1 class="header-title">A Letter in the Scroll</h1>
+                        <p class="header-subtitle">Interactive Weekly Portion Study & Discussion</p>
                     </div>
-                    <p class="text-blue-200 text-sm md:text-base leading-relaxed">Important Prayers & Readings</p>
-                </div>
-                
-                <!-- Quick Actions -->
-                <div class="flex flex-wrap gap-3 flex-shrink-0">
-                    <a href="index.html" class="px-5 py-3 bg-white text-blue-900 rounded-lg font-semibold shadow-lg hover:bg-blue-50 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap flex-1 sm:flex-initial justify-center">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </button>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="header-actions-wrapper">
+                <div id="header-actions" class="header-actions">
+                    <button id="go-to-weekly" class="header-btn header-btn-primary" title="Go to this week's parsha">
+                        <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
-                        <span class="hidden sm:inline">Torah Study</span>
-                        <span class="sm:hidden">Home</span>
+                        <span class="header-btn-text">This Week's Parsha</span>
+                    </button>
+                    <a href="prayers.html" aria-current="page" class="header-btn header-btn-secondary" title="Important Prayers and Readings">
+                        <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                        <span class="header-btn-text">Prayers</span>
                     </a>
-                    <span aria-current="page" class="px-5 py-3 bg-blue-50 text-blue-900 rounded-lg font-semibold shadow-lg border border-blue-200 flex items-center gap-2 whitespace-nowrap flex-1 sm:flex-initial justify-center">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h6m-6 4h10m2 5H5a2 2 0 01-2-2V5a2 2 0 012-2h9l5 5v14a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <span class="hidden sm:inline">Important Prayers/Readings</span>
-                        <span class="sm:hidden">Prayers</span>
-                    </span>
-                    <a href="about.html" class="px-5 py-3 bg-blue-700 text-white rounded-lg font-semibold shadow-lg hover:bg-blue-600 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 whitespace-nowrap flex-1 sm:flex-initial justify-center">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="about.html" class="header-btn header-btn-secondary" title="About this project">
+                        <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <span class="hidden sm:inline">About</span>
-                        <span class="sm:hidden">Info</span>
+                        <span class="header-btn-text">About</span>
                     </a>
+                    <button id="my-bookmarks-btn" class="header-btn header-btn-secondary" title="View your saved verses">
+                        <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h6a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                        </svg>
+                        <span class="header-btn-text">My Bookmarks</span>
+                    </button>
+                    <button id="logout-btn" class="header-btn header-btn-secondary" title="Sign out">
+                        <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        <span class="header-btn-text">Sign Out</span>
+                    </button>
                 </div>
             </div>
         </div>
     </header>
+
+    <!-- Community Status Bar (Subtle Header Bar) -->
+    <div id="community-status-bar" class="hidden bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200">
+        <div class="container mx-auto">
+            <div id="community-status-content" class="flex flex-wrap items-center gap-4 text-sm text-gray-700">
+                <!-- Online Users Section -->
+                <div id="header-online-section" class="status-section hidden flex items-center gap-1.5">
+                    <div class="flex items-center gap-1">
+                        <div class="status-leading-dot bg-green-500 rounded-full animate-pulse"></div>
+                        <span class="text-xs font-medium text-gray-700">Online:</span>
+                    </div>
+                    <span id="header-online-concurrency" class="status-concurrency hidden"></span>
+                    <div id="header-online-users-list" class="status-scroll flex flex-nowrap items-center gap-1.5 overflow-x-auto">
+                        <!-- Online users will be listed here -->
+                    </div>
+                </div>
+
+                <!-- Your Status Section -->
+                <div id="header-your-status" class="status-section hidden flex items-center gap-1 ml-auto">
+                    <span id="header-your-username" class="text-xs font-medium text-gray-800"></span>
+                    <span class="text-xs text-gray-400">•</span>
+                    <span id="header-your-login-time" class="text-xs text-gray-600">just now</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Improved Navigation Bar -->
+    <nav class="bg-white shadow-md sticky top-0 z-10 border-b-2 border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <!-- Desktop Layout -->
+            <div id="nav-desktop" class="hidden md:flex items-center justify-between gap-4">
+                <!-- Parsha Selector -->
+                <div class="flex items-center gap-3 flex-1 max-w-xl">
+                    <label for="parsha-selector" class="font-semibold text-gray-700 whitespace-nowrap text-sm">Torah Portion:</label>
+                    <select id="parsha-selector" class="flex-1 px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-white text-gray-900 font-medium shadow-sm hover:border-blue-400 transition-colors">
+                        <option value="">Loading portions...</option>
+                    </select>
+                </div>
+
+                <!-- Navigation Buttons and Text Size Control -->
+                <div class="flex items-center gap-2">
+                    <div id="nav-header-actions" class="flex items-center gap-2"></div>
+                    <button id="general-parsha-chat" class="px-4 py-2.5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all font-medium shadow-md hover:shadow-lg flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        Parsha Chat
+                    </button>
+                    <button id="show-significance" class="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-medium shadow-md hover:shadow-lg flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Significance
+                    </button>
+                    <button id="prev-parsha" class="group px-4 py-2.5 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 font-medium shadow-sm flex items-center gap-2">
+                        <svg class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Previous
+                    </button>
+                    <button id="next-parsha" class="group px-4 py-2.5 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 font-medium shadow-sm flex items-center gap-2">
+                        Next
+                        <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Layout -->
+            <div id="nav-mobile" class="md:hidden space-y-3">
+                <!-- Text Size Control (Mobile) -->
+                <div id="header-actions-mobile" class="flex justify-end"></div>
+
+                <!-- Parsha Selector -->
+                <div class="flex flex-col gap-2">
+                    <label for="parsha-selector" class="font-semibold text-gray-700 text-sm">Torah Portion:</label>
+                    <select id="parsha-selector" class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-white text-gray-900 font-medium shadow-sm">
+                        <option value="">Loading portions...</option>
+                    </select>
+                </div>
+                
+                <!-- General Chat Button (Mobile) -->
+                <button id="general-parsha-chat-mobile" class="w-full px-4 py-2.5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all font-medium shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                    Parsha Chat
+                </button>
+
+                <button id="show-significance-mobile" class="w-full px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-medium shadow-md hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Significance
+                </button>
+
+                <!-- Navigation Buttons -->
+                <div class="flex gap-2">
+                    <button id="prev-parsha" class="flex-1 px-4 py-2.5 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-all disabled:opacity-40 disabled:cursor-not-allowed font-medium shadow-sm text-sm flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Previous
+                    </button>
+                    <button id="next-parsha" class="flex-1 px-4 py-2.5 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-all disabled:opacity-40 disabled:cursor-not-allowed font-medium shadow-sm text-sm flex items-center justify-center gap-2">
+                        Next
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8">
@@ -67,11 +194,58 @@
             <div id="category-cards" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
         </section>
 
+        <!-- Prayer Finder -->
+        <section id="prayer-finder" class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8 border border-blue-100">
+            <div class="finder-header">
+                <div>
+                    <h3 class="text-xl font-semibold text-blue-900">Prayer Finder</h3>
+                    <p class="text-blue-800 text-sm">
+                        Search, filter by focus area, and choose the text you want to view. Everything updates in real time.
+                    </p>
+                </div>
+            </div>
+            <div class="finder-grid">
+                <label class="filter-field" aria-label="Search prayers">
+                    <span class="filter-label">Search</span>
+                    <input type="search" id="prayer-search" class="filter-input" placeholder="Search by title, theme, Hebrew, or English text">
+                    <span class="filter-helper">Live results update as you type.</span>
+                </label>
+                <label class="filter-field" aria-label="Filter prayers by focus area">
+                    <span class="filter-label">Focus Area</span>
+                    <select id="prayer-category" class="filter-input">
+                        <option value="">All focus areas</option>
+                    </select>
+                    <span class="filter-helper">Includes Shabbat, daily, praise, healing, and more.</span>
+                </label>
+            </div>
+            <div class="finder-languages" role="group" aria-label="Toggle text sections">
+                <span class="filter-label">Text Display</span>
+                <div class="toggle-group">
+                    <label class="toggle-pill">
+                        <input type="checkbox" data-language-toggle="english" checked>
+                        <span>English</span>
+                    </label>
+                    <label class="toggle-pill">
+                        <input type="checkbox" data-language-toggle="hebrew" checked>
+                        <span>Hebrew</span>
+                    </label>
+                    <label class="toggle-pill">
+                        <input type="checkbox" data-language-toggle="transliteration" checked>
+                        <span>Transliteration</span>
+                    </label>
+                </div>
+            </div>
+            <div class="finder-footer">
+                <p id="prayer-count" class="prayer-count text-blue-900 font-semibold">Showing 0 prayers</p>
+                <button type="button" id="reset-prayer-filters" class="reset-button" data-reset-filters>Reset filters</button>
+            </div>
+        </section>
+
         <section class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8 border border-gray-200">
             <div class="flex flex-col gap-2 mb-4">
                 <h3 class="text-xl font-semibold text-blue-900">Complete Prayer Directory</h3>
                 <p class="text-blue-800 text-sm">
-                    Tap any title to scroll to its section. The list follows the order shown in the navigation.
+                    Tap any title to scroll to its section. The directory stays in sync with your filters.
                 </p>
             </div>
             <div id="prayer-directory" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
@@ -99,6 +273,7 @@
 
     <script src="prayers-data.js"></script>
     <script src="prayers.js"></script>
+    <script src="header-fallback.js"></script>
     <script src="text-size-control.js"></script>
 </body>
 </html>

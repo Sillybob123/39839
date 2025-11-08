@@ -33,9 +33,12 @@
      */
     function init() {
         const torahText = document.getElementById('parsha-text');
+        const forceEnable =
+            (document.body && document.body.dataset && document.body.dataset.enableTextSize === 'true') ||
+            (document.documentElement && document.documentElement.dataset && document.documentElement.dataset.enableTextSize === 'true');
 
-        // Only render the control when Torah text is present on the page
-        if (!torahText) {
+        // Only render the control when Torah text is present on the page or when explicitly enabled
+        if (!torahText && !forceEnable) {
             return;
         }
 

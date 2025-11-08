@@ -253,10 +253,29 @@ def main():
 
     # --- Load parsha-level significance if provided ---
     significance_map = {}
+    def format_significance_entry(value):
+        if isinstance(value, str):
+            return value.strip()
+        if isinstance(value, dict):
+            order = [
+                ('nameMeaning', 'Name Meaning'),
+                ('context', 'Context'),
+                ('summary', 'Parsha Summary'),
+                ('significance', 'Significance'),
+                ('takeaway', 'The takeaway')
+            ]
+            parts = []
+            for key, label in order:
+                section = value.get(key)
+                if section:
+                    parts.append(f"{label}: {section.strip()}")
+            return "\n\n".join(parts).strip()
+        return ""
+
     try:
         with open('parsha_significance.json', 'r', encoding='utf-8') as sf:
             raw = json.load(sf)
-            # Expect either {"significance": {"ParshaName": "..."}} or a direct mapping
+            # Expect either {"significance": {...}} or a direct mapping
             if isinstance(raw, dict):
                 if 'significance' in raw and isinstance(raw['significance'], dict):
                     significance_map = raw['significance']
@@ -299,8 +318,10 @@ def main():
             "verses": verses
         }
 
-        if parsha_name in significance_map and isinstance(significance_map[parsha_name], str):
-            parsha_entry["significance"] = significance_map[parsha_name]
+        if parsha_name in significance_map:
+            formatted_sig = format_significance_entry(significance_map[parsha_name])
+            if formatted_sig:
+                parsha_entry["significance"] = formatted_sig
 
         if verses or parsha_entry.get("significance"):
             final_json_structure["parshas"].append(parsha_entry)
