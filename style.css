@@ -3979,7 +3979,8 @@ body.torah-text-size-xlarge #parsha-text .english-text {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
     scrollbar-gutter: stable both-edges;
-    padding-right: 0.25rem;
+    /* Keep text away from the scrollbar, esp. Hebrew on the right */
+    padding-inline-end: max(0.75rem, env(safe-area-inset-right));
 }
 
 .mitzvah-modal__eyebrow {
@@ -4011,6 +4012,8 @@ body.torah-text-size-xlarge #parsha-text .english-text {
 
 .mitzvah-modal__mitzvah .mitzvah-label__he {
     font-size: 1.25rem;
+    /* Hebrew (rtl) needs a little breathing room from the right edge */
+    padding-inline-start: 0.5rem;
 }
 
 .mitzvah-modal__mitzvah .mitzvah-label__sub {
