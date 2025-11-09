@@ -1589,6 +1589,13 @@ function showMitzvahModal() {
     modal.classList.remove('hidden');
     modal.setAttribute('aria-hidden', 'false');
     mitzvahModalWasShown = true;
+    // Prevent background scroll while modal is open
+    try {
+        document.documentElement.classList.add('no-scroll');
+        document.body.classList.add('no-scroll');
+    } catch (e) {
+        // noop
+    }
 }
 
 function hideMitzvahModal(persist = false) {
@@ -1604,6 +1611,14 @@ function hideMitzvahModal(persist = false) {
     }
 
     mitzvahModalWasShown = persist;
+
+    // Restore background scroll
+    try {
+        document.documentElement.classList.remove('no-scroll');
+        document.body.classList.remove('no-scroll');
+    } catch (e) {
+        // noop
+    }
 }
 
 function dismissMitzvahModal(persist) {
