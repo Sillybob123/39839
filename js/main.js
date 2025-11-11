@@ -66,6 +66,7 @@ import {
     getMitzvahCompletionStatus,
     setMitzvahCompletionStatus,
     updateMitzvahLeaderboard,
+    recalculateMitzvahLeaderboard,
     getMitzvahLeaderboard,
     formatTimeAgo
 } from './firebase.js';
@@ -1673,6 +1674,7 @@ function renderMitzvahLeaderboard(leaderboard = []) {
     }
 
     const currentUserId = getCurrentUserId();
+    const currentCanonicalUserId = (currentUserProfile && currentUserProfile.userId) || null;
     listEl.innerHTML = '';
 
     // For tie-breaking: earliest reflection in the current challenge wins
@@ -1716,7 +1718,7 @@ function renderMitzvahLeaderboard(leaderboard = []) {
     sorted.forEach((entry, index) => {
         const item = document.createElement('div');
         item.className = 'mitzvah-leaderboard__item';
-        if (entry.userId && currentUserId && entry.userId === currentUserId) {
+        if (entry.userId && ((currentUserId && entry.userId === currentUserId) || (currentCanonicalUserId && entry.userId === currentCanonicalUserId))) {
             item.classList.add('is-self');
         }
 
@@ -1870,20 +1872,43 @@ async function handleMitzvahChatSubmit() {
 
         if (!wasCompleted) {
             try {
-                console.log('[Mitzvah Reflection] First completion! Updating leaderboard...');
+                console.log('[Mitzvah Reflection] First completion! Updating leaderboard...', {
+                    userId,
+                    challengeId,
+                    username,
+                    submissionEmail
+                });
                 await setMitzvahCompletionStatus(userId, challengeId, true);
                 currentMitzvahCompletion = true;
                 updateMitzvahChecklistUI('Challenge marked as completed!');
                 await updateMitzvahLeaderboard(userId, username, 1, submissionEmail);
-                console.log('[Mitzvah Reflection] Leaderboard updated successfully');
-                await refreshMitzvahLeaderboardDisplay();
+                console.log('[Mitzvah Reflection] Leaderboard incremented successfully');
             } catch (error) {
                 console.error('Error finalizing mitzvah completion:', error);
                 updateMitzvahChecklistUI('Reflection saved, but we could not update completion status. Please try again later.');
             }
         } else {
-            console.log('[Mitzvah Reflection] Already completed - skipping leaderboard update');
+            console.log('[Mitzvah Reflection] Already completed this challenge - skipping increment', {
+                challengeId,
+                currentMitzvahCompletion
+            });
             updateMitzvahChecklistUI();
+        }
+
+        // Ensure leaderboard total is accurate by recalculating from progress
+        try {
+            console.log('[Mitzvah Reflection] Recalculating leaderboard total...');
+            const recalcResult = await recalculateMitzvahLeaderboard(userId, username, submissionEmail);
+            console.log('[Mitzvah Reflection] Recalculation result:', recalcResult);
+
+            // Add a small delay to ensure Firestore propagation
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            console.log('[Mitzvah Reflection] Refreshing leaderboard display...');
+            await refreshMitzvahLeaderboardDisplay();
+            console.log('[Mitzvah Reflection] Leaderboard display refreshed successfully');
+        } catch (e) {
+            console.error('Unable to recalculate leaderboard:', e);
         }
 
         statusEl.textContent = 'Reflection shared!';

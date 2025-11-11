@@ -1394,7 +1394,23 @@ async function updateMitzvahLeaderboard(userId, username, delta, userEmail = nul
   }
 
   try {
-    const leaderboardRef = doc(db, 'mitzvahLeaderboard', normalizedUserId);
+    // Resolve canonical user to keep leaderboard unified across multiple login IDs
+    let canonicalId = normalizedUserId;
+    let profileData = null;
+    try {
+      const userDocRef = doc(db, 'users', normalizedUserId);
+      const snap = await getDoc(userDocRef);
+      if (snap.exists()) {
+        profileData = snap.data() || {};
+        if (profileData.canonicalUserId && typeof profileData.canonicalUserId === 'string') {
+          canonicalId = profileData.canonicalUserId;
+        }
+      }
+    } catch (e) {
+      // Non-fatal: fallback to normalizedUserId
+    }
+
+    const leaderboardRef = doc(db, 'mitzvahLeaderboard', canonicalId);
     const normalizedUsername = typeof username === 'string' ? username.trim() : '';
     const sanitizedUsername = normalizedUsername
       && !normalizedUsername.includes('@')
@@ -1406,7 +1422,10 @@ async function updateMitzvahLeaderboard(userId, username, delta, userEmail = nul
     const canonicalEmail = normalizedEmail ? resolveCanonicalEmail(normalizedEmail) : null;
     const emailForFallback = canonicalEmail || normalizedEmail || '';
     const fallbackUsername = emailForFallback ? getDisplayNameFromEmail(emailForFallback) : '';
-    const resolvedUsername = sanitizedUsername || fallbackUsername || 'Friend';
+    const nameFromProfile = (profileData && typeof profileData.username === 'string' && !profileData.username.includes('@'))
+      ? profileData.username.trim()
+      : '';
+    const resolvedUsername = sanitizedUsername || nameFromProfile || fallbackUsername || 'Friend';
 
     await runTransaction(db, async (transaction) => {
       const snapshot = await transaction.get(leaderboardRef);
@@ -1418,7 +1437,7 @@ async function updateMitzvahLeaderboard(userId, username, delta, userEmail = nul
 
       const now = serverTimestamp();
       const payload = {
-        userId: normalizedUserId,
+        userId: canonicalId,
         username: resolvedUsername,
         totalCompleted: newTotal,
         updatedAt: now
@@ -1438,22 +1457,143 @@ async function updateMitzvahLeaderboard(userId, username, delta, userEmail = nul
   }
 }
 
+// Recalculate a user's leaderboard total from their recorded completions.
+// Ensures accuracy if any incremental updates were missed.
+async function recalculateMitzvahLeaderboard(userId, username, userEmail = null) {
+  if (!userId) {
+    return null;
+  }
+
+  const normalizedUserId = typeof userId === 'string' ? userId.trim() : String(userId);
+  if (!normalizedUserId) {
+    return null;
+  }
+
+  try {
+    // Resolve canonical context and list of auth IDs to aggregate progress across aliases
+    let canonicalId = normalizedUserId;
+    let authIds = [normalizedUserId];
+    let profileData = null;
+    try {
+      const userDocRef = doc(db, 'users', normalizedUserId);
+      const userSnap = await getDoc(userDocRef);
+      if (userSnap.exists()) {
+        profileData = userSnap.data() || {};
+        if (profileData.canonicalUserId && typeof profileData.canonicalUserId === 'string') {
+          canonicalId = profileData.canonicalUserId;
+        }
+        const arr = Array.isArray(profileData.authUserIds) ? profileData.authUserIds : [];
+        const set = new Set([normalizedUserId, canonicalId, ...arr].filter(Boolean));
+        authIds = Array.from(set);
+      }
+    } catch (e) {
+      // Non-fatal; fallback to single ID
+    }
+
+    let total = 0;
+    let firstCompletedAt = null;
+    let firstMs = Number.POSITIVE_INFINITY;
+    let lastCompletedAt = null;
+    let lastMs = 0;
+
+    console.log('[Leaderboard Recalc] Counting completions for user:', {
+      normalizedUserId,
+      canonicalId,
+      authIds
+    });
+
+    for (const aid of authIds) {
+      try {
+        const progressColRef = collection(db, 'users', aid, 'mitzvahProgress');
+        const progressSnap = await getDocs(progressColRef);
+        let countForThisId = 0;
+        progressSnap.forEach((docSnap) => {
+          const data = docSnap.data() || {};
+          if (data.completed) {
+            total += 1;
+            countForThisId += 1;
+            const ts = data.completedAt;
+            const ms = ts && typeof ts.toMillis === 'function' ? ts.toMillis() : (ts ? new Date(ts).getTime() : NaN);
+            if (Number.isFinite(ms)) {
+              if (ms < firstMs) {
+                firstMs = ms;
+                firstCompletedAt = ts;
+              }
+              if (ms > lastMs) {
+                lastMs = ms;
+                lastCompletedAt = ts;
+              }
+            }
+          }
+        });
+        console.log(`[Leaderboard Recalc] Auth ID ${aid}: ${countForThisId} completions`);
+      } catch (e) {
+        console.warn(`[Leaderboard Recalc] Error reading progress for auth ID ${aid}:`, e);
+      }
+    }
+
+    console.log('[Leaderboard Recalc] Total completions:', total);
+
+    const normalizedUsername = typeof username === 'string' ? username.trim() : '';
+    const sanitizedUsername = normalizedUsername
+      && !normalizedUsername.includes('@')
+      && normalizedUsername.toLowerCase() !== 'friend'
+      ? normalizedUsername
+      : '';
+
+    const normalizedEmail = typeof userEmail === 'string' ? userEmail.trim().toLowerCase() : '';
+    const canonicalEmail = normalizedEmail ? resolveCanonicalEmail(normalizedEmail) : null;
+    const emailForFallback = canonicalEmail || normalizedEmail || '';
+    const fallbackUsername = emailForFallback ? getDisplayNameFromEmail(emailForFallback) : '';
+    const resolvedUsername = sanitizedUsername || fallbackUsername || 'Friend';
+
+    const leaderboardRef = doc(db, 'mitzvahLeaderboard', canonicalId);
+    const payload = {
+      userId: canonicalId,
+      username: resolvedUsername,
+      totalCompleted: Math.max(0, Number.isFinite(total) ? total : 0),
+      updatedAt: serverTimestamp()
+    };
+    if (firstCompletedAt) {
+      payload.firstCompletedAt = firstCompletedAt;
+    }
+    if (lastCompletedAt) {
+      payload.lastCompletedAt = lastCompletedAt;
+    }
+
+    await setDoc(leaderboardRef, payload, { merge: true });
+    return payload;
+  } catch (error) {
+    console.error('Error recalculating mitzvah leaderboard:', error);
+    return null;
+  }
+}
+
 async function getMitzvahLeaderboard(limitCount = 10) {
   try {
-    const leaderboardQuery = query(
-      collection(db, 'mitzvahLeaderboard'),
-      orderBy('totalCompleted', 'desc'),
-      limit(limitCount)
-    );
+    // Try the optimized query with orderBy first
+    let snapshot;
+    try {
+      const leaderboardQuery = query(
+        collection(db, 'mitzvahLeaderboard'),
+        orderBy('totalCompleted', 'desc'),
+        limit(limitCount * 2) // fetch extra to allow local de-duplication
+      );
+      snapshot = await getDocs(leaderboardQuery);
+    } catch (indexError) {
+      // If orderBy fails (likely missing index), fall back to fetching all documents
+      console.warn('Leaderboard index not available, using fallback query:', indexError.message);
+      const fallbackQuery = query(collection(db, 'mitzvahLeaderboard'));
+      snapshot = await getDocs(fallbackQuery);
+    }
 
-    const snapshot = await getDocs(leaderboardQuery);
-    const results = [];
+    const interim = [];
     snapshot.forEach((docSnapshot) => {
       const data = docSnapshot.data();
       if (!data || typeof data.totalCompleted !== 'number' || data.totalCompleted <= 0) {
         return;
       }
-      results.push({
+      interim.push({
         id: docSnapshot.id,
         userId: data.userId || docSnapshot.id,
         username: data.username || getDisplayNameFromEmail(docSnapshot.id),
@@ -1463,7 +1603,30 @@ async function getMitzvahLeaderboard(limitCount = 10) {
         updatedAt: data.updatedAt || null
       });
     });
-    return results;
+
+    // De-duplicate by userId only (already canonicalized on write)
+    const byUser = new Map();
+    for (const entry of interim) {
+      const key = entry.userId || entry.id;
+      const existing = byUser.get(key);
+      if (!existing) {
+        byUser.set(key, entry);
+        continue;
+      }
+      if ((entry.totalCompleted || 0) > (existing.totalCompleted || 0)) {
+        byUser.set(key, entry);
+      } else if ((entry.totalCompleted || 0) === (existing.totalCompleted || 0)) {
+        const a = existing.updatedAt && existing.updatedAt.toMillis ? existing.updatedAt.toMillis() : (existing.updatedAt ? new Date(existing.updatedAt).getTime() : 0);
+        const b = entry.updatedAt && entry.updatedAt.toMillis ? entry.updatedAt.toMillis() : (entry.updatedAt ? new Date(entry.updatedAt).getTime() : 0);
+        if (b > a) {
+          byUser.set(key, entry);
+        }
+      }
+    }
+
+    return Array.from(byUser.values())
+      .sort((a, b) => (b.totalCompleted || 0) - (a.totalCompleted || 0))
+      .slice(0, limitCount);
   } catch (error) {
     console.error('Error loading mitzvah leaderboard:', error);
     return [];
@@ -1537,6 +1700,7 @@ export {
   getMitzvahCompletionStatus,
   setMitzvahCompletionStatus,
   updateMitzvahLeaderboard,
+  recalculateMitzvahLeaderboard,
   getMitzvahLeaderboard,
   formatTimeAgo
 };
