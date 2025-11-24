@@ -1659,6 +1659,118 @@ function scrollToMitzvahChallenge() {
     }
 }
 
+function resolveCanonicalLeaderboardUserId(userId) {
+    if (!userId) {
+        return null;
+    }
+
+    if (currentUserProfile && typeof currentUserProfile.canonicalUserId === 'string' && currentUserProfile.canonicalUserId.trim()) {
+        return currentUserProfile.canonicalUserId.trim();
+    }
+
+    return userId;
+}
+
+function resolveLeaderboardUsernameForDisplay(preferredUsername) {
+    const preferred = sanitizeReflectionUsername(preferredUsername);
+    if (preferred) {
+        return preferred;
+    }
+
+    const profileName = sanitizeReflectionUsername(currentUserProfile && currentUserProfile.username);
+    if (profileName) {
+        return profileName;
+    }
+
+    const savedName = sanitizeReflectionUsername(getSavedUsername());
+    if (savedName) {
+        return savedName;
+    }
+
+    const profileEmail = (currentUserProfile && typeof currentUserProfile.email === 'string' && currentUserProfile.email.trim())
+        ? currentUserProfile.email
+        : (currentUserProfile && Array.isArray(currentUserProfile.emails)
+            ? currentUserProfile.emails.find((value) => typeof value === 'string' && value.trim())
+            : null);
+
+    if (profileEmail) {
+        return getDisplayNameFromEmail(profileEmail);
+    }
+
+    return 'Friend';
+}
+
+function applyLocalMitzvahLeaderboardIncrement(userId, username, delta = 1) {
+    const canonicalUserId = resolveCanonicalLeaderboardUserId(userId);
+    const deltaNumber = Number(delta);
+
+    if (!canonicalUserId || !Number.isFinite(deltaNumber) || deltaNumber === 0) {
+        return;
+    }
+
+    const leaderboard = Array.isArray(state.mitzvahLeaderboard)
+        ? [...state.mitzvahLeaderboard]
+        : [];
+    const existingIndex = leaderboard.findIndex((entry) => entry && entry.userId === canonicalUserId);
+    const existingEntry = existingIndex >= 0 ? leaderboard[existingIndex] : null;
+    const baseTotal = (existingEntry && typeof existingEntry.totalCompleted === 'number')
+        ? existingEntry.totalCompleted
+        : 0;
+    const newTotal = Math.max(0, baseTotal + deltaNumber);
+    const resolvedUsername = resolveLeaderboardUsernameForDisplay(username)
+        || (existingEntry ? existingEntry.username : null)
+        || 'Friend';
+
+    const nextEntry = {
+        ...(existingEntry || {}),
+        userId: canonicalUserId,
+        username: resolvedUsername,
+        totalCompleted: newTotal
+    };
+
+    if (existingIndex >= 0) {
+        leaderboard[existingIndex] = nextEntry;
+    } else {
+        leaderboard.push(nextEntry);
+    }
+
+    setState({ mitzvahLeaderboard: leaderboard });
+    renderMitzvahLeaderboard(leaderboard);
+}
+
+function mergeLeaderboardWithLocalState(fetched = []) {
+    const serverList = Array.isArray(fetched) ? fetched : [];
+    const localList = Array.isArray(state.mitzvahLeaderboard) ? state.mitzvahLeaderboard : [];
+
+    const byUser = new Map();
+
+    const upsert = (entry, isLocal = false) => {
+        if (!entry || !entry.userId) {
+            return;
+        }
+        const existing = byUser.get(entry.userId) || {};
+        const existingTotal = typeof existing.totalCompleted === 'number' ? existing.totalCompleted : 0;
+        const newTotal = typeof entry.totalCompleted === 'number' ? entry.totalCompleted : 0;
+        const mergedTotal = Math.max(existingTotal, newTotal);
+
+        const merged = {
+            ...existing,
+            ...(isLocal ? {} : entry),
+            ...(isLocal ? entry : {})
+        };
+        merged.totalCompleted = mergedTotal;
+        merged.userId = entry.userId;
+        merged.username = entry.username || existing.username || 'Friend';
+
+        byUser.set(entry.userId, merged);
+    };
+
+    serverList.forEach((entry) => upsert(entry, false));
+    localList.forEach((entry) => upsert(entry, true));
+
+    return Array.from(byUser.values());
+}
+
 function renderMitzvahLeaderboard(leaderboard = []) {
     const listEl = document.getElementById('mitzvah-leaderboard-list');
     if (!listEl) {
@@ -1711,10 +1823,6 @@ function renderMitzvahLeaderboard(leaderboard = []) {
         return (a?.userId || '').localeCompare(b?.userId || '');
     });
 
-    // Compute ranks with tie handling (standard competition ranking)
-    let lastScore = null;
-    let lastRank = 0;
-
     sorted.forEach((entry, index) => {
         const item = document.createElement('div');
         item.className = 'mitzvah-leaderboard__item';
@@ -1724,25 +1832,8 @@ function renderMitzvahLeaderboard(leaderboard = []) {
 
         const rank = document.createElement('span');
         rank.className = 'mitzvah-leaderboard__rank';
-        if (entry && typeof entry.totalCompleted === 'number') {
-            if (lastScore === null) {
-                // First row always rank 1
-                lastRank = 1;
-                lastScore = entry.totalCompleted;
-            } else if (entry.totalCompleted === lastScore) {
-                // Same score → same rank
-                // lastRank remains unchanged
-            } else {
-                // New lower score → rank equals current position (1-based)
-                lastRank = index + 1;
-                lastScore = entry.totalCompleted;
-            }
-        } else {
-            // Fallback if score missing
-            lastRank = index + 1;
-            lastScore = entry?.totalCompleted ?? null;
-        }
-        rank.textContent = `#${lastRank}`;
+        const displayRank = index + 1;
+        rank.textContent = `#${displayRank}`;
 
         // Create a flex container for name and badge to keep them together
         const nameContainer = document.createElement('div');
@@ -1781,8 +1872,9 @@ async function refreshMitzvahLeaderboardDisplay() {
 
     try {
         const leaderboard = await getMitzvahLeaderboard(MITZVAH_LEADERBOARD_LIMIT);
-        setState({ mitzvahLeaderboard: leaderboard });
-        renderMitzvahLeaderboard(leaderboard);
+        const merged = mergeLeaderboardWithLocalState(leaderboard);
+        setState({ mitzvahLeaderboard: merged });
+        renderMitzvahLeaderboard(merged);
     } catch (error) {
         console.error('Unable to load mitzvah leaderboard:', error);
         listEl.innerHTML = '<p class="mitzvah-leaderboard__error">Unable to load leaderboard right now.</p>';
@@ -1882,6 +1974,7 @@ async function handleMitzvahChatSubmit() {
                 currentMitzvahCompletion = true;
                 updateMitzvahChecklistUI('Challenge marked as completed!');
                 await updateMitzvahLeaderboard(userId, username, 1, submissionEmail);
+                applyLocalMitzvahLeaderboardIncrement(userId, username, 1);
                 console.log('[Mitzvah Reflection] Leaderboard incremented successfully');
             } catch (error) {
                 console.error('Error finalizing mitzvah completion:', error);
