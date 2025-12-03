@@ -166,8 +166,9 @@ nav {
 /* Daily Inspiration Banner */
 .daily-inspiration-header-section {
     background: #fafbfc;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: none;
     padding-bottom: 5px;
+    margin-bottom: 0px;
 }
 
 #daily-inspiration {
@@ -498,21 +499,21 @@ select {
 
 /* Verse Container - IMPROVED LAYOUT */
 .verse-container {
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
     border-radius: 8px;
-    transition: all 0.3s ease;
-    border: 2px solid #e5e7eb;
+    transition: all 0.2s ease;
+    border: 1px solid #e5e7eb;
     background: #ffffff;
     cursor: pointer;
     position: relative;
 }
 
 .verse-container:hover {
-    background: #f8fafc;
-    border-color: #3b82f6;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-    transform: translateY(-2px);
+    background: #f9fafb;
+    border-color: #60a5fa;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.12);
+    transform: translateY(-1px);
 }
 
 /* Verses with Content */
@@ -546,14 +547,14 @@ select {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
+    font-weight: 600;
     color: white;
     background: #3b82f6;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 /* Verse Text Container - HEBREW ABOVE ENGLISH */
@@ -616,37 +617,39 @@ select {
 .content-indicator {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.375rem;
     padding: 0.375rem 0.75rem;
     border-radius: 6px;
-    font-size: 0.85rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .commentary-indicator {
-    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    background: #eff6ff;
     color: #1e40af;
-    border: 1px solid #93c5fd;
+    border: 1px solid #bfdbfe;
 }
 
 .commentary-indicator:hover {
-    background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
+    background: #dbeafe;
+    border-color: #93c5fd;
     transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 1px 3px rgba(59, 130, 246, 0.2);
 }
 
 .keyword-indicator {
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    background: #fef3c7;
     color: #92400e;
-    border: 1px solid #fcd34d;
+    border: 1px solid #fde68a;
 }
 
 .keyword-indicator:hover {
-    background: linear-gradient(135deg, #fde68a 0%, #fcd34d 100%);
+    background: #fde68a;
+    border-color: #fcd34d;
     transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+    box-shadow: 0 1px 3px rgba(245, 158, 11, 0.2);
 }
 
 /* NO EMOJI ICONS */
@@ -700,90 +703,93 @@ select {
 .reaction-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.45rem 0.9rem;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
     border-radius: 999px;
-    font-size: 0.85rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border 0.2s ease;
-    border: 1px solid rgba(15, 23, 42, 0.08);
+    transition: all 0.2s ease;
+    border: 1px solid #e5e7eb;
     background: #ffffff;
-    color: #1f2937;
+    color: #374151;
     position: relative;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .reaction-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.15);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 }
 
 .reaction-btn:active {
     transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .reaction-btn:focus-visible {
-    outline: 2px solid rgba(59, 130, 246, 0.45);
+    outline: 2px solid #3b82f6;
     outline-offset: 2px;
 }
 
 /* Emphasize Button - Amber Theme */
 .emphasize-btn {
-    color: #b45309;
-    border-color: rgba(217, 119, 6, 0.45);
-    background: linear-gradient(135deg, rgba(253, 230, 138, 0.85) 0%, rgba(252, 211, 77, 0.6) 100%);
+    color: #92400e;
+    border-color: #fde68a;
+    background: #fef3c7;
 }
 
 .emphasize-btn:hover {
-    background: linear-gradient(135deg, rgba(252, 211, 77, 0.8) 0%, rgba(251, 191, 36, 0.75) 100%);
-    box-shadow: 0 8px 16px rgba(217, 119, 6, 0.25);
+    background: #fde68a;
+    border-color: #fcd34d;
+    box-shadow: 0 2px 4px 0 rgba(245, 158, 11, 0.15);
 }
 
 .emphasize-btn.active {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    background: #f59e0b;
     color: white;
-    border-color: #b45309;
-    box-shadow: 0 10px 20px rgba(217, 119, 6, 0.32);
+    border-color: #d97706;
+    box-shadow: 0 2px 4px 0 rgba(217, 119, 6, 0.2);
 }
 
 /* Heart Button - Plum Theme */
 .heart-btn {
     color: #9d174d;
-    border-color: rgba(214, 31, 105, 0.4);
-    background: linear-gradient(135deg, rgba(250, 215, 235, 0.9) 0%, rgba(244, 173, 205, 0.6) 100%);
+    border-color: #fbcfe8;
+    background: #fce7f3;
 }
 
 .heart-btn:hover {
-    background: linear-gradient(135deg, rgba(244, 173, 205, 0.75) 0%, rgba(236, 72, 153, 0.7) 100%);
-    box-shadow: 0 8px 16px rgba(236, 72, 153, 0.25);
+    background: #fbcfe8;
+    border-color: #f9a8d4;
+    box-shadow: 0 2px 4px 0 rgba(236, 72, 153, 0.15);
 }
 
 .heart-btn.active {
-    background: linear-gradient(135deg, #db2777 0%, #be185d 100%);
+    background: #db2777;
     color: white;
-    border-color: #9d174d;
-    box-shadow: 0 10px 20px rgba(219, 39, 119, 0.32);
+    border-color: #be185d;
+    box-shadow: 0 2px 4px 0 rgba(190, 24, 93, 0.2);
 }
 
 /* Bookmark Button - Blue Theme */
 .bookmark-btn {
     color: #1e40af;
-    border-color: rgba(29, 78, 216, 0.4);
-    background: linear-gradient(135deg, rgba(219, 234, 254, 0.9) 0%, rgba(191, 219, 254, 0.6) 100%);
+    border-color: #bfdbfe;
+    background: #dbeafe;
 }
 
 .bookmark-btn:hover {
-    background: linear-gradient(135deg, rgba(191, 219, 254, 0.75) 0%, rgba(147, 197, 253, 0.7) 100%);
-    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.25);
+    background: #bfdbfe;
+    border-color: #93c5fd;
+    box-shadow: 0 2px 4px 0 rgba(59, 130, 246, 0.15);
 }
 
 .bookmark-btn.active {
-    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    background: #3b82f6;
     color: white;
-    border-color: #1e40af;
-    box-shadow: 0 10px 20px rgba(30, 64, 175, 0.32);
+    border-color: #2563eb;
+    box-shadow: 0 2px 4px 0 rgba(37, 99, 235, 0.2);
 }
 
 /* Reaction Icons */
@@ -850,64 +856,106 @@ select {
 
 /* Bookmarks Panel */
 .bookmarks-container {
-    padding: 0.5rem 0;
+    padding: 1.4rem;
+    background: linear-gradient(180deg, #f9fafb 0%, #ffffff 65%);
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 14px 30px -24px rgba(15, 23, 42, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .bookmark-tabs {
     display: inline-flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    gap: 0.6rem;
+    margin-bottom: 0.35rem;
     flex-wrap: wrap;
+    background: #ffffff;
+    padding: 0.45rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid #e2e8f0;
+    width: fit-content;
+    box-shadow: 0 10px 20px -20px rgba(15, 23, 42, 0.32);
 }
 
 .bookmark-tab {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.5rem 0.9rem;
+    gap: 0.4rem;
+    padding: 0.5rem 1.05rem;
     border-radius: 999px;
-    border: 1px solid #e5e7eb;
-    background: #ffffff;
-    color: #334155;
-    font-weight: 700;
-    box-shadow: 0 10px 18px -14px rgba(15, 23, 42, 0.35);
-    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #0f172a;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.01em;
+    box-shadow: none;
+    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border 0.2s ease;
+    cursor: pointer;
 }
 
 .bookmark-tab:hover {
-    border-color: #d0d7e2;
+    background: #f1f5f9;
+    border-color: #e2e8f0;
+    color: #111827;
     transform: translateY(-1px);
 }
 
 .bookmark-tab.active {
-    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
     color: #ffffff;
     border-color: #1e3a8a;
-    box-shadow: 0 12px 20px -14px rgba(30, 64, 175, 0.5);
+    box-shadow: 0 12px 22px -16px rgba(30, 64, 175, 0.48);
 }
 
 .bookmark-tab-pill {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.1rem 0.55rem;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 0.375rem;
     border-radius: 999px;
-    font-size: 0.78rem;
-    background: rgba(255, 255, 255, 0.92);
-    color: #1e3a8a;
-    box-shadow: inset 0 0 0 1px rgba(30, 64, 175, 0.35);
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.9);
+    color: #0f172a;
+    box-shadow: inset 0 0 0 1px rgba(30, 64, 175, 0.28);
 }
 
 .bookmark-panels {
     width: 100%;
+    position: relative;
+    height: 420px;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 16px 32px -26px rgba(15, 23, 42, 0.35);
+    padding: 0.6rem 0.6rem 0.45rem;
 }
 
 .bookmark-panel {
-    display: none;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    padding: 0.2rem 0.35rem 0.6rem 0.25rem;
 }
 
 .bookmark-panel.active {
-    display: block;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .bookmarks-list {
@@ -919,30 +967,29 @@ select {
 .bookmark-item {
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
+    gap: 0.5rem;
     width: 100%;
     text-align: left;
-    padding: 1rem 1.1rem;
-    border-radius: 0.85rem;
-    border: 1px solid rgba(30, 64, 175, 0.2);
-    background: linear-gradient(135deg, rgba(219, 234, 254, 0.55) 0%, rgba(255, 255, 255, 0.95) 100%);
-    color: #1e3a8a;
+    padding: 0.95rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    background: #fdfefe;
+    color: #0f172a;
     cursor: pointer;
-    box-shadow: 0 10px 18px -12px rgba(15, 23, 42, 0.45);
+    box-shadow: 0 8px 18px -16px rgba(15, 23, 42, 0.32);
     transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease, background 0.2s ease;
     font: inherit;
 }
 
 .bookmark-item:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 18px 28px -14px rgba(15, 23, 42, 0.55);
-    border-color: rgba(37, 99, 235, 0.35);
-    background: linear-gradient(135deg, rgba(191, 219, 254, 0.7) 0%, rgba(255, 255, 255, 0.96) 100%);
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 14px 24px -18px rgba(15, 23, 42, 0.36);
+    background: #f6f9ff;
 }
 
 .bookmark-item:focus-visible {
-    outline: 2px solid rgba(59, 130, 246, 0.45);
-    outline-offset: 3px;
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
 }
 
 .bookmark-item-header {
@@ -955,29 +1002,29 @@ select {
 
 .bookmark-item-ref {
     font-weight: 700;
-    font-size: 1rem;
-    color: #1e3a8a;
+    font-size: 0.95rem;
+    color: #0f172a;
 }
 
 .bookmark-item-count {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: #1d4ed8;
     background: rgba(59, 130, 246, 0.12);
-    padding: 0.2rem 0.6rem;
+    padding: 0.16rem 0.55rem;
     border-radius: 999px;
     white-space: nowrap;
 }
 
 .bookmark-item-text {
-    font-size: 0.95rem;
-    line-height: 1.65;
+    font-size: 0.9rem;
+    line-height: 1.6;
     color: #1f2937;
     word-break: break-word;
 }
 
 .bookmark-item-meta {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: #6b7280;
 }
 
@@ -985,35 +1032,70 @@ select {
     font-weight: 500;
 }
 
+/* Custom scrollbar for bookmark panels */
+.bookmark-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.bookmark-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.bookmark-panel::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.bookmark-panel::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
 @media (max-width: 640px) {
+    .bookmarks-container {
+        padding: 1rem;
+    }
+
+    .bookmark-panels {
+        height: 380px;
+    }
+
     .bookmark-item {
-        padding: 0.85rem 0.95rem;
+        padding: 0.875rem;
     }
 
     .bookmark-item-count {
-        font-size: 0.8rem;
-        padding: 0.15rem 0.55rem;
+        font-size: 0.7rem;
+        padding: 0.125rem 0.375rem;
     }
 
     .bookmark-item-text {
-        font-size: 0.9rem;
+        font-size: 0.8125rem;
     }
 }
 
 .quote-bookmarks-list {
     gap: 0.75rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .quote-bookmark-item {
     width: 100%;
-    padding: 1rem 1.1rem;
-    border-radius: 0.85rem;
-    border: 1px solid rgba(16, 24, 40, 0.08);
-    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-    box-shadow: 0 10px 18px -14px rgba(15, 23, 42, 0.25);
+    padding: 0.95rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    background: #fdfefe;
+    box-shadow: 0 8px 18px -16px rgba(15, 23, 42, 0.32);
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.65rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease, background 0.2s ease;
+}
+
+.quote-bookmark-item:hover {
+    box-shadow: 0 14px 24px -18px rgba(15, 23, 42, 0.36);
+    border-color: rgba(59, 130, 246, 0.3);
+    background: #f6f9ff;
 }
 
 .quote-bookmark-top {
@@ -1021,53 +1103,57 @@ select {
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-    color: #475569;
-    font-size: 0.9rem;
+    color: #4b5563;
+    font-size: 0.8rem;
 }
 
 .quote-bookmark-source {
     font-weight: 600;
+    color: #1f2937;
+    letter-spacing: 0.01em;
 }
 
 .quote-remove-btn {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    min-height: 32px;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
     background: #ffffff;
-    color: #64748b;
+    color: #9ca3af;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.05rem;
+    font-size: 1rem;
     line-height: 1;
     transition: all 0.2s ease;
+    cursor: pointer;
 }
 
 .quote-remove-btn:hover {
     color: #ef4444;
-    border-color: #fecdd3;
-    background: #fff1f2;
+    border-color: #fca5a5;
+    background: #fef2f2;
 }
 
 .quote-bookmark-translation {
-    font-weight: 700;
-    color: #0f172a;
-    font-size: 1rem;
-    line-height: 1.45;
+    font-weight: 600;
+    color: #111827;
+    font-size: 0.9375rem;
+    line-height: 1.5;
 }
 
 .quote-bookmark-hebrew {
-    font-size: 0.95rem;
-    color: #111827;
+    font-size: 0.875rem;
+    color: #4b5563;
+    line-height: 1.5;
 }
 
 .quote-bookmark-reflection {
-    color: #475569;
-    line-height: 1.55;
-    font-size: 0.95rem;
+    color: #6b7280;
+    line-height: 1.5;
+    font-size: 0.875rem;
 }
 
 /* Dynamic Verse Background Colors */
@@ -1765,6 +1851,7 @@ select {
     overflow: visible;
     background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
     box-shadow: 0 4px 20px rgba(30, 64, 175, 0.3);
+    padding-bottom: 20px;
 }
 
 .header-container {
@@ -3029,40 +3116,40 @@ body.torah-text-size-xlarge #parsha-text .english-text {
 /* Community status bar animation */
 #community-status-bar {
     animation: slideDown 0.3s ease-out;
-    min-height: 56px;
-    padding: 0.5rem 0 !important;
+    min-height: 38px;
+    padding: 0.3rem 0 !important;
     margin: 0 !important;
     overflow: visible;
-    z-index: 20;
+    z-index: 40;
     position: relative;
 }
 
 #community-status-bar .container {
     padding: 0 !important;
-    min-height: 56px;
+    min-height: 38px;
     overflow: visible;
 }
 
 #community-status-content {
-    gap: 1.2rem !important;
-    font-size: 0.72rem;
+    gap: 0.65rem !important;
+    font-size: 0.68rem;
     align-items: center;
     flex-wrap: wrap;
-    min-height: 56px;
-    padding: 0.5rem 2rem;
+    min-height: 38px;
+    padding: 0.35rem 1.25rem;
     overflow: visible;
     width: 100%;
 }
 
 .status-leading-dot {
-    width: 0.38rem;
-    height: 0.38rem;
+    width: 0.3rem;
+    height: 0.3rem;
     flex-shrink: 0;
 }
 
 #community-status-content .text-xs,
 #community-status-content .text-sm {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
 }
 
 @keyframes slideDown {
@@ -3342,26 +3429,26 @@ body.torah-text-size-xlarge #parsha-text .english-text {
 }
 
 #community-status-content .text-sm {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
     color: #1f2937;
-    opacity: 0.82;
+    opacity: 0.78;
     display: flex;
     align-items: center;
     gap: 0.3rem;
 }
 
 #community-status-bar .status-badge {
-    gap: 0.45rem;
-    padding: 0.5rem 0.95rem;
-    border-radius: 8px;
-    font-size: 0.76rem;
+    gap: 0.3rem;
+    padding: 0.32rem 0.72rem;
+    border-radius: 999px;
+    font-size: 0.68rem;
     font-weight: 600;
-    line-height: 1.25;
-    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
-    border-color: rgba(148, 163, 184, 0.32);
-    background: rgba(255, 255, 255, 0.88);
+    line-height: 1.1;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    border-color: rgba(148, 163, 184, 0.3);
+    background: rgba(255, 255, 255, 0.86);
 }
 
 #community-status-bar .status-badge--green {
@@ -3388,27 +3475,27 @@ body.torah-text-size-xlarge #parsha-text .english-text {
 }
 
 #community-status-bar .status-dot {
-    width: 0.36rem;
-    height: 0.36rem;
+    width: 0.3rem;
+    height: 0.3rem;
 }
 
 #community-status-bar .status-time {
-    font-size: 0.62rem;
-    margin-left: 0.16rem;
+    font-size: 0.58rem;
+    margin-left: 0.12rem;
 }
 
 #community-status-bar #header-your-status {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    padding: 0.18rem 0.5rem;
+    padding: 0.12rem 0.4rem;
     border-radius: 999px;
     background: rgba(248, 250, 252, 0.9);
     border: 1px solid rgba(148, 163, 184, 0.3);
 }
 
 #community-status-bar #header-your-status span {
-    font-size: 0.64rem;
+    font-size: 0.6rem;
     line-height: 1.12;
 }
 
@@ -3428,12 +3515,12 @@ body.torah-text-size-xlarge #parsha-text .english-text {
 #header-online-users-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.45rem;
-    row-gap: 0.4rem;
+    gap: 0.35rem;
+    row-gap: 0.3rem;
     align-items: center;
     flex: 1;
-    min-height: 2.2rem;
-    padding: 0.15rem 0;
+    min-height: 1.8rem;
+    padding: 0.1rem 0;
 }
 
 #header-online-concurrency {
@@ -3458,14 +3545,15 @@ body.torah-text-size-xlarge #parsha-text .english-text {
 }
 
 #header-online-users-list .status-badge--presence {
-    gap: 0.4rem;
-    padding: 0.45rem 0.75rem;
+    gap: 0.28rem;
+    padding: 0.3rem 0.6rem;
     border-radius: 999px;
     background: rgba(15, 23, 42, 0.03);
     border: 1px solid rgba(148, 163, 184, 0.28);
     color: #1f2937;
     font-weight: 600;
-    font-size: 0.74rem;
+    font-size: 0.64rem;
+    line-height: 1.08;
     box-shadow: none;
     backdrop-filter: blur(6px);
     transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
@@ -3498,25 +3586,25 @@ body.torah-text-size-xlarge #parsha-text .english-text {
 #header-online-users-list .status-badge--active {
     border-color: rgba(34, 197, 94, 0.45);
     background: rgba(240, 253, 244, 0.75);
-    box-shadow: 0 6px 14px rgba(34, 197, 94, 0.12);
+    box-shadow: 0 3px 8px rgba(34, 197, 94, 0.08);
 }
 
 .status-badge__info {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.12rem;
-    line-height: 1.24;
+    gap: 0.08rem;
+    line-height: 1.14;
     min-width: 0;
 }
 
 .status-name--presence {
-    font-size: 0.74rem;
-    letter-spacing: 0.015em;
+    font-size: 0.66rem;
+    letter-spacing: 0.01em;
 }
 
 .status-time--detail {
-    font-size: 0.62rem;
+    font-size: 0.58rem;
     font-weight: 500;
     color: rgba(15, 23, 42, 0.65);
     letter-spacing: 0.01em;
@@ -4476,37 +4564,37 @@ body.no-scroll {
 /* Responsive adjustments */
 @media (max-width: 768px) {
     #community-status-bar {
-        min-height: 56px;
-        padding: 0.4rem 0 !important;
+        min-height: 44px;
+        padding: 0.3rem 0 !important;
     }
 
     #community-status-content {
-        padding: 0.5rem 1.5rem;
-        gap: 1rem !important;
+        padding: 0.35rem 1rem;
+        gap: 0.7rem !important;
     }
 
     #header-online-users-list .status-badge {
-        font-size: 0.72rem;
-        padding: 0.45rem 0.85rem;
+        font-size: 0.66rem;
+        padding: 0.32rem 0.65rem;
     }
 
     #header-your-status {
-        gap: 0.45rem;
+        gap: 0.3rem;
     }
 
     .status-time {
-        font-size: 0.66rem;
+        font-size: 0.6rem;
     }
 
     .status-badge[title]:hover::after {
         max-width: 280px;
-        font-size: 0.68rem;
-        padding: 0.5rem 0.8rem;
+        font-size: 0.64rem;
+        padding: 0.45rem 0.7rem;
     }
 
     .status-tooltip[data-tooltip]::after {
         max-width: 280px;
-        font-size: 0.68rem;
-        padding: 0.5rem 0.8rem;
+        font-size: 0.64rem;
+        padding: 0.45rem 0.7rem;
     }
 }

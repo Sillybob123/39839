@@ -116,6 +116,32 @@
         </div>
     </div>
 
+    <!-- Community Status Bar (Subtle Header Bar) -->
+    <div id="community-status-bar" class="hidden bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200">
+        <div class="container mx-auto">
+            <div id="community-status-content" class="flex flex-wrap items-center gap-4 text-sm text-gray-700">
+                <!-- Online Users Section -->
+                <div id="header-online-section" class="status-section hidden flex items-center gap-1.5">
+                    <div class="flex items-center gap-1">
+                        <div class="status-leading-dot bg-green-500 rounded-full animate-pulse"></div>
+                        <span class="text-xs font-medium text-gray-700">Online:</span>
+                    </div>
+                    <span id="header-online-concurrency" class="status-concurrency hidden"></span>
+                    <div id="header-online-users-list" class="status-scroll flex flex-nowrap items-center gap-1.5 overflow-x-auto">
+                        <!-- Online users will be listed here -->
+                    </div>
+                </div>
+
+                <!-- Your Status Section -->
+                <div id="header-your-status" class="status-section hidden flex items-center gap-1 ml-auto">
+                    <span id="header-your-username" class="text-xs font-medium text-gray-800"></span>
+                    <span class="text-xs text-gray-400">•</span>
+                    <span id="header-your-login-time" class="text-xs text-gray-600">just now</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Professional Responsive Header -->
     <header class="header-main relative z-30">
         <div class="header-container">
@@ -190,32 +216,6 @@
             </div>
         </div>
     </header>
-
-    <!-- Community Status Bar (Subtle Header Bar) -->
-    <div id="community-status-bar" class="hidden bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200">
-        <div class="container mx-auto">
-            <div id="community-status-content" class="flex flex-wrap items-center gap-4 text-sm text-gray-700">
-                <!-- Online Users Section -->
-                <div id="header-online-section" class="status-section hidden flex items-center gap-1.5">
-                    <div class="flex items-center gap-1">
-                        <div class="status-leading-dot bg-green-500 rounded-full animate-pulse"></div>
-                        <span class="text-xs font-medium text-gray-700">Online:</span>
-                    </div>
-                    <span id="header-online-concurrency" class="status-concurrency hidden"></span>
-                    <div id="header-online-users-list" class="status-scroll flex flex-nowrap items-center gap-1.5 overflow-x-auto">
-                        <!-- Online users will be listed here -->
-                    </div>
-                </div>
-
-                <!-- Your Status Section -->
-                <div id="header-your-status" class="status-section hidden flex items-center gap-1 ml-auto">
-                    <span id="header-your-username" class="text-xs font-medium text-gray-800"></span>
-                    <span class="text-xs text-gray-400">•</span>
-                    <span id="header-your-login-time" class="text-xs text-gray-600">just now</span>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Improved Navigation Bar -->
     <nav class="bg-white shadow-md sticky top-0 z-10 border-b-2 border-gray-200">
