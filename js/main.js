@@ -3584,26 +3584,24 @@ async function openBookmarksPanel(defaultTab = 'verses') {
         ]);
 
         const html = `
-            <div class="bookmarks-container">
-                <h3 class="text-2xl font-bold mb-4 text-blue-900">My Bookmarks</h3>
-                <div class="bookmark-tabs" role="tablist">
-                    <button type="button" class="bookmark-tab ${safeDefault === 'verses' ? 'active' : ''}" data-tab="verses" role="tab" aria-selected="${safeDefault === 'verses'}">Verses</button>
-                    <button type="button" class="bookmark-tab ${safeDefault === 'quotes' ? 'active' : ''}" data-tab="quotes" role="tab" aria-selected="${safeDefault === 'quotes'}">
-                        Quotes ${quoteBookmarks && quoteBookmarks.length ? `<span class="bookmark-tab-pill">${quoteBookmarks.length}</span>` : ''}
-                    </button>
+            <div class="bookmark-tabs" role="tablist" aria-label="Bookmarks">
+                <button type="button" class="bookmark-tab ${safeDefault === 'verses' ? 'active' : ''}" data-tab="verses" role="tab" aria-selected="${safeDefault === 'verses'}">Verses</button>
+                <button type="button" class="bookmark-tab ${safeDefault === 'quotes' ? 'active' : ''}" data-tab="quotes" role="tab" aria-selected="${safeDefault === 'quotes'}">
+                    Quotes ${quoteBookmarks && quoteBookmarks.length ? `<span class="bookmark-tab-pill">${quoteBookmarks.length}</span>` : ''}
+                </button>
+            </div>
+            <div class="bookmark-panels">
+                <div class="bookmark-panel ${safeDefault === 'verses' ? 'active' : ''}" data-panel="verses" role="tabpanel">
+                    ${renderVerseBookmarks(verseBookmarks || [])}
                 </div>
-                <div class="bookmark-panels">
-                    <div class="bookmark-panel ${safeDefault === 'verses' ? 'active' : ''}" data-panel="verses" role="tabpanel">
-                        ${renderVerseBookmarks(verseBookmarks || [])}
-                    </div>
-                    <div class="bookmark-panel ${safeDefault === 'quotes' ? 'active' : ''}" data-panel="quotes" role="tabpanel">
-                        ${renderQuoteBookmarks(quoteBookmarks || [])}
-                    </div>
+                <div class="bookmark-panel ${safeDefault === 'quotes' ? 'active' : ''}" data-panel="quotes" role="tabpanel">
+                    ${renderQuoteBookmarks(quoteBookmarks || [])}
                 </div>
             </div>
         `;
 
         const infoContent = document.getElementById('info-content');
+        infoContent.classList.add('info-content-bookmarks');
         infoContent.innerHTML = html;
 
         setupBookmarkTabs(safeDefault);
