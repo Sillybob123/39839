@@ -163,6 +163,154 @@ nav {
     background: rgba(255, 255, 255, 0.98);
 }
 
+/* Daily Inspiration Banner */
+.daily-inspiration-header-section {
+    background: #fafbfc;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 5px;
+}
+
+#daily-inspiration {
+    background: transparent;
+}
+
+.daily-inspiration-card {
+    position: relative;
+    overflow: visible;
+    border-radius: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    padding: 0.35rem 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.daily-inspiration-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: linear-gradient(135deg, #faf9f6 0%, #f5f3ef 100%);
+    border: 1px solid #e5e1db;
+    border-radius: 10px;
+    padding: 0.6rem 0.8rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.daily-inspiration-main {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.daily-inspiration-quotes {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+}
+
+.daily-inspiration-hebrew,
+.daily-inspiration-translation {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #3f3f46;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+}
+
+.daily-inspiration-translation {
+    font-style: italic;
+    color: #52525b;
+}
+
+.quote-mark {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.15em;
+    color: #a1a1aa;
+    opacity: 0.6;
+    line-height: 1;
+}
+
+.quote-divider {
+    color: #a1a1aa;
+    font-size: 0.85rem;
+    opacity: 0.5;
+    margin: 0 0.15rem;
+}
+
+.daily-inspiration-source {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #71717a;
+    letter-spacing: 0.02em;
+    width: 100%;
+    text-align: right;
+    margin-top: 0.35rem;
+    padding-top: 0.35rem;
+    border-top: 1px solid #e5e1db;
+}
+
+.daily-inspiration-explanation-section {
+    margin-top: 0.5rem;
+}
+
+.daily-inspiration-explanation-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #52525b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 0.35rem;
+}
+
+.daily-inspiration-reflection {
+    font-size: 0.8rem;
+    color: #27272a;
+    line-height: 1.5;
+    font-weight: 500;
+    display: inline;
+}
+
+@media (max-width: 768px) {
+    .daily-inspiration-card {
+        padding: 0.35rem 1rem;
+    }
+
+    .daily-inspiration-main {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.15rem;
+    }
+
+    .daily-inspiration-quotes {
+        gap: 0.3rem;
+        padding: 0.55rem 0.7rem;
+    }
+
+    .daily-inspiration-hebrew,
+    .daily-inspiration-translation {
+        font-size: 0.8rem;
+    }
+
+    .quote-divider {
+        font-size: 0.8rem;
+        margin: 0 0.1rem;
+    }
+
+    .daily-inspiration-reflection {
+        font-size: 0.72rem;
+    }
+}
+
 /* Select Dropdown Enhancement */
 select {
     cursor: pointer;
@@ -3314,22 +3462,42 @@ body.torah-text-size-xlarge #parsha-text .english-text {
 .mitzvah-card {
     background: #ffffff;
     border: 1px solid rgba(148, 163, 184, 0.28);
-    border-radius: 16px;
-    padding: 2rem;
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
     display: flex;
     flex-direction: column;
-    gap: 1.75rem;
+    gap: 1rem;
 }
 
 .mitzvah-card__header {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.mitzvah-card__header:hover {
+    background-color: #f8fafc;
+}
+
+.mitzvah-toggle-icon {
+    transition: transform 0.3s ease;
+    color: #64748b;
+    flex-shrink: 0;
+}
+
+.mitzvah-toggle-icon.expanded {
+    transform: rotate(180deg);
+}
+
+.mitzvah-collapsible-content {
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
 }
 
 .mitzvah-card__title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: #1e3a8a;
 }

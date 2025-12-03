@@ -165,6 +165,30 @@
                 </div>
             </div>
         </div>
+
+        <!-- Daily Inspiration (Part of Header) -->
+        <div id="daily-inspiration" class="daily-inspiration-header-section">
+            <div class="container mx-auto px-4 py-1">
+                <div class="daily-inspiration-card">
+                    <div class="daily-inspiration-content">
+                        <div class="daily-inspiration-main">
+                            <div class="daily-inspiration-quotes">
+                                <span class="quote-mark quote-mark-start">"</span>
+                                <span data-quote-hebrew class="daily-inspiration-hebrew">Loading today's teaching...</span>
+                                <span class="quote-divider">|</span>
+                                <span data-quote-translation class="daily-inspiration-translation"></span>
+                                <span class="quote-mark quote-mark-end">"</span>
+                                <span data-quote-source class="daily-inspiration-source"></span>
+                            </div>
+                        </div>
+                        <div class="daily-inspiration-explanation-section">
+                            <span class="daily-inspiration-explanation-label">Explanation:</span>
+                            <p data-quote-reflection class="daily-inspiration-reflection">An inspiring reflection will appear here each day.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
 
     <!-- Community Status Bar (Subtle Header Bar) -->
@@ -303,13 +327,19 @@
             <!-- Text Display -->
             <div id="mitzvah-challenge-section" class="mitzvah-challenge hidden">
                 <div class="mitzvah-card">
-                    <div class="mitzvah-card__header">
+                    <div class="mitzvah-card__header" id="mitzvah-toggle-header" style="cursor: pointer;">
                         <div class="mitzvah-card__title-row">
-                            <h2 id="mitzvah-challenge-heading" class="mitzvah-card__title">Weekly Mitzvah Challenge</h2>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <h2 id="mitzvah-challenge-heading" class="mitzvah-card__title">Weekly Mitzvah Challenge</h2>
+                                <svg id="mitzvah-toggle-icon" class="mitzvah-toggle-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
                             <span id="mitzvah-countdown" class="mitzvah-card__countdown"></span>
                         </div>
                     </div>
 
+                    <div id="mitzvah-collapsible-content" class="mitzvah-collapsible-content" style="display: none;">
                     <div class="mitzvah-card__body">
                         <section class="mitzvah-card__section">
                             <h3 class="mitzvah-card__section-title">The Mitzvah</h3>
@@ -365,6 +395,7 @@
                                 <p class="mitzvah-leaderboard__empty">Loading leaderboard…</p>
                             </div>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -465,7 +496,33 @@
         </div>
     </footer>
 
+    <script src="daily-inspiration.js"></script>
     <script type="module" src="js/main.js"></script>
     <script src="text-size-control.js"></script>
+
+    <script>
+        // Mitzvah Challenge Collapse/Expand Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleHeader = document.getElementById('mitzvah-toggle-header');
+            const collapsibleContent = document.getElementById('mitzvah-collapsible-content');
+            const toggleIcon = document.getElementById('mitzvah-toggle-icon');
+
+            if (toggleHeader && collapsibleContent && toggleIcon) {
+                toggleHeader.addEventListener('click', function() {
+                    const isExpanded = collapsibleContent.style.display !== 'none';
+
+                    if (isExpanded) {
+                        // Collapse
+                        collapsibleContent.style.display = 'none';
+                        toggleIcon.classList.remove('expanded');
+                    } else {
+                        // Expand
+                        collapsibleContent.style.display = 'block';
+                        toggleIcon.classList.add('expanded');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
