@@ -626,6 +626,126 @@ async function getUserBookmarksForVerses(userId, verseRefs) {
   }
 }
 
+// ========================================
+// DAILY QUOTE BOOKMARKING
+// ========================================
+
+async function addDailyQuoteBookmark(quote, userId, options = {}) {
+  if (!userId) {
+    throw new Error('User not authenticated');
+  }
+
+  if (!quote || (quote.id == null && quote.quoteId == null)) {
+    throw new Error('Quote id is required');
+  }
+
+  const quoteId = String(quote.quoteId ?? quote.id);
+
+  try {
+    const bookmarkKey = `${userId}__dailyQuote__${quoteId}`;
+    const bookmarkDocRef = doc(db, 'dailyQuoteBookmarks', bookmarkKey);
+
+    const bookmarkData = {
+      quoteId,
+      userId,
+      hebrew: quote.hebrew || '',
+      translation: quote.translation || '',
+      source: quote.source || '',
+      reflection: quote.reflection || '',
+      savedOn: options.displayDate || quote.displayDate || null,
+      timestamp: serverTimestamp()
+    };
+
+    await setDoc(bookmarkDocRef, bookmarkData);
+    return { action: 'added', quoteId, id: bookmarkKey };
+  } catch (error) {
+    console.error('Error adding daily quote bookmark:', error);
+    throw error;
+  }
+}
+
+async function removeDailyQuoteBookmark(quoteId, userId) {
+  if (!userId) {
+    throw new Error('User not authenticated');
+  }
+
+  if (quoteId == null) {
+    throw new Error('Quote id is required');
+  }
+
+  try {
+    const bookmarkKey = `${userId}__dailyQuote__${quoteId}`;
+    const bookmarkDocRef = doc(db, 'dailyQuoteBookmarks', bookmarkKey);
+    await deleteDoc(bookmarkDocRef);
+    return { action: 'removed', quoteId };
+  } catch (error) {
+    console.error('Error removing daily quote bookmark:', error);
+    throw error;
+  }
+}
+
+async function isDailyQuoteBookmarked(quoteId, userId) {
+  if (!userId) {
+    return false;
+  }
+
+  if (quoteId == null) {
+    return false;
+  }
+
+  try {
+    const bookmarkKey = `${userId}__dailyQuote__${quoteId}`;
+    const bookmarkDocRef = doc(db, 'dailyQuoteBookmarks', bookmarkKey);
+    const docSnap = await getDoc(bookmarkDocRef);
+    return docSnap.exists();
+  } catch (error) {
+    console.error('Error checking daily quote bookmark:', error);
+    return false;
+  }
+}
+
+async function getUserDailyQuoteBookmarks(userId) {
+  if (!userId) {
+    return [];
+  }
+
+  try {
+    const bookmarksQuery = query(
+      collection(db, 'dailyQuoteBookmarks'),
+      where('userId', '==', userId)
+    );
+
+    const querySnapshot = await getDocs(bookmarksQuery);
+    const bookmarks = [];
+
+    querySnapshot.forEach((docSnapshot) => {
+      const data = docSnapshot.data();
+      bookmarks.push({
+        id: docSnapshot.id,
+        quoteId: data.quoteId,
+        userId: data.userId,
+        hebrew: data.hebrew || '',
+        translation: data.translation || '',
+        source: data.source || '',
+        reflection: data.reflection || '',
+        savedOn: data.savedOn || null,
+        timestamp: data.timestamp
+      });
+    });
+
+    bookmarks.sort((a, b) => {
+      if (!a.timestamp) return 1;
+      if (!b.timestamp) return -1;
+      return b.timestamp.toMillis() - a.timestamp.toMillis();
+    });
+
+    return bookmarks;
+  } catch (error) {
+    console.error('Error getting daily quote bookmarks:', error);
+    return [];
+  }
+}
+
 // Send password reset email
 async function sendPasswordReset(email) {
   try {
@@ -1685,6 +1805,10 @@ export {
   isVerseBookmarked,
   getUserBookmarks,
   getUserBookmarksForVerses,
+  addDailyQuoteBookmark,
+  removeDailyQuoteBookmark,
+  isDailyQuoteBookmarked,
+  getUserDailyQuoteBookmarks,
   recordUserLogin,
   updateUserPresence,
   markUserOffline,

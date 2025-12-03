@@ -52,6 +52,10 @@ import {
     removeBookmark,
     isVerseBookmarked,
     getUserBookmarks,
+    addDailyQuoteBookmark,
+    removeDailyQuoteBookmark,
+    isDailyQuoteBookmarked,
+    getUserDailyQuoteBookmarks,
     recordUserLogin,
     updateUserPresence,
     markUserOffline,
@@ -79,6 +83,8 @@ let userReactions = {};
 let isAuthReady = false;
 let bookmarkedVerses = new Set();
 let verseBookmarkCounts = {};
+let bookmarkedQuoteIds = new Set();
+let cachedQuoteBookmarks = [];
 const verseDisplayTexts = {};
 
 // User presence tracking
@@ -147,6 +153,52 @@ function getVerseTextSnippet(verseRef) {
     }
 
     return '';
+}
+
+function getCurrentDailyQuotePayload() {
+    const container = document.getElementById('daily-inspiration');
+    const quoteFromWindow = typeof window !== 'undefined' ? window.currentDailyQuote : null;
+    const quoteId = quoteFromWindow && (quoteFromWindow.id ?? quoteFromWindow.quoteId);
+
+    if (quoteFromWindow && quoteId != null) {
+        return {
+            ...quoteFromWindow,
+            id: String(quoteId),
+            quoteId: String(quoteId),
+            displayDate: quoteFromWindow.displayDate || container?.dataset?.quoteDate || null
+        };
+    }
+
+    if (container && container.dataset.quoteId) {
+        return {
+            id: String(container.dataset.quoteId),
+            quoteId: String(container.dataset.quoteId),
+            displayDate: container.dataset.quoteDate || null,
+            hebrew: container.querySelector('[data-quote-hebrew]')?.textContent?.trim() || '',
+            translation: container.querySelector('[data-quote-translation]')?.textContent?.trim() || '',
+            source: container.querySelector('[data-quote-source]')?.textContent?.trim() || '',
+            reflection: container.querySelector('[data-quote-reflection]')?.textContent?.trim() || ''
+        };
+    }
+
+    return null;
+}
+
+function updateDailyQuoteBookmarkButtonState() {
+    const button = document.querySelector('[data-quote-bookmark]');
+    if (!button) {
+        return;
+    }
+
+    const payload = getCurrentDailyQuotePayload();
+    const quoteId = payload ? String(payload.quoteId || payload.id) : null;
+    const isActive = quoteId ? bookmarkedQuoteIds.has(quoteId) : false;
+
+    button.classList.toggle('is-active', Boolean(isActive));
+    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    const label = isActive ? 'Remove this quote from your bookmarks' : 'Bookmark this quote';
+    button.setAttribute('aria-label', label);
+    button.setAttribute('title', isActive ? 'Saved to your quotes' : 'Save this quote');
 }
 
 function addDays(date, days) {
@@ -518,6 +570,17 @@ function setupEventListeners() {
                 document.getElementById('next-parsha').click();
             }
         }
+    });
+
+    document.addEventListener('dailyQuoteBookmarkToggle', (event) => {
+        if (!event || !event.detail) {
+            return;
+        }
+        handleDailyQuoteBookmarkToggle(event.detail);
+    });
+
+    document.addEventListener('dailyQuoteRendered', () => {
+        updateDailyQuoteBookmarkButtonState();
     });
 }
 
@@ -2475,6 +2538,7 @@ async function handleAuthStateChange(user) {
         setCurrentUserEmail(user.email);
         updateUsernameDisplay();
         await refreshBookmarkedVerses();
+        await refreshBookmarkedQuotes();
 
         let userProfile = null;
 
@@ -2520,6 +2584,7 @@ async function handleAuthStateChange(user) {
         updateUsernameDisplay();
         bookmarkedVerses.clear();
         clearBookmarkUIState();
+        clearQuoteBookmarkUIState();
         currentUserProfile = null;
 
         // Mark user as offline
@@ -2581,6 +2646,36 @@ async function refreshBookmarkedVerses(options = {}) {
     }
 }
 
+async function refreshBookmarkedQuotes(options = {}) {
+    const userId = getCurrentUserId();
+
+    if (!userId) {
+        bookmarkedQuoteIds.clear();
+        cachedQuoteBookmarks = [];
+        updateDailyQuoteBookmarkButtonState();
+        return options.returnList ? [] : undefined;
+    }
+
+    try {
+        const quoteBookmarks = await getUserDailyQuoteBookmarks(userId);
+        cachedQuoteBookmarks = quoteBookmarks;
+        bookmarkedQuoteIds = new Set(
+            quoteBookmarks
+                .map((bookmark) => bookmark.quoteId)
+                .filter((value) => value !== undefined && value !== null)
+                .map((value) => String(value))
+        );
+        updateDailyQuoteBookmarkButtonState();
+        return options.returnList ? quoteBookmarks : undefined;
+    } catch (error) {
+        console.error('Error refreshing quote bookmarks:', error);
+        if (options.returnList) {
+            throw error;
+        }
+        return undefined;
+    }
+}
+
 function applyBookmarkStateToVisibleVerses() {
     const buttons = document.querySelectorAll('.bookmark-btn');
     buttons.forEach((btn) => {
@@ -2613,6 +2708,12 @@ function applyBookmarkStateToVisibleVerses() {
 
 function clearBookmarkUIState() {
     applyBookmarkStateToVisibleVerses();
+}
+
+function clearQuoteBookmarkUIState() {
+    bookmarkedQuoteIds.clear();
+    cachedQuoteBookmarks = [];
+    updateDailyQuoteBookmarkButtonState();
 }
 
 async function handleBookmarkClick(verseRef, bookmarkBtn) {
@@ -2653,6 +2754,51 @@ async function handleBookmarkClick(verseRef, bookmarkBtn) {
     } catch (error) {
         console.error('Error toggling bookmark:', error);
         alert('Error saving bookmark. Please try again.');
+    }
+}
+
+async function handleDailyQuoteBookmarkToggle(quotePayload) {
+    const userId = getCurrentUserId();
+
+    if (!userId) {
+        alert('Please sign in to bookmark quotes');
+        return;
+    }
+
+    const quoteId = quotePayload && (quotePayload.quoteId ?? quotePayload.id);
+    if (quoteId == null) {
+        showError('Unable to save this quote right now.');
+        return;
+    }
+
+    const normalizedQuote = {
+        hebrew: quotePayload.hebrew || '',
+        translation: quotePayload.translation || '',
+        source: quotePayload.source || '',
+        reflection: quotePayload.reflection || '',
+        displayDate: quotePayload.displayDate || null,
+        id: String(quoteId),
+        quoteId: String(quoteId)
+    };
+
+    try {
+        const isBookmarked = bookmarkedQuoteIds.has(String(quoteId))
+            ? true
+            : await isDailyQuoteBookmarked(String(quoteId), userId);
+
+        if (isBookmarked) {
+            await removeDailyQuoteBookmark(String(quoteId), userId);
+            bookmarkedQuoteIds.delete(String(quoteId));
+        } else {
+            await addDailyQuoteBookmark(normalizedQuote, userId, { displayDate: normalizedQuote.displayDate });
+            bookmarkedQuoteIds.add(String(quoteId));
+        }
+
+        updateDailyQuoteBookmarkButtonState();
+        await refreshBookmarkedQuotes();
+    } catch (error) {
+        console.error('Error toggling quote bookmark:', error);
+        alert('Error saving quote. Please try again.');
     }
 }
 
@@ -3332,69 +3478,195 @@ function escapeRegex(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-async function openBookmarksPanel() {
+async function openBookmarksPanel(defaultTab = 'verses') {
     const userId = getCurrentUserId();
     if (!userId) {
         showError('Please sign in to view bookmarks');
         return;
     }
 
-    try {
-        const bookmarks = await refreshBookmarkedVerses({ returnList: true });
+    const safeDefault = defaultTab === 'quotes' ? 'quotes' : 'verses';
 
-        let html = `
-            <div class="bookmarks-container">
-                <h3 class="text-2xl font-bold mb-4 text-blue-900">My Bookmarks</h3>
-        `;
-
-        if (bookmarks.length === 0) {
-            html += `
+    const renderVerseBookmarks = (bookmarks = []) => {
+        if (!bookmarks || bookmarks.length === 0) {
+            return `
                 <div class="text-center py-8">
-                    <p class="text-gray-500">No bookmarks yet.</p>
-                    <p class="text-sm text-gray-400 mt-2">Click the bookmark icon on any verse to save it!</p>
+                    <p class="text-gray-500">No verse bookmarks yet.</p>
+                    <p class="text-sm text-gray-400 mt-2">Click the bookmark icon on any verse to save it.</p>
                 </div>
             `;
-        } else {
-            html += `<div class="bookmarks-list">`;
-            bookmarks.forEach(bookmark => {
-                const verseRef = bookmark.verseRef;
-                const escapedRef = escapeHtml(verseRef);
-                const verseText = getVerseTextSnippet(verseRef) || bookmark.verseText || '';
-                const displayText = verseText
-                    ? escapeHtml(verseText)
-                    : 'Verse text will load when opened.';
-                const count = Math.max(verseBookmarkCounts[verseRef] || 0, 1);
-                const countLabel = count === 1 ? 'Saved by 1 reader' : `Saved by ${count} readers`;
-                let savedDateLabel = 'Date unavailable';
-                if (bookmark.timestamp && typeof bookmark.timestamp.toDate === 'function') {
-                    savedDateLabel = bookmark.timestamp.toDate().toLocaleDateString();
-                }
-
-                html += `
-                    <button type="button" class="bookmark-item" data-verse-ref="${escapedRef}" onclick="loadVerseFromBookmark('${escapedRef}')">
-                        <div class="bookmark-item-header">
-                            <span class="bookmark-item-ref">${escapedRef}</span>
-                            <span class="bookmark-item-count">${escapeHtml(countLabel)}</span>
-                        </div>
-                        <div class="bookmark-item-text">${displayText}</div>
-                        <div class="bookmark-item-meta">
-                            <span class="bookmark-item-date">Saved ${escapeHtml(savedDateLabel)}</span>
-                        </div>
-                    </button>
-                `;
-            });
-            html += `</div>`;
         }
 
-        html += `</div>`;
+        let html = '<div class="bookmarks-list">';
+        bookmarks.forEach((bookmark) => {
+            const verseRef = bookmark.verseRef;
+            const escapedRef = escapeHtml(verseRef);
+            const verseText = getVerseTextSnippet(verseRef) || bookmark.verseText || '';
+            const displayText = verseText
+                ? escapeHtml(verseText)
+                : 'Verse text will load when opened.';
+            const count = Math.max(verseBookmarkCounts[verseRef] || 0, 1);
+            const countLabel = count === 1 ? 'Saved by 1 reader' : `Saved by ${count} readers`;
+            let savedDateLabel = 'Date unavailable';
+            if (bookmark.timestamp && typeof bookmark.timestamp.toDate === 'function') {
+                savedDateLabel = bookmark.timestamp.toDate().toLocaleDateString();
+            }
+
+            html += `
+                <button type="button" class="bookmark-item" data-verse-ref="${escapedRef}" onclick="loadVerseFromBookmark('${escapedRef}')">
+                    <div class="bookmark-item-header">
+                        <span class="bookmark-item-ref">${escapedRef}</span>
+                        <span class="bookmark-item-count">${escapeHtml(countLabel)}</span>
+                    </div>
+                    <div class="bookmark-item-text">${displayText}</div>
+                    <div class="bookmark-item-meta">
+                        <span class="bookmark-item-date">Saved ${escapeHtml(savedDateLabel)}</span>
+                    </div>
+                </button>
+            `;
+        });
+        html += '</div>';
+        return html;
+    };
+
+    const renderQuoteBookmarks = (bookmarks = []) => {
+        if (!bookmarks || bookmarks.length === 0) {
+            return `
+                <div class="text-center py-8">
+                    <p class="text-gray-500">No saved quotes yet.</p>
+                    <p class="text-sm text-gray-400 mt-2">Tap the bookmark icon on today's quote to save it.</p>
+                </div>
+            `;
+        }
+
+        let html = '<div class="bookmarks-list quote-bookmarks-list">';
+        bookmarks.forEach((bookmark) => {
+            const quoteId = bookmark.quoteId != null ? String(bookmark.quoteId) : '';
+            const savedDateLabel = bookmark.savedOn
+                ? escapeHtml(bookmark.savedOn)
+                : (bookmark.timestamp && typeof bookmark.timestamp.toDate === 'function'
+                    ? bookmark.timestamp.toDate().toLocaleDateString()
+                    : 'Saved');
+            const reflectionSnippet = bookmark.reflection
+                ? escapeHtml(
+                    bookmark.reflection.length > 220
+                        ? `${bookmark.reflection.slice(0, 220)}…`
+                        : bookmark.reflection
+                )
+                : '';
+
+            html += `
+                <article class="quote-bookmark-item" data-quote-id="${quoteId}">
+                    <div class="quote-bookmark-top">
+                        <div class="quote-bookmark-source">
+                            ${bookmark.source ? escapeHtml(bookmark.source) : 'Daily Inspiration'}
+                            ${savedDateLabel ? ` • ${savedDateLabel}` : ''}
+                        </div>
+                        <button type="button" class="quote-remove-btn" data-quote-remove="true" data-quote-id="${quoteId}" title="Remove from saved quotes">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Remove quote</span>
+                        </button>
+                    </div>
+                    <div class="quote-bookmark-translation">"${escapeHtml(bookmark.translation || 'Teaching')}"</div>
+                    ${bookmark.hebrew ? `<div class="quote-bookmark-hebrew">${escapeHtml(bookmark.hebrew)}</div>` : ''}
+                    ${reflectionSnippet ? `<div class="quote-bookmark-reflection">${reflectionSnippet}</div>` : ''}
+                </article>
+            `;
+        });
+        html += '</div>';
+        return html;
+    };
+
+    try {
+        const [verseBookmarks, quoteBookmarks] = await Promise.all([
+            refreshBookmarkedVerses({ returnList: true }),
+            refreshBookmarkedQuotes({ returnList: true })
+        ]);
+
+        const html = `
+            <div class="bookmarks-container">
+                <h3 class="text-2xl font-bold mb-4 text-blue-900">My Bookmarks</h3>
+                <div class="bookmark-tabs" role="tablist">
+                    <button type="button" class="bookmark-tab ${safeDefault === 'verses' ? 'active' : ''}" data-tab="verses" role="tab" aria-selected="${safeDefault === 'verses'}">Verses</button>
+                    <button type="button" class="bookmark-tab ${safeDefault === 'quotes' ? 'active' : ''}" data-tab="quotes" role="tab" aria-selected="${safeDefault === 'quotes'}">
+                        Quotes ${quoteBookmarks && quoteBookmarks.length ? `<span class="bookmark-tab-pill">${quoteBookmarks.length}</span>` : ''}
+                    </button>
+                </div>
+                <div class="bookmark-panels">
+                    <div class="bookmark-panel ${safeDefault === 'verses' ? 'active' : ''}" data-panel="verses" role="tabpanel">
+                        ${renderVerseBookmarks(verseBookmarks || [])}
+                    </div>
+                    <div class="bookmark-panel ${safeDefault === 'quotes' ? 'active' : ''}" data-panel="quotes" role="tabpanel">
+                        ${renderQuoteBookmarks(quoteBookmarks || [])}
+                    </div>
+                </div>
+            </div>
+        `;
 
         const infoContent = document.getElementById('info-content');
         infoContent.innerHTML = html;
-        showInfoPanel();
 
+        setupBookmarkTabs(safeDefault);
+
+        infoContent.querySelectorAll('[data-quote-remove]').forEach((btn) => {
+            btn.addEventListener('click', async (event) => {
+                event.stopPropagation();
+                const quoteId = btn.getAttribute('data-quote-id');
+                await removeQuoteBookmarkFromPanel(quoteId);
+            });
+        });
+
+        showInfoPanel();
     } catch (error) {
         console.error('Error loading bookmarks:', error);
         showError('Failed to load bookmarks');
+    }
+}
+
+function setupBookmarkTabs(defaultTab = 'verses') {
+    const infoContent = document.getElementById('info-content');
+    if (!infoContent) {
+        return;
+    }
+
+    const tabs = infoContent.querySelectorAll('.bookmark-tab');
+    const panels = infoContent.querySelectorAll('.bookmark-panel');
+
+    const activate = (tabName) => {
+        tabs.forEach((tab) => {
+            const isActive = tab.dataset.tab === tabName;
+            tab.classList.toggle('active', isActive);
+            tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+        panels.forEach((panel) => {
+            panel.classList.toggle('active', panel.dataset.panel === tabName);
+        });
+    };
+
+    tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+            activate(tab.dataset.tab);
+        });
+    });
+
+    activate(defaultTab);
+}
+
+async function removeQuoteBookmarkFromPanel(quoteId) {
+    const userId = getCurrentUserId();
+    if (!userId || !quoteId) {
+        return;
+    }
+
+    try {
+        await removeDailyQuoteBookmark(String(quoteId), userId);
+        bookmarkedQuoteIds.delete(String(quoteId));
+        await refreshBookmarkedQuotes();
+        updateDailyQuoteBookmarkButtonState();
+        await openBookmarksPanel('quotes');
+    } catch (error) {
+        console.error('Error removing quote bookmark:', error);
+        showError('Failed to remove quote bookmark');
     }
 }
 

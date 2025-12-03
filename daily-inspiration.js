@@ -628,6 +628,42 @@
         });
     }
 
+    function ensureBookmarkButton(container) {
+        if (!container) {
+            return null;
+        }
+
+        const existing = container.querySelector('[data-quote-bookmark]');
+        if (existing) {
+            return existing;
+        }
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'daily-quote-bookmark-btn';
+        btn.setAttribute('data-quote-bookmark', 'true');
+        btn.setAttribute('aria-pressed', 'false');
+        btn.setAttribute('title', 'Save this quote');
+        btn.innerHTML = `
+            <span class="sr-only">Bookmark this quote</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M6 4a2 2 0 012-2h8a2 2 0 012 2v18l-7-4-7 4V4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            </svg>
+        `;
+
+        const mainRow = container.querySelector('.daily-inspiration-main');
+        if (mainRow) {
+            const actions = document.createElement('div');
+            actions.className = 'daily-inspiration-actions';
+            actions.appendChild(btn);
+            mainRow.appendChild(actions);
+        } else {
+            container.appendChild(btn);
+        }
+
+        return btn;
+    }
+
     function renderDailyInspiration() {
         const container = document.getElementById('daily-inspiration');
         if (!container) {
@@ -656,6 +692,35 @@
         if (reflectionEl) {
             reflectionEl.textContent = quote.reflection;
         }
+
+        const displayDate = formatDisplayDate(new Date());
+        const bookmarkBtn = ensureBookmarkButton(container);
+
+        const renderedQuote = {
+            ...quote,
+            displayDate
+        };
+
+        container.dataset.quoteId = quote.id;
+        container.dataset.quoteDate = displayDate;
+        window.currentDailyQuote = renderedQuote;
+
+        if (bookmarkBtn) {
+            bookmarkBtn.dataset.quoteId = quote.id;
+            bookmarkBtn.dataset.displayDate = displayDate;
+            bookmarkBtn.setAttribute('aria-pressed', 'false');
+            bookmarkBtn.classList.remove('is-active');
+            bookmarkBtn.onclick = (event) => {
+                event.stopPropagation();
+                const toggleEvent = new CustomEvent('dailyQuoteBookmarkToggle', {
+                    bubbles: true,
+                    detail: renderedQuote
+                });
+                bookmarkBtn.dispatchEvent(toggleEvent);
+            };
+        }
+
+        document.dispatchEvent(new CustomEvent('dailyQuoteRendered', { detail: renderedQuote }));
     }
 
     document.addEventListener('DOMContentLoaded', renderDailyInspiration);
