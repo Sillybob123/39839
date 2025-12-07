@@ -2213,7 +2213,7 @@ function setupLoginListeners() {
                 const result = await sendPasswordReset(email);
 
                 if (result.success) {
-                    resetSuccess.textContent = 'Password reset email sent! Check your inbox.';
+                    resetSuccess.innerHTML = 'Password reset email sent!<br><strong>Please check your spam folder</strong> if you don\'t see it in your inbox.';
                     resetSuccess.classList.remove('hidden');
                     resetError.classList.add('hidden');
                     resetEmail.value = '';
