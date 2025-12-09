@@ -232,8 +232,8 @@
     id: 32,
     hebrew: "כִּי֩ אָנֹכִ֨י יָדַ֜עְתִּי אֶת־הַמַּחֲשָׁבֹ֗ת... לָתֵ֥ת לָכֶ֖ם אַחֲרִ֥ית וְתִקְוָֽה",
     translation: "To give you a future and a hope.",
-    source: "Jeremiah 29:11",
-    reflection: "The Prophet Jeremiah wrote this to Jews recently exiled to Babylon who thought their world had ended, assuring them of a plan for restoration. No matter how difficult the present looks, there is a plan for a brighter future; never lose hope in what tomorrow can bring."
+    source: "29:11",
+    reflection: "The Prophet wrote this to Jews recently exiled to Babylon who thought their world had ended, assuring them of a plan for restoration. No matter how difficult the present looks, there is a plan for a brighter future; never lose hope in what tomorrow can bring."
   },
   {
     id: 33,
@@ -267,8 +267,8 @@
     id: 37,
     hebrew: "וְאַהֲבַ֤ת עוֹלָם֙ אֲהַבְתִּ֔יךְ",
     translation: "I have loved you with an everlasting love.",
-    source: "Jeremiah 31:2",
-    reflection: "The Prophet Jeremiah describes God's love for the people even during their exile and failures. You are loved unconditionally and eternally, and this love is the foundation of your existence."
+    source: "31:2",
+    reflection: "The Prophet describes God's love for the people even during their exile and failures. You are loved unconditionally and eternally, and this love is the foundation of your existence."
   },
   {
     id: 38,
@@ -361,7 +361,7 @@
     hebrew: "הֲשִׁיבֵ֨נוּ יְהוָ֤ה ׀ אֵלֶ֙יךָ֙ וְֽנָשׁ֔וּבָה",
     translation: "Turn us back to You, O Lord, and we shall return.",
     source: "Lamentations 5:21",
-    reflection: "Written by Jeremiah after the Temple's destruction, this is the penultimate verse of Lamentations, recited to end on a note of hope. It is never too late to fix a relationship or start over; the door to return (Teshuvah) is always open."
+    reflection: "Written by after the Temple's destruction, this is the penultimate verse of Lamentations, recited to end on a note of hope. It is never too late to fix a relationship or start over; the door to return (Teshuvah) is always open."
   },
 
   // --- Part VI: World & Society ---
@@ -497,7 +497,7 @@
     id: 69,
     hebrew: "בְּטֶרֶם אֶצָּרְךָ בַבֶּטֶן יְדַעְתִּיךָ",
     translation: "Before I formed you in the womb, I knew you.",
-    source: "Jeremiah 1:5",
+    source: "1:5",
     reflection: "You are not an accident. Your existence was intended and 'known' before you were even born, implying that you have a specific purpose that only you can fulfill."
   },
   {
