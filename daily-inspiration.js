@@ -596,7 +596,7 @@
         hebrew: "הֱוֵי עַז כַּנָּמֵר",
         translation: "Be bold as a leopard.",
         source: "Pirkei Avot 5:20",
-        reflection: "Religious living requires boldness. You shouldn't be embarrassed to do the right thing, even if it is unpopular. Have the 'audacity' of a leopard when it comes to doing the will of your Father in Heaven."
+        reflection: "Religious living requires boldness. You shouldn't be embarrassed to do the right thing, even if it is unpopular. Have the 'audacity' of a leopard when it comes to doing the will of Hashem."
       },
       {
         id: 84,
