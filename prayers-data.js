@@ -513,6 +513,30 @@ Ach tov vachesed yird'funi kol y'mei chayai. V'shavti b'beit Adonai l'orech yami
     english: `Blessed are You, Lord our God, King of the universe, who has granted us life, sustained us, and enabled us to reach this occasion.`,
     hebrew: `בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁהֶחֱיָנוּ וְקִיְּמָנוּ וְהִגִּיעָנוּ לַזְּמַן הַזֶּה.`,
     transliteration: `Baruch Atah Adonai Eloheinu Melech ha'olam, shehecheyanu v'kiy'manu v'higianu laz'man hazeh.`
+  },
+  {
+    id: "mizmor-letodah",
+    order: 20,
+    title: "Mizmor L'Todah (Psalm 100)",
+    label: "Mizmor L'Todah",
+    summary: "A psalm of thanksgiving that celebrates joyful service and God's enduring kindness.",
+    category: "praise",
+    english: `A Psalm of thanksgiving.
+Shout to the Lord, all the earth.
+Serve the Lord with gladness; come before Him with joyful song.
+Know that the Lord is God; He made us, and we are His, His people and the sheep of His pasture.
+Enter His gates with thanksgiving and His courts with praise; give thanks to Him, bless His name.
+For the Lord is good; His steadfast love is everlasting, and His faithfulness is to all generations.`,
+    hebrew: `מִזְמוֹר לְתוֹדָה; הָרִיעוּ לַיהוָה, כָּל־הָאָרֶץ.
+עִבְדוּ אֶת־יְהוָה בְּשִׂמְחָה; בֹּאוּ לְפָנָיו, בִּרְנָנָה.
+דְּעוּ כִּי יְהוָה הוּא אֱלֹהִים; הוּא עָשָׂנוּ וְלוֹ אֲנַחְנוּ, עַמּוֹ וְצֹאן מַרְעִיתוֹ.
+בֹּאוּ שְׁעָרָיו בְּתוֹדָה, חֲצֵרֹתָיו בִּתְהִלָּה; הוֹדוּ־לוֹ, בָּרְכוּ שְׁמוֹ.
+כִּי־טוֹב יְהוָה, לְעוֹלָם חַסְדּוֹ; וְעַד־דֹּר וָדֹר, אֱמוּנָתוֹ.`,
+    transliteration: `Mizmor l'Todah; hari'u la'Adonai kol ha'aretz.
+Ivdu et Adonai b'simchah; bo'u lefanav birnanah.
+De'u ki Adonai hu Elohim; hu asanu v'lo anachnu, amo v'tzon mar'ito.
+Bo'u she'arav b'todah, chatzerotav b'tehilah; hodu lo, barchu sh'mo.
+Ki tov Adonai, l'olam chasdo; v'ad dor vador, emunato.`
   }
 ];
 
@@ -567,7 +591,8 @@ const PRAYER_CATEGORIES = [
       { id: "ein-keloheinu", label: "Ein Keloheinu" },
       { id: "ashrei", label: "Ashrei" },
       { id: "anim-zemirot", label: "An'im Zemirot" },
-      { id: "yigdal", label: "Yigdal" }
+      { id: "yigdal", label: "Yigdal" },
+      { id: "mizmor-letodah", label: "Mizmor L'Todah" }
     ]
   },
   {
