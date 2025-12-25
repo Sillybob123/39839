@@ -4189,4 +4189,38 @@ function stopPresenceTracking() {
     hideLastLogin();
 }
 
+// Handle user going offline when page is closed or navigated away
+async function handleUserOffline() {
+    const userId = lastUserId || getCurrentUserId();
+    if (userId) {
+        try {
+            await markUserOffline(userId);
+            console.log('[Presence] User marked offline on page unload');
+        } catch (error) {
+            console.error('[Presence] Error marking user offline:', error);
+        }
+    }
+}
+
+// Handle visibility change (tab switching) - update presence when tab becomes visible
+function handleVisibilityChange() {
+    const userId = getCurrentUserId();
+    if (!userId) return;
+
+    if (document.hidden) {
+        console.log('[Presence] Tab hidden');
+    } else {
+        // Tab is visible again - update presence immediately
+        console.log('[Presence] Tab visible - updating presence');
+        updateUserPresence(userId).catch(error =>
+            console.error('[Presence] Error updating presence on visibility:', error)
+        );
+    }
+}
+
+// Set up page lifecycle event handlers for presence tracking
+window.addEventListener('beforeunload', handleUserOffline);
+window.addEventListener('pagehide', handleUserOffline);
+document.addEventListener('visibilitychange', handleVisibilityChange);
+
 document.addEventListener('DOMContentLoaded', init);
