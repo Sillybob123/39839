@@ -653,7 +653,141 @@
         translation: "Do not be angry and do not be fuming, for anger removes a person from the world. If someone provokes you, give a soft answer and overlook the offense.",
         source: "Sefer HaYirah",
         reflection: "Anger is described by the Sages as a form of temporary insanity that blinds us to truth and God's presence. Rabbeinu Yonah teaches that the peak of self-mastery is responding to provocation with softness. By 'overlooking' (Ma'avir al Midotav), we mirror the Divine quality of mercy, showing that we are larger than the petty insults thrown our way."
+      },
+      {
+        id: 92,
+        hebrew: "הוי מקדים שלום לכל אדם, ואילו לנכרי בשוק. ואם הקדימך אדם בשלום, השב לו בנחת רוח ובפנים מאירות.",
+        translation: "Be the first to greet every person with peace, even a stranger in the marketplace. If someone greets you first, respond with a pleasant spirit and a shining countenance.",
+        source: "Sefer HaYirah",
+        reflection: "Rabbeinu Yonah emphasizes that 'Shalom' is not just a greeting, but a tool for creating harmony in the world. Being the first to speak shows that you value the other person's existence. A 'shining countenance' (Panim Meirot) reflects a soul that is at peace with itself and seeks to share that light with others, regardless of who they are."
+      },
+      {
+        id: 93,
+        hebrew: "עשה חסד עם מי שצריך לו, בין בגופך בין בממונך. ואל תאמר 'מה לי ולצרה הזאת', כי לכך נוצרת.",
+        translation: "Perform acts of kindness for whoever needs it, whether with your body or your money. Do not say, 'What does this trouble have to do with me?' for it was for this purpose that you were created.",
+        source: "Sefer HaYirah",
+        reflection: "This teaching challenges the instinct of indifference. We often view the problems of others as an inconvenience or 'not our business.' Rabbeinu Yonah flips this perspective: serving others is the very definition of our life's mission. Kindness (Chessed) is not an optional extra; it is the fundamental reason for our existence."
+      },
+      {
+        id: 94,
+        hebrew: "הדרך הישרה היא מדה בינונית שבכל דעה ודעה מכל הדעות שיש לו לאדם. והיא הדעה הרחוקה משני הקצוות ריחוק שוה.",
+        translation: "The straight path is the middle trait within every character quality that a person possesses. It is the temperament which is equidistant from the two extremes.",
+        source: "Rambam (Mishneh Torah, Hilchot De'ot 1:4)",
+        reflection: "The Rambam’s 'Golden Path' is a guide for emotional stability. Being a better person isn't about extreme asceticism or extreme indulgence, but about balance. True morality is found in the center—knowing when to be firm and when to be soft, when to spend and when to save, and how to navigate the complex world with moderation."
+      },
+      {
+        id: 95,
+        hebrew: "שורש הכל הוא להרגיל את עצמו להיות מהנותנים ולא מהנוטלים.",
+        translation: "The root of everything is to habituate oneself to be among the givers and not among the takers.",
+        source: "Rav Eliyahu Dessler (Michtav Me'Eliyahu)",
+        reflection: "Rav Dessler identifies two primary orientations toward life: the Giver and the Taker. Being a good human being starts with a shift in consciousness—looking at every situation and asking, 'What can I contribute?' rather than 'What can I get?' When we give, we mirror the Creator, who is the ultimate Giver."
+      },
+      {
+        id: 96,
+        hebrew: "הוי זהיר במשאך ובמתנך שיהיה באמונה. ואל תגזול ואל תעשוק ואל תסיג גבול רעך.",
+        translation: "Be careful that your business dealings are conducted with integrity. Do not rob, do not exploit, and do not encroach upon the boundary of your fellow.",
+        source: "Sefer HaYirah",
+        reflection: "Holiness is found in the marketplace just as much as in the synagogue. Rabbeinu Yonah reminds us that daily morality is tested most acutely in how we handle money. Integrity (Emunah) in business means that our 'yes' is yes and our 'no' is no, ensuring that our success is never built on the loss or exploitation of another."
+      },
+      {
+        id: 97,
+        hebrew: "השמחה היא שער גדול לעבודת השם. וצריך האדם להיות בשמחה תמיד, ובפרט בעת עשיית המצוות.",
+        translation: "Joy is a great gate to the service of Hashem. A person should always be in a state of joy, especially while performing the commandments.",
+        source: "Orchot Tzaddikim (The Gate of Joy)",
+        reflection: "Morality without joy can become heavy and robotic. The Sages teach that joy (Simcha) is a spiritual engine. When we perform acts of goodness with a happy heart, we elevate the act itself. Joy is not a result of our circumstances, but a choice in how we approach our duties to God and our fellow man."
+      },
+      {
+        id: 98,
+        hebrew: "עיקר עבודת האדם בעולם הזה היא לשבור את מדותיו הרעות.",
+        translation: "The essence of a person's work in this world is to break their negative character traits.",
+        source: "Vilna Gaon",
+        reflection: "The Vilna Gaon provides a sobering focus: the purpose of our life is self-refinement. We all come into the world with certain 'rough edges'—ego, jealousy, or a quick temper. Life is the workshop where we use the tools of Torah and introspection to smooth those edges and transform ourselves into better versions of who we are."
+      },
+      {
+        id: 99,
+        hebrew: "כל אדם צריך לדעת שיש לו נר דולק בתוכו, ואין נרו שלו כנר חברו.",
+        translation: "Every person must know that they have a candle burning within them, and their candle is not like their fellow's candle.",
+        source: "Rav Kook",
+        reflection: "To be a better person, you must recognize your own unique value without comparing yourself to others. Rav Kook reminds us that every soul has a specific 'light' to bring to the world. True morality includes respecting your own unique path and potential, while honoring the fact that everyone else has a different light that the world also needs."
+      },
+      {
+        id: 100,
+        hebrew: "אם אין אני משנה את עצמי, איך אשנה את העולם?",
+        translation: "If I do not change myself, how can I change the world?",
+        source: "Rabbi Israel Salanter",
+        reflection: "The Mussar movement, founded by Rabbi Salanter, emphasizes that global change begins with the individual. We often look at the flaws in society and want to fix them, but the most effective way to improve the world is to model the behavior we want to see. Personal integrity is the seed of communal transformation."
+      },
+      {
+        id: 101,
+        hebrew: "תקן דבריך והזהר מאוד פן תכזב, כי הכזב תועבת השם יתברך. ויהיה פיך ולבך שווים.",
+        translation: "Perfect your speech and be very careful lest you lie, for falsehood is an abomination to the Blessed Name. Let your mouth and your heart be at one.",
+        source: "Sefer HaYirah",
+        reflection: "Rabbeinu Yonah addresses the gap between our internal thoughts and our external words. To be 'whole' (Tamim), our heart and mouth must match. Honesty isn't just about not telling major lies; it’s about the integrity of being consistent. When you speak with truth, you become a vessel for the Divine presence, which is defined as Truth itself."
+      },
+      {
+        id: 102,
+        hebrew: "תקדים שלום לכל אדם. ואל תהי מוציא דבה, ואל תקבל לשון הרע.",
+        translation: "Greet every person first. Do not spread gossip, and do not accept evil speech.",
+        source: "Sefer HaYirah",
+        reflection: "This teaching emphasizes the two sides of speech: positive initiative and negative restraint. Greeting someone shows kindness, but protecting someone's reputation in their absence is a deeper act of character. To 'not accept' Lashon Hara means actively choosing to believe the best of people, even when others are trying to plant seeds of doubt in your mind."
+      },
+      {
+        id: 103,
+        hebrew: "תתנהג תמיד לדבר כל דבריך בנחת, לכל אדם ובכל עת, ובזה תנצל מן הכעס.",
+        translation: "Always conduct yourself to speak all your words gently, to every person and at all times, and by this you will be saved from anger.",
+        source: "Igeret HaRamban",
+        reflection: "This famous advice from Nachmanides (Ramban) provides a practical 'hack' for character development. He suggests that if you force your voice to be quiet and gentle, your internal anger will naturally dissipate. Gentleness is not a sign of weakness; it is a sign of supreme self-control. It allows you to navigate conflicts with dignity rather than impulse."
+      },
+      {
+        id: 104,
+        hebrew: "והווי משתתף בצער חברך, ושמח בשמחתו, ואהוב אותו כנפשך.",
+        translation: "Participate in the pain of your fellow, rejoice in their joy, and love them as your own soul.",
+        source: "Sefer HaYirah",
+        reflection: "Empathy is the cornerstone of Jewish ethics. Rabbeinu Yonah moves beyond the basic command of 'Love your neighbor' to explain *how* to do it: by emotionally linking your destiny to theirs. When a friend succeeds, feel as though you won; when they suffer, feel their weight. This erodes the barrier of ego and builds a truly unified community."
+      },
+      {
+        id: 105,
+        hebrew: "יסוד החסידות ושורש העבודה התמימה הוא שיסדיר האדם ויאמת אצלו מה חובתו בעולמו.",
+        translation: "The foundation of piety and the root of perfect service is for a person to clarify and verify for themselves what their duty is in their world.",
+        source: "Mesillat Yesharim (Path of the Just, Ch. 1)",
+        reflection: "Rabbi Moshe Chaim Luzzatto (The Ramchal) teaches that a moral life begins with clarity of purpose. If we don't know why we are here, we wander aimlessly through life's distractions. Being a 'good human being' requires sitting down and asking: 'What does God want from me in this specific moment?' Clarity leads to consistency."
+      },
+      {
+        id: 106,
+        hebrew: "כָּל הַמְרַחֵם עַל הַבְּרִיּוֹת, מְרַחֲמִים עָלָיו מִן הַשָּׁמָיִם.",
+        translation: "Whoever is merciful to others, mercy is shown to them from Heaven.",
+        source: "Talmud (Shabbat 151b)",
+        reflection: "This is a fundamental spiritual law: our treatment of others acts as a mirror for how the Universe treats us. If we want God to be patient with our mistakes, we must be patient with the mistakes of our coworkers, family, and neighbors. Our compassion below opens the gates of compassion above."
+      },
+      {
+        id: 107,
+        hebrew: "כל ישראל צריכים להיות אוהבים זה את זה כאיש אחד חברים.",
+        translation: "All of Israel must love one another as 'one man, companions.'",
+        source: "The Chofetz Chaim (Ahavat Yisrael)",
+        reflection: "The Chofetz Chaim dedicated his life to the laws of speech and love. He teaches that we should view the Jewish people as a single body. If the left hand is injured, the right hand doesn't judge it—it helps it. Love for a fellow Jew is not an abstract concept; it is the practical realization that we are fundamentally connected."
+      },
+      {
+        id: 108,
+        hebrew: "העולם הזה הוא כמו פרוזדור בפני העולם הבא; התקן עצמך בפרוזדור, כדי שתכנס לטרקלין.",
+        translation: "This world is like a corridor before the World to Come; prepare yourself in the corridor, so that you may enter the banquet hall.",
+        source: "Pirkei Avot 4:16",
+        reflection: "This perspective shift helps us prioritize our daily actions. If we view life as a training ground (the corridor), then challenges and moral dilemmas become opportunities to grow. We don't collect 'things' in a corridor; we prepare our character so that we are ready for the ultimate reality of closeness to God."
+      },
+      {
+        id: 109,
+        hebrew: "אל תדין את חברך עד שתגיע למקומו.",
+        translation: "Do not judge your fellow until you have reached their place.",
+        source: "Pirkei Avot 2:4",
+        reflection: "We can never truly know the internal struggles, upbringing, or pressures someone else is facing. This quote is a call for radical humility in our social interactions. Instead of judging a person's failure, we should recognize that we might have done worse had we been in their exact circumstances ('their place')."
+      },
+      {
+        id: 110,
+        hebrew: "ודע כי אין לך דבר שמקרב את האדם אל השם יתברך יותר מן הענווה.",
+        translation: "Know that there is nothing that brings a person closer to the Blessed Name more than humility.",
+        source: "Sefer HaYirah",
+        reflection: "Humility (Anavah) is not about thinking you are nothing; it is about realizing that you aren't the center of the universe. In the space created by removing our own ego, there is room for the Divine to enter. A humble person is a better person because they are open to learning, open to others, and open to God."
       }
+
     ];
 
     function getQuoteForDate(date = new Date()) {
