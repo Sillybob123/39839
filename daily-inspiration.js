@@ -87,7 +87,7 @@
       {
         id: 12,
         hebrew: "וְאָהַבְתָּ֥ לְרֵעֲךָ֖ כָּמ֑וֹךָ",
-        translation: "Love your neighbor as yourself.",
+        translation: "Love your fellows(Israelites) as yourself.",
         source: "Leviticus 19:18",
         reflection: "Rabbi Akiva called this the 'Great Principle of the Torah.' It teaches that we are all connected souls, and treating others with love is the ultimate expression of our humanity."
       },
