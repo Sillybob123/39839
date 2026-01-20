@@ -191,8 +191,8 @@ nav {
     display: flex;
     flex-direction: column;
     gap: 0;
-    background: linear-gradient(135deg, #faf9f6 0%, #f5f3ef 100%);
-    border: 1px solid #e5e1db;
+    background: linear-gradient(135deg, #fefcf7 0%, #faf8f3 100%);
+    border: 1px solid #ebe7df;
     border-radius: 10px;
     padding: 1rem 1rem 0.85rem 1rem;
     padding-right: 3.25rem; /* breathing room for the floating bookmark */
@@ -209,11 +209,19 @@ nav {
 
 .daily-inspiration-actions {
     position: absolute;
-    top: 0.5rem;
+    top: 0.45rem;
     right: 0.45rem;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    z-index: 1;
+    justify-content: center;
+    padding: 0.2rem;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    border-radius: 999px;
+    box-shadow: 0 12px 26px -18px rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    pointer-events: auto;
 }
 
 .daily-quote-bookmark-btn {
@@ -222,25 +230,29 @@ nav {
     min-width: 34px;
     min-height: 34px;
     border-radius: 999px;
-    border: 1px solid #e5e7eb;
-    background: rgba(255, 255, 255, 0.65);
-    color: #475569;
+    border: 1px solid #cbd5e1;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    color: #1e293b;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 6px 14px -10px rgba(15, 23, 42, 0.4);
+    box-shadow: 0 10px 22px -14px rgba(15, 23, 42, 0.55);
     transition: all 0.2s ease;
 }
 
 .daily-quote-bookmark-btn svg {
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
+}
+
+.bookmark-icon-mobile {
+    display: none;
 }
 
 .daily-quote-bookmark-btn:hover {
     color: #1e3a8a;
-    border-color: #cbd5e1;
-    background: rgba(255, 255, 255, 0.9);
+    border-color: #94a3b8;
+    background: rgba(255, 255, 255, 0.95);
     transform: translateY(-1px);
 }
 
@@ -254,15 +266,13 @@ nav {
 .daily-inspiration-quotes {
     flex: 1;
     min-width: 0;
-    display: flex;
-    align-items: baseline;
-    gap: 0.4rem;
-    flex-wrap: wrap;
+    display: block;
     background: transparent;
     border: none;
     border-radius: 0;
     padding: 0;
     box-shadow: none;
+    line-height: 1.6;
 }
 
 .daily-inspiration-hebrew,
@@ -277,6 +287,8 @@ nav {
 .daily-inspiration-translation {
     font-style: italic;
     color: #52525b;
+    display: block;
+    margin-top: 0.25rem;
 }
 
 .quote-mark {
@@ -285,6 +297,19 @@ nav {
     color: #a1a1aa;
     opacity: 0.6;
     line-height: 1;
+    white-space: nowrap;
+}
+
+.quote-mark-start {
+    margin-right: -0.1em;
+}
+
+.quote-mark-end {
+    margin-left: -0.1em;
+}
+
+.daily-inspiration-hebrew {
+    display: inline;
 }
 
 .quote-divider {
@@ -295,15 +320,28 @@ nav {
 }
 
 .daily-inspiration-source {
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: #71717a;
-    letter-spacing: 0.02em;
-    width: 100%;
+    position: relative;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #5b5566;
+    letter-spacing: 0.025em;
+    display: block;
     text-align: right;
-    margin-top: 0.35rem;
-    padding-top: 0.35rem;
-    border-top: 1px solid #e5e1db;
+    margin-top: 0.65rem;
+    padding-top: 0.8rem;
+    padding-left: 0.35rem;
+    padding-right: 0.35rem;
+}
+
+.daily-inspiration-source::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -1.4rem;
+    right: -1.4rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #d0c8ba 18%, #b8b0a3 50%, #d0c8ba 82%, transparent 100%);
+    opacity: 0.95;
 }
 
 .daily-inspiration-explanation-section {
@@ -329,7 +367,12 @@ nav {
 
 @media (max-width: 768px) {
     .daily-inspiration-card {
-        padding: 0.35rem 1rem;
+        padding: 0.35rem 0.75rem;
+    }
+
+    .daily-inspiration-content {
+        padding: 0.75rem;
+        padding-right: 2.5rem;
     }
 
     .daily-inspiration-main {
@@ -340,7 +383,8 @@ nav {
 
     .daily-inspiration-quotes {
         gap: 0.3rem;
-        padding: 0.55rem 0.7rem;
+        padding: 0;
+        width: 100%;
     }
 
     .daily-inspiration-hebrew,
@@ -348,13 +392,65 @@ nav {
         font-size: 0.8rem;
     }
 
-    .quote-divider {
-        font-size: 0.8rem;
-        margin: 0 0.1rem;
+    .quote-mark {
+        font-size: 1em;
     }
 
     .daily-inspiration-reflection {
         font-size: 0.72rem;
+    }
+
+    /* Mobile bookmark - minimal design */
+    .daily-inspiration-actions {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        z-index: 10;
+    }
+
+    .daily-quote-bookmark-btn {
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        min-height: 24px;
+        background: transparent;
+        border: none;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .bookmark-icon-desktop {
+        display: none !important;
+    }
+
+    .bookmark-icon-mobile {
+        display: block !important;
+        width: 20px !important;
+        height: 20px !important;
+        color: #9ca3af;
+    }
+
+    .daily-quote-bookmark-btn:active {
+        transform: scale(0.9);
+    }
+
+    .daily-quote-bookmark-btn.is-active .bookmark-icon-mobile {
+        color: #3b82f6;
+    }
+
+    .daily-inspiration-source {
+        margin-top: 0.55rem;
+        padding-top: 0.65rem;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+    }
+
+    .daily-inspiration-source::before {
+        left: -0.85rem;
+        right: -0.85rem;
     }
 }
 

@@ -205,13 +205,27 @@
             <div class="container mx-auto px-4 py-1">
                 <div class="daily-inspiration-card">
                     <div class="daily-inspiration-content">
+                        <div class="daily-inspiration-actions">
+                            <button
+                                type="button"
+                                class="daily-quote-bookmark-btn"
+                                data-quote-bookmark="true"
+                                aria-pressed="false"
+                                title="Save this quote"
+                            >
+                                <span class="sr-only">Bookmark this quote</span>
+                                <svg class="bookmark-icon-desktop" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M6 4a2 2 0 012-2h8a2 2 0 012 2v18l-7-4-7 4V4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                                </svg>
+                                <svg class="bookmark-icon-mobile" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M5 2h14a1 1 0 011 1v20l-8-5-8 5V3a1 1 0 011-1z" fill="currentColor"/>
+                                </svg>
+                            </button>
+                        </div>
                         <div class="daily-inspiration-main">
                             <div class="daily-inspiration-quotes">
-                                <span class="quote-mark quote-mark-start">"</span>
-                                <span data-quote-hebrew class="daily-inspiration-hebrew">Loading today's teaching...</span>
-                                <span class="quote-divider">|</span>
+                                <span class="quote-mark quote-mark-start">"</span><span data-quote-hebrew class="daily-inspiration-hebrew">Loading today's teaching...</span><span class="quote-mark quote-mark-end">"</span>
                                 <span data-quote-translation class="daily-inspiration-translation"></span>
-                                <span class="quote-mark quote-mark-end">"</span>
                                 <span data-quote-source class="daily-inspiration-source"></span>
                             </div>
                         </div>

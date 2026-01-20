@@ -822,17 +822,20 @@
         btn.setAttribute('title', 'Save this quote');
         btn.innerHTML = `
             <span class="sr-only">Bookmark this quote</span>
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M6 4a2 2 0 012-2h8a2 2 0 012 2v18l-7-4-7 4V4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            <svg class="bookmark-icon-desktop" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M6 4a2 2 0 012-2h8a2 2 0 012 2v18l-7-4-7 4V4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+            </svg>
+            <svg class="bookmark-icon-mobile" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M5 2h14a1 1 0 011 1v20l-8-5-8 5V3a1 1 0 011-1z" fill="currentColor"/>
             </svg>
         `;
 
-        const mainRow = container.querySelector('.daily-inspiration-main');
-        if (mainRow) {
+        const contentBox = container.querySelector('.daily-inspiration-content');
+        if (contentBox) {
             const actions = document.createElement('div');
             actions.className = 'daily-inspiration-actions';
             actions.appendChild(btn);
-            mainRow.appendChild(actions);
+            contentBox.appendChild(actions);
         } else {
             container.appendChild(btn);
         }
