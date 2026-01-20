@@ -100,31 +100,31 @@
       },
       {
         id: 14,
-        hebrew: "בַּקֵּ֖שׁ שָׁל֣וֹם וְרׇדְפֵֽהוּ",
-        translation: "Seek peace and pursue it.",
-        source: "Psalm 34:15",
-        reflection: "Written by King David, this verse teaches that peace (Shalom) requires active pursuit. Peace doesn't just happen; you have to chase after it, actively working to reconcile differences and create harmony."
+        hebrew: "סוּר מֵרָע וַעֲשֵׂה טוֹב, בַּקֵּשׁ שָׁלוֹם וְרָדְפֵהוּ—בַּקְּשֵׁהוּ בִּמְקוֹמְךָ וְרָדְפֵהוּ בְּמָקוֹם אַחֵר",
+        translation: "Turn from evil and do good; seek peace and pursue it—seek it in your own heart, and chase it into the hearts of others.",
+        source: "Psalm 34:15 / Midrash Tehillim",
+        reflection: "The Hebrew word for Peace, 'Shalom,' comes from the root 'Shalem,' which means 'Wholeness.' This reveals a clever truth: peace is not the absence of conflict, but the presence of completion. King David commands us to 'pursue' it because wholeness is elusive. The Sages teach that God found no vessel capable of holding all other blessings except Peace; if you lack peace, your other blessings leak away."
       },
       {
         id: 15,
-        hebrew: "יְהִי בֵיתְךָ פָתוּחַ לִרְוָחָה",
-        translation: "Let your house be open wide.",
-        source: "Pirkei Avot 1:5",
-        reflection: "Yossi ben Yochanan lived during a time of social stratification and emphasized the home as a center of kindness (Chessed), modeled after Abraham's tent. Sharing your space and resources creates a community of kindness."
+        hebrew: "יְהִי בֵיתְךָ פָתוּחַ לִרְוָחָה לְאַרְבַּע רוּחוֹת הָעוֹלָם, וְיִהְיוּ עֲנִיִּים בְּנֵי בֵיתֶךָ",
+        translation: "Let your house be open wide to the four winds of the world, and let the vulnerable be the very children of your home.",
+        source: "Pirkei Avot 1:5 / Avot D'Rabbi Natan",
+        reflection: "In Hebrew, the word for 'wide' (Revacha) also implies 'relief' or 'breathing room.' When you open your doors, you aren't just giving a stranger a seat; you are giving your own soul room to breathe. A closed house is a prison of the self. By making your home a sanctuary for those who have nothing, you transform a physical building into a living extension of Abraham’s tent, where hospitality to man attracts the presence of the Divine."
       },
       {
         id: 16,
-        hebrew: "הֱוֵי דָן אֶת כָּל הָאָדָם לְכַף זְכוּת",
-        translation: "Judge every person favorably.",
-        source: "Pirkei Avot 1:6",
-        reflection: "The Sages urge us to interpret ambiguity in others' actions positively. Give people the benefit of the doubt (Dan L'kaf Zechut); when you look for the good in others, you often bring out the best in them."
+        hebrew: "הֱוֵי דָן אֶת כָּל הָאָדָם לְכַף זְכוּת—אַל תָּדִין אֶת חֲבֵרְךָ עַד שֶׁתַּגִּיעַ לִמְקוֹמוֹ",
+        translation: "Judge the 'whole' of every person by tipping the scale toward merit—never judging a person until you have stood in their very spot.",
+        source: "Pirkei Avot 1:6 / 2:4",
+        reflection: "The phrase 'Kol HaAdam' literally means 'The Whole of the person.' Most judge based on a single snapshot of a mistake, but the Sages tell us to look at the 'Whole'—the context and the hidden potential. There is a cosmic mirroring here: the way you judge below determines how the Heavenly Court judges you above. By cleverly finding a 'Zechut' (merit) in a person, you are building a spiritual defense for your own soul."
       },
       {
         id: 17,
-        hebrew: "וּקְנֵה לְךָ חָבֵר",
-        translation: "Acquire for yourself a friend.",
-        source: "Pirkei Avot 1:6",
-        reflection: "The use of the word 'acquire' implies that friendship requires an investment, much like a purchase. Friends are not just found; they are earned through effort, investment, and loyalty."
+        hebrew: "וּקְנֵה לְךָ חָבֵר—אַל תִּקְרָא 'וּקְנֵה' אֶלָּא 'וּקְנֵה' כְּקָנֶה, שֶׁיְּהֵא לִבְּךָ רַךְ כַּקָּנֶה",
+        translation: "Acquire for yourself a friend—read it not just as 'purchase' but as 'reed,' for your heart must be as flexible and soft as a reed to sustain a friendship.",
+        source: "Pirkei Avot 1:6 / Kallah Rabbati",
+        reflection: "The word 'Acquire' (K’neh) is a play on 'Kaneh' (a reed). A true friend is 'acquired' through a high price—the currency of vulnerability—but the bond must be like a reed: able to bend in the storm without breaking. The Talmud warns, 'Either friendship or death' (O Chavruta O Mituta), because a life without a mirror to challenge and love you is a life that has stopped growing."
       },
       {
         id: 18,
