@@ -145,6 +145,37 @@ export function showCommentary(verseRef, commentaries) {
     showInfoPanel();
 }
 
+/**
+ * Show verse significance explanation
+ */
+export function showVerseSignificance(verseRef, explanation) {
+    const modal = document.getElementById('verse-significance-modal');
+    const referenceElement = document.getElementById('verse-significance-reference');
+    const contentElement = document.getElementById('verse-significance-content');
+
+    // Set the verse reference
+    referenceElement.textContent = verseRef;
+
+    // Set the explanation content
+    contentElement.innerHTML = `<p class="text-lg">${escapeHtml(explanation)}</p>`;
+
+    // Show the modal
+    modal.classList.remove('hidden');
+
+    // Close button handler
+    const closeBtn = document.getElementById('close-verse-significance');
+    closeBtn.onclick = () => {
+        modal.classList.add('hidden');
+    };
+
+    // Close on overlay click
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+        }
+    };
+}
+
 // ========================================
 // COMMENT PANEL FUNCTIONS
 // ========================================

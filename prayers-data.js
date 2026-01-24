@@ -537,6 +537,225 @@ Ivdu et Adonai b'simchah; bo'u lefanav birnanah.
 De'u ki Adonai hu Elohim; hu asanu v'lo anachnu, amo v'tzon mar'ito.
 Bo'u she'arav b'todah, chatzerotav b'tehilah; hodu lo, barchu sh'mo.
 Ki tov Adonai, l'olam chasdo; v'ad dor vador, emunato.`
+  },
+  {
+    id: "shalom-aleichem",
+    order: 21,
+    title: "Shalom Aleichem",
+    label: "Shalom Aleichem",
+    summary: "The song welcoming the ministering angels on Friday night.",
+    category: "shabbat",
+    details: {
+      when: "Friday night, typically after returning home and before Kiddush."
+    },
+    english: `Peace be unto you, ministering angels, angels of the Most High, from the King of kings, the Holy One, Blessed be He.
+May your coming be in peace, angels of peace, angels of the Most High, from the King of kings, the Holy One, Blessed be He.
+Bless me with peace, angels of peace, angels of the Most High, from the King of kings, the Holy One, Blessed be He.
+May your departure be in peace, angels of peace, angels of the Most High, from the King of kings, the Holy One, Blessed be He.`,
+    hebrew: `שָׁלוֹם עֲלֵיכֶם מַלְאֲכֵי הַשָּׁרֵת מַלְאֲכֵי עֶלְיוֹן מִמֶּלֶךְ מַלְכֵי הַמְּלָכִים הַקָּדוֹשׁ בָּרוּךְ הוּא.
+בּוֹאֲכֶם לְשָׁלוֹם מַלְאֲכֵי הַשָּׁלוֹם מַלְאֲכֵי עֶלְיוֹן מִמֶּלֶךְ מַלְכֵי הַמְּלָכִים הַקָּדוֹשׁ בָּרוּךְ הוּא.
+בָּרְכוּנִי לְשָׁלוֹם מַלְאֲכֵי הַשָּׁלוֹם מַלְאֲכֵי עֶלְיוֹן מִמֶּלֶךְ מַלְכֵי הַמְּלָכִים הַקָּדוֹשׁ בָּרוּךְ הוּא.
+צֵאתְכֶם לְשָׁלוֹם מַלְאֲכֵי הַשָּׁלוֹם מַלְאֲכֵי עֶלְיוֹן מִמֶּלֶךְ מַלְכֵי הַמְּלָכִים הַקָּדוֹשׁ בָּרוּךְ הוּא.`,
+    transliteration: `Shalom aleichem malachei hasharet, malachei elyon, mimelech malchei hamelachim, hakadosh baruch Hu.
+Bo'achem l'shalom, malachei hashalom, malachei elyon, mimelech malchei hamelachim, hakadosh baruch Hu.
+Barchuni l'shalom, malachei hashalom, malachei elyon, mimelech malchei hamelachim, hakadosh baruch Hu.
+Tzeitchem l'shalom, malachei hashalom, malachei elyon, mimelech malchei hamelachim, hakadosh baruch Hu.`
+  },
+  {
+    id: "vshamru",
+    order: 22,
+    title: "V'shamru",
+    label: "V'shamru",
+    summary: "Shabbat covenant verses from Exodus 31:16-17.",
+    category: "shabbat",
+    details: {
+      when: "Friday night during the Shabbat evening service and Kiddush."
+    },
+    english: `The children of Israel shall keep the Sabbath, to observe the Sabbath throughout their generations as an everlasting covenant. It is a sign between Me and the children of Israel forever; for in six days the Lord made heaven and earth, and on the seventh day He ceased from work and rested.`,
+    hebrew: `וְשָׁמְרוּ בְנֵי יִשְׂרָאֵל אֶת הַשַּׁבָּת לַעֲשׂוֹת אֶת הַשַּׁבָּת לְדֹרֹתָם בְּרִית עוֹלָם. בֵּינִי וּבֵין בְּנֵי יִשְׂרָאֵל אוֹת הִיא לְעֹלָם כִּי שֵׁשֶׁת יָמִים עָשָׂה יְהֹוָה אֶת הַשָּׁמַיִם וְאֶת הָאָרֶץ וַּבַּיּוֹם הַשְּׁבִיעִי שָׁבַת וַיִּנָּפַשׁ.`,
+    transliteration: `V'shamru v'nei Yisrael et haShabbat la'asot et haShabbat l'dorotam brit olam.
+Beini u'vein b'nei Yisrael ot hi l'olam, ki sheshet yamim asah Adonai et hashamayim v'et ha'aretz, uvayom hashvi'i shavat vayinafash.`
+  },
+  {
+    id: "friday-night-kiddush",
+    order: 23,
+    title: "Friday Night Kiddush",
+    label: "Friday Night Kiddush",
+    summary: "Sanctification over wine that ushers in Shabbat.",
+    category: "shabbat",
+    details: {
+      when: "Friday night, recited over wine before the Shabbat meal."
+    },
+    english: `The sixth day. And the heavens and the earth and all their hosts were completed. And on the seventh day God finished His work which He had made, and He rested on the seventh day from all His work which He had made. And God blessed the seventh day and made it holy, for on it He rested from all His work which God created to function.
+Attention, masters, teachers, and gentlemen! Blessed are You, Lord our God, King of the universe, who creates the fruit of the vine.
+Blessed are You, Lord our God, King of the universe, who has sanctified us with His commandments and favored us, and with love and favor gave us His holy Sabbath as a heritage, a remembrance of the work of Creation. For this day is the first of the holy festivals, commemorating the Exodus from Egypt. For You have chosen us and sanctified us from among all the nations, and with love and favor gave us Your holy Sabbath as a heritage. Blessed are You, Lord, who sanctifies the Sabbath.`,
+    hebrew: `יוֹם הַשִּׁשִּׁי. וַיְכֻלּוּ הַשָּׁמַיִם וְהָאָרֶץ וְכָל צְבָאָם. וַיְכַל אֱלֹהִים בַּיּוֹם הַשְּׁבִיעִי מְלַאכְתּוֹ אֲשֶׁר עָשָׂה וַיִּשְׁבֹּת בַּיּוֹם הַשְּׁבִיעִי מִכָּל מְלַאכְתּוֹ אֲשֶׁר עָשָׂה. וַיְבָרֶךְ אֱלֹהִים אֶת יוֹם הַשְּׁבִיעִי וַיְקַדֵּשׁ אֹתוֹ כִּי בוֹ שָׁבַת מִכָּל מְלַאכְתּוֹ אֲשֶׁר בָּרָא אֱלֹהִים לַעֲשׂוֹת.
+סַבְרִי מָרָנָן וְרַבָּנָן וְרַבּוֹתַי. בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם בּוֹרֵא פְּרִי הַגָּפֶן.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְרָצָה בָנוּ וְשַׁבַּת קָדְשׁוֹ בְּאַהֲבָה וּבְרָצוֹן הִנְחִילָנוּ זִכָּרוֹן לְמַעֲשֵׂה בְרֵאשִׁית כִּי הוּא יוֹם תְּחִלָּה לְמִקְרָאֵי קֹדֶשׁ זֵכֶר לִיצִיאַת מִצְרָיִם כִּי בָנוּ בָחַרְתָּ וְאוֹתָנוּ קִדַּשְׁתָּ מִכָּל הָעַמִּים וְשַׁבַּת קָדְשְׁךָ בְּאַהֲבָה וּבְרָצוֹן הִנְחִילְתָּנוּ. בָּרוּךְ אַתָּה יְהֹוָה מְקַדֵּשׁ הַשַׁבָּת.`,
+    transliteration: `Yom hashishi. Vayechulu hashamayim v'ha'aretz v'chol tz'va'am. Vayechal Elohim bayom hashvi'i m'lachto asher asah, vayishbot bayom hashvi'i mikol m'lachto asher asah. Vayevarech Elohim et yom hashvi'i vayekadesh oto, ki vo shavat mikol m'lachto asher bara Elohim la'asot.
+Savri maranan v'rabanan v'rabotai. Baruch ata Adonai Eloheinu Melech ha'olam, borei p'ri hagafen.
+Baruch ata Adonai Eloheinu Melech ha'olam, asher kid'shanu b'mitzvotav v'ratzah vanu, v'Shabbat kodsho b'ahavah u'v'ratzon hinchilanu, zikaron l'ma'aseh v'reishit, ki hu yom t'chilah l'mikra'ei kodesh, zecher litziat Mitzrayim, ki vanu vacharta v'otanu kidashta mikol ha'amim, v'Shabbat kodsh'cha b'ahavah u'v'ratzon hinchaltanu. Baruch ata Adonai, m'kadesh haShabbat.`
+  },
+  {
+    id: "birkot-hashachar",
+    order: 24,
+    title: "Birkot HaShachar",
+    label: "Birkot HaShachar",
+    summary: "Morning blessings thanking God for daily renewal and strength.",
+    category: "daily",
+    details: {
+      when: "In the morning, after waking and washing hands, before or during Shacharit."
+    },
+    english: `I offer thanks before You, living and eternal King, for You have mercifully restored my soul within me; Your faithfulness is great.
+Blessed are You, Lord our God, King of the universe, who has sanctified us with His commandments and commanded us concerning the washing of the hands.
+Blessed are You, Lord our God, King of the universe, who formed man with wisdom and created within him many openings and many hollow spaces; it is obvious and known before Your Throne of Glory that if but one of them were to be opened or sealed, it would be impossible to exist and to stand before You even for a single hour. Blessed are You, Lord, Physician of all flesh and Wonder-worker.
+My God, the soul You have placed within me is pure. You created it, You fashioned it, You breathed it into me and You preserve it within me. You will eventually take it from me, and restore it within me in the Time to Come. As long as the soul is within me, I offer thanks before You, Lord my God and God of my fathers, Master of all works, Lord of all souls. Blessed are You, Lord, who restores souls to dead bodies.
+Blessed are You, Lord our God, King of the universe, who gave the heart understanding to distinguish between day and night.
+Blessed are You, Lord our God, King of the universe, who opens the eyes of the blind.
+Blessed are You, Lord our God, King of the universe, who clothes the naked.
+Blessed are You, Lord our God, King of the universe, who sets the captives free.
+Blessed are You, Lord our God, King of the universe, who straightens the bowed.
+Blessed are You, Lord our God, King of the universe, who spreads the earth above the waters.
+Blessed are You, Lord our God, King of the universe, who firms a person's steps.
+Blessed are You, Lord our God, King of the universe, who has provided me with all my needs.
+Blessed are You, Lord our God, King of the universe, who girds Israel with strength.
+Blessed are You, Lord our God, King of the universe, who crowns Israel with glory.
+Blessed are You, Lord our God, King of the universe, who gives strength to the weary.
+Blessed are You, Lord our God, King of the universe, who removes sleep from my eyes and slumber from my eyelids.
+Blessed are You, Lord our God, King of the universe, who has not made me a gentile.
+Blessed are You, Lord our God, King of the universe, who has not made me a slave.
+Blessed are You, Lord our God, King of the universe, who made me according to His will.`,
+    hebrew: `מוֹדֶה אֲנִי לְפָנֶיךָ מֶלֶךְ חַי וְקַיָּם שֶׁהֶחֱזַרְתָּ בִּי נִשְׁמָתִי בְּחֶמְלָה רַבָּה אֱמוּנָתֶךָ.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ עַל נְטִילַת יָדָיִם.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם אֲשֶׁר יָצַר אֶת הָאָדָם בְּחָכְמָה וּבָרָא בוֹ נְקָבִים נְקָבִים חֲלוּלִים חֲלוּלִים גָּלוּי וְיָדוּעַ לִפְנֵי כִסֵּא כְבוֹדֶךָ שֶׁאִם יִפָּתֵחַ אֶחָד מֵהֶם אוֹ יִסָּתֵם אֶחָד מֵהֶם אִי אֶפְשַׁר לְהִתְקַיֵּם וְלַעֲמֹד לְפָנֶיךָ אֲפִילוּ שָׁעָה אֶחָת.
+בָּרוּךְ אַתָּה יְהֹוָה רוֹפֵא כָל בָּשָׂר וּמַפְלִיא לַעֲשׂוֹת.
+אֱלֹהַי נְשָׁמָה שֶׁנָּתַתָּ בִּי טְהוֹרָה הִיא אַתָּה בְרָאתָהּ אַתָּה יְצַרְתָּהּ אַתָּה נְפַחְתָּהּ בִּי וְאַתָּה מְשַׁמְּרָהּ בְּקִרְבִּי וְאַתָּה עָתִיד לִטְּלָהּ מִמֶּנִּי וּלְהַחֲזִירָהּ בִּי לֶעָתִיד לָבֹא כָּל זְמַן שֶׁהַנְּשָׁמָה בְּקִרְבִּי מוֹדֶה אֲנִי לְפָנֶיךָ יְהֹוָה אֱלֹהַי וֵאלֹהֵי אֲבוֹתַי רִבּוֹן כָּל הַמַּעֲשִׂים אֲדוֹן כָּל הַנְּשָׁמוֹת.
+בָּרוּךְ אַתָּה יְהֹוָה הַמַּחֲזִיר נְשָׁמוֹת לִפְגָרִים מֵתִים.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם אֲשֶׁר נָתַן לַשֶּׂכְוִי בִינָה לְהַבְחִין בֵּין יוֹם וּבֵין לָיְלָה.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם פּוֹקֵחַ עִוְרִים.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם מַלְבִּישׁ עֲרֻמִּים.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם מַתִּיר אֲסוּרִים.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם זוֹקֵף כְּפוּפִים.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם רוֹקַע הָאָרֶץ עַל הַמָּיִם.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם הַמֵּכִין מִצְעֲדֵי גָבֶר.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם שֶׁעָשָׂה לִי כָּל צָרְכִּי.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם אוֹזֵר יִשְׂרָאֵל בִּגְבוּרָה.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם עוֹטֵר יִשְׂרָאֵל בְּתִפְאָרָה.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם הַנּוֹתֵן לַיָּעֵף כֹּחַ.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם הַמַּעֲבִיר שֵׁנָה מֵעֵינָי וּתְנוּמָה מֵעַפְעַפָּי.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם שֶׁלֹּא עָשַׂנִי גּוֹי.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם שֶׁלֹּא עָשַׂנִי עָבֶד.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם שֶׁעָשַׂנִי כִּרְצוֹנוֹ.`,
+    transliteration: `Modeh ani l'fanecha Melech chai v'kayam, shehechezarta bi nishmati b'chemlah, rabbah emunatecha.
+Baruch ata Adonai Eloheinu Melech ha'olam, asher kid'shanu b'mitzvotav v'tzivanu al n'tilat yadayim.
+Baruch ata Adonai Eloheinu Melech ha'olam, asher yatzar et ha'adam b'chochmah u'vara vo n'kavim n'kavim, chalulim chalulim, galui v'yadua lifnei kisei k'vodecha, she'im yipate'ach echad mehem o yisatem echad mehem, i efshar l'hitkayem v'la'amod l'fanecha afilu sha'ah achat. Baruch ata Adonai, rofeh chol basar u'mafli la'asot.
+Elohai, neshama shenatata bi t'horah hi. Atah b'ratah, atah y'tzartah, atah nafachtah bi, v'atah m'shamrah b'kirbi, v'atah atid litlah mimeni u'l'hachazirah bi l'atid lavo. Kol z'man shehaneshama b'kirbi, modeh ani l'fanecha Adonai Elohai v'Elohei avotai, Ribon kol ha'ma'asim, Adon kol haneshamot. Baruch ata Adonai, ha'machazir neshamot lif'garim metim.
+Baruch ata Adonai Eloheinu Melech ha'olam, asher natan lasechvi binah l'havchin bein yom u'vein laylah.
+Baruch ata Adonai Eloheinu Melech ha'olam, poke'ach ivrim.
+Baruch ata Adonai Eloheinu Melech ha'olam, malbish arumim.
+Baruch ata Adonai Eloheinu Melech ha'olam, matir asurim.
+Baruch ata Adonai Eloheinu Melech ha'olam, zokef k'fufim.
+Baruch ata Adonai Eloheinu Melech ha'olam, roka ha'aretz al hamayim.
+Baruch ata Adonai Eloheinu Melech ha'olam, hamechin mitz'adei gaver.
+Baruch ata Adonai Eloheinu Melech ha'olam, she'asah li kol tzarki.
+Baruch ata Adonai Eloheinu Melech ha'olam, ozer Yisrael big'vurah.
+Baruch ata Adonai Eloheinu Melech ha'olam, oter Yisrael b'tifarah.
+Baruch ata Adonai Eloheinu Melech ha'olam, hanoten laya'ef koach.
+Baruch ata Adonai Eloheinu Melech ha'olam, hama'avir sheinah me'einai u'tenumah me'af'apai.
+Baruch ata Adonai Eloheinu Melech ha'olam, shelo asani goy.
+Baruch ata Adonai Eloheinu Melech ha'olam, shelo asani eved.
+Baruch ata Adonai Eloheinu Melech ha'olam, she'asani kirtzono.`
+  },
+  {
+    id: "birkat-hamazon",
+    order: 25,
+    title: "Birkat HaMazon",
+    label: "Birkat HaMazon",
+    summary: "Grace after meals thanking God for sustenance and blessing.",
+    category: "meals",
+    details: {
+      when: "After eating a meal that included bread."
+    },
+    english: `A Song of Ascents. When the Lord brings back the exiles of Zion, we will be like dreamers. Then our mouths will be filled with laughter and our tongues with song. Then it will be said among the nations: The Lord has done great things for these. The Lord has done great things for us; we are joyful. Return our captivity, O Lord, like streams in the Negev. Those who sow in tears shall reap in song. He who goes along weeping, carrying the bag of seed, shall surely come back with song, carrying his sheaves.
+Blessed are You, Lord our God, King of the universe, who nourishes the whole world with His goodness, with grace, with lovingkindness and with pity; He gives bread to all flesh, for His lovingkindness endures forever. And through His great goodness, food has never failed us, and may it not fail us for ever and ever, for the sake of His great name; for He is a God who nourishes and sustains all, and does good to all, and provides food for all His creatures which He has created. Blessed are You, Lord, who nourishes all.
+We thank You, Lord our God, because You have given as a heritage to our fathers a desirable, good and ample land, and because You have brought us out, Lord our God, from the land of Egypt and redeemed us from the house of bondage; as well as for Your covenant which You have sealed in our flesh, and for Your Torah which You have taught us, and for Your statutes which You have made known to us, and for the life, grace and lovingkindness which You have bestowed upon us, and for the food with which You nourish and sustain us continually, every day, at every season and at every hour. For all this, Lord our God, we thank You and bless You, may Your name be blessed by the mouth of every living being continually and for ever, as it is written: And you shall eat and be satisfied, and you shall bless the Lord your God for the good land which He has given you. Blessed are You, Lord, for the land and for the food.
+Have mercy, Lord our God, upon Israel Your people, upon Jerusalem Your city, upon Zion the abiding-place of Your glory, upon the kingdom of the house of David Your anointed, and upon the great and holy House that was called by Your name. Our God, our Father, feed us, nourish us, sustain us, provide for us and relieve us; and speedily, Lord our God, grant us relief from all our troubles. We beseech You, Lord our God, let us not be in need of the gifts of flesh and blood, nor of their loans, but only of Your helping hand, which is full, open, holy and ample, so that we may not be ashamed nor confounded for ever and ever. And build Jerusalem the holy city speedily in our days. Blessed are You, Lord, who in His mercy builds Jerusalem. Amen.
+Blessed are You, Lord our God, King of the universe, O God, our Father, our King, our Mighty One, our Creator, our Redeemer, our Maker, our Holy One, the Holy One of Jacob, our Shepherd, the Shepherd of Israel, the King who is good and does good to all, who every day has done good, does good, and will do good to us; He has bestowed, He bestows, and He will ever bestow upon us grace, lovingkindness and pity, relief, deliverance and prosperity, blessing and salvation, consolation, sustenance and support, mercy, life, peace and all good; of no manner of good let Him make us lack.
+May the Merciful One reign over us for ever and ever. May the Merciful One be blessed in heaven and on earth. May the Merciful One be praised for all generations, and be glorified in us for ever and all eternity, and may He be honored in us for ever and ever. May the Merciful One provide us with an honorable livelihood. May the Merciful One break the yoke from off our neck, and lead us upright to our land. May the Merciful One send a plentiful blessing upon this house and upon this table at which we have eaten. May the Merciful One send us Elijah the prophet (let him be remembered for good), who shall announce to us good tidings, salvation and consolation. May the Merciful One bless my father and teacher, the master of this house, and my mother and teacher, the mistress of this house; them, their house, their seed and all that is theirs. May the Merciful One bless all of us together with a perfect blessing, and let us say, Amen.
+In heaven may merit be pleaded for them and for us, such as shall lead to a lasting peace, and we shall receive a blessing from the Lord, and righteousness from the God of our salvation; and may we find grace and good understanding in the eyes of God and man. May the Merciful One make us inherit the day which shall be all Shabbat and rest in life everlasting. May the Merciful One make us inherit the day which is altogether good. May the Merciful One grant us the merit of seeing the days of the Messiah and the life of the World to Come. He is a tower of salvation to His king, and shows lovingkindness to His anointed, to David and to his seed for ever. He who makes peace in His high places, may He make peace for us and for all Israel, and say, Amen.
+Fear the Lord, You His holy ones, for there is no want to them that fear Him. Young lions do lack and suffer hunger, but they that seek the Lord shall not want any good thing. Give thanks unto the Lord, for He is good, for His lovingkindness endures forever. You open Your hand and satisfy the desire of every living thing. Blessed is the man that trusts in the Lord, and whose trust the Lord is. I have been young and now am old, yet have I not seen the righteous forsaken, nor his seed begging for bread. The Lord will give strength unto His people; the Lord will bless His people with peace.`,
+    hebrew: `שִׁיר הַמַּעֲלוֹת בְּשׁוּב יְהֹוָה אֶת שִׁיבַת צִיּוֹן הָיִינוּ כְּחֹלְמִים.
+אָז יִמָּלֵא שְׂחוֹק פִּינוּ וּלְשׁוֹנֵנוּ רִנָּה אָז יֹאמְרוּ בַגּוֹיִם הִגְדִּיל יְהֹוָה לַעֲשׂוֹת עִם אֵלֶּה.
+הִגְדִּיל יְהֹוָה לַעֲשׂוֹת עִמָּנוּ הָיִינוּ שְׂמֵחִים.
+שׁוּבָה יְהֹוָה אֶת שְׁבִיתֵנוּ כַּאֲפִיקִים בַּנֶּגֶב.
+הַזֹּרְעִים בְּדִמְעָה בְּרִנָּה יִקְצֹרוּ.
+הָלוֹךְ יֵלֵךְ וּבָכֹה נֹשֵׂא מֶשֶׁךְ הַזָּרַע בֹּא יָבֹא בְרִנָּה נֹשֵׂא אֲלֻמֹּתָיו.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם הַזָּן אֶת הָעוֹלָם כֻּלּוֹ בְּטוּבוֹ בְּחֵן בְּחֶסֶד וּבְרַחֲמִים הוּא נוֹתֵן לֶחֶם לְכָל בָּשָׂר כִּי לְעוֹלָם חַסְדּוֹ. וּבְטוּבוֹ הַגָּדוֹל תָּמִיד לֹא חָסַר לָנוּ וְאַל יֶחְסַר לָנוּ מָזוֹן לְעוֹלָם וָעֶד בַּעֲבוּר שְׁמוֹ הַגָּדוֹל כִּי הוּא אֵל זָן וּמְפַרְנֵס לַכֹּל וּמֵטִיב לַכֹּל וּמֵכִין מָזוֹן לְכָל בְּרִיּוֹתָיו אֲשֶׁר בָּרָא. בָּרוּךְ אַתָּה יְהֹוָה הַזָּן אֶת הַכֹּל.
+נוֹדֶה לְּךָ יְהֹוָה אֱלֹהֵינוּ עַל שֶׁהִנְחַלְתָּ לַאֲבוֹתֵינוּ אֶרֶץ חֶמְדָּה טוֹבָה וּרְחָבָה וְעַל שֶׁהוֹצֵאתָנוּ יְהֹוָה אֱלֹהֵינוּ מֵאֶרֶץ מִצְרַיִם וּפְדִיתָנוּ מִבֵּית עֲבָדִים וְעַל בְּרִיתְךָ שֶׁחָתַמְתָּ בִּבְשָׂרֵנוּ וְעַל תּוֹרָתְךָ שֶׁלִּמַּדְתָּנוּ וְעַל חֻקֶּיךָ שֶׁהוֹדַעְתָּנוּ וְעַל חַיִּים חֵן וָחֶסֶד שֶׁחוֹנַנְתָּנוּ וְעַל אֲכִילַת מָזוֹן שָׁאַתָּה זָן וּמְפַרְנֵס אוֹתָנוּ תָּמִיד בְּכָל יוֹם וּבְכָל עֵת וּבְכָל שָׁעָה.
+וְעַל הַכֹּל יְהֹוָה אֱלֹהֵינוּ אֲנַחְנוּ מוֹדִים לָךְ וּמְבָרְכִים אוֹתָךְ יִתְבָּרַךְ שִׁמְךָ בְּפִי כָּל חַי תָּמִיד לְעוֹלָם וָעֶד כַּכָּתוּב וְאָכַלְתָּ וְשָׂבָעְתָּ וּבֵרַכְתָּ אֶת יְהֹוָה אֱלֹהֶיךָ עַל הָאָרֶץ הַטּוֹבָה אֲשֶׁר נָתַן לָךְ. בָּרוּךְ אַתָּה יְהֹוָה עַל הָאָרֶץ וְעַל הַמָּזוֹן.
+רַחֶם נָא יְהֹוָה אֱלֹהֵינוּ עַל יִשְׂרָאֵל עַמֶּךָ וְעַל יְרוּשָׁלַיִם עִירֶךָ וְעַל צִיּוֹן מִשְׁכַּן כְּבוֹדֶךָ וְעַל מַלְכוּת בֵּית דָּוִד מְשִׁיחֶךָ וְעַל הַבַּיִת הַגָּדוֹל וְהַקָּדוֹשׁ שֶׁנִּקְרָא שִׁמְךָ עָלָיו.
+אֱלֹהֵינוּ אָבִינוּ רְעֵנוּ זוּנֵנוּ פַּרְנְסֵנוּ וְכַלְכְּלֵנוּ וְהַרְוִיחֵנוּ וְהַרְוַח לָנוּ יְהֹוָה אֱלֹהֵינוּ מְהֵרָה מִכָּל צָרוֹתֵינוּ.
+וְנָא אַל תַּצְרִיכֵנוּ יְהֹוָה אֱלֹהֵינוּ לֹא לִידֵי מַתְּנַת בָּשָׂר וָדָם וְלֹא לִידֵי הַלְוָאָתָם כִּי אִם לְיָדְךָ הַמְּלֵאָה הַפְּתוּחָה הַקְּדוֹשָׁה וְהָרְחָבָה שֶׁלֹּא נֵבוֹשׁ וְלֹא נִכָּלֵם לְעוֹלָם וָעֶד.
+וּבְנֵה יְרוּשָׁלַיִם עִיר הַקֹּדֶשׁ בִּמְהֵרָה בְיָמֵינוּ. בָּרוּךְ אַתָּה יְהֹוָה בּוֹנֵה בְרַחֲמָיו יְרוּשָׁלָיִם. אָמֵן.
+בָּרוּךְ אַתָּה יְהֹוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם הָאֵל אָבִינוּ מַלְכֵּנוּ אַדִּירֵנוּ בּוֹרְאֵנוּ גּוֹאֲלֵנוּ יוֹצְרֵנוּ קְדוֹשֵׁנוּ קְדוֹשׁ יַעֲקֹב רוֹעֵנוּ רוֹעֵה יִשְׂרָאֵל הַמֶּלֶךְ הַטּוֹב וְהַמֵּטִיב לַכֹּל שֶׁבְּכָל יוֹם וָיוֹם הוּא הֵיטִיב הוּא מֵיטִיב הוּא יֵיטִיב לָנוּ הוּא גְמָלָנוּ הוּא גוֹמְלֵנוּ הוּא יִגְמְלֵנוּ לָעַד לְחֵן וּלְחֶסֶד וּלְרַחֲמִים וּלְרֶוַח הַצָּלָה וְהַצְלָחָה בְּרָכָה וִישׁוּעָה נֶחָמָה פַּרְנָסָה וְכַלְכָּלָה וְרַחֲמִים וְחַיִּים וְשָׁלוֹם וְכָל טוֹב וּמִכָּל טוּב לְעוֹלָם אַל יְחַסְּרֵנוּ.
+הָרַחֲמָן הוּא יִמְלֹךְ עָלֵינוּ לְעוֹלָם וָעֶד.
+הָרַחֲמָן הוּא יִתְבָּרַךְ בַּשָּׁמַיִם וּבָאָרֶץ.
+הָרַחֲמָן הוּא יִשְׁתַּבַּח לְדוֹר דּוֹרִים וְיִתְפָּאַר בָּנוּ לָעַד וּלְנֵצַח נְצָחִים וְיִתְהַדַּר בָּנוּ לָעוֹלָם וּלְעוֹלְמֵי עוֹלָמִים.
+הָרַחֲמָן הוּא יְפַרְנְסֵנוּ בְּכָבוֹד.
+הָרַחֲמָן הוּא יִשְׁבֹּר עֻלֵּנוּ מֵעַל צַוָּארֵנוּ וְהוּא יוֹלִיכֵנוּ קוֹמְמִיּוּת לְאַרְצֵנוּ.
+הָרַחֲמָן הוּא יִשְׁלַח לָנוּ בְּרָכָה מְרֻבָּה בַּבַּיִת הַזֶּה וְעַל שֻׁלְחָן זֶה שֶׁאָכַלְנוּ עָלָיו.
+הָרַחֲמָן הוּא יִשְׁלַח לָנוּ אֶת אֵלִיָּהוּ הַנָּבִיא זָכוּר לַטּוֹב וִיבַשֶּׂר לָנוּ בְּשׂוֹרוֹת טוֹבוֹת יְשׁוּעוֹת וְנֶחָמָת.
+הָרַחֲמָן הוּא יְבָרֵךְ אֶת אָבִי מוֹרִי בַּעַל הַבַּיִת הַזֶּה וְאֶת אִמִּי מוֹרָתִי בַּעֲלַת הַבַּיִת הַזֶּה אוֹתָם וְאֶת בֵּיתָם וְאֶת זַרְעָם וְאֶת כָּל אֲשֶׁר לָהֶם.
+הָרַחֲמָן הוּא יְבָרֵךְ אֶת כָּל הַמְסֻבִּים כָּאן אוֹתָנוּ וְאֶת כָּל אֲשֶׁר לָנוּ כְּמוֹ שֶׁנִּתְבָּרְכוּ אֲבוֹתֵינוּ אַבְרָהָם יִצְחָק וְיַעֲקֹב בַּכֹּל מִכֹּל כֹּל כֵּן יְבָרֵךְ אוֹתָנוּ כֻּלָּנוּ יַחַד בִּבְרָכָה שְׁלֵמָה וְנֹאמַר אָמֵן.
+בַּמָּרוֹם יְלַמְּדוּ עֲלֵיהֶם וְעָלֵינוּ זְכוּת שֶׁתְּהֵא לְמִשְׁמֶרֶת שָׁלוֹם וְנִשָּׂא בְרָכָה מֵאֵת יְהֹוָה וּצְדָקָה מֵאֱלֹהֵי יִשְׁעֵנוּ וְנִמְצָא חֵן וְשֵׂכֶל טוֹב בְּעֵינֵי אֱלֹהִים וְאָדָם.
+הָרַחֲמָן הוּא יַנְחִילֵנוּ יוֹם שֶׁכֻּלּוֹ שַׁבָּת וּמְנוּחָה לְחַיֵּי הָעוֹלָמִים.
+הָרַחֲמָן הוּא יַנְחִילֵנוּ יוֹם שֶׁכֻּלּוֹ טוֹב.
+הָרַחֲמָן הוּא יְזַכֵּנוּ לִימוֹת הַמָּשִׁיחַ וּלְחַיֵּי הָעוֹלָם הַבָּא.
+מִגְדּוֹל יְשׁוּעוֹת מַלְכּוֹ וְעֹשֶׂה חֶסֶד לִמְשִׁיחוֹ לְדָוִד וּלְזַרְעוֹ עַד עוֹלָם.
+עֹשֶׂה שָׁלוֹם בִּמְרוֹמָיו הוּא יַעֲשֶׂה שָׁלוֹם עָלֵינוּ וְעַל כָּל יִשְׂרָאֵל וְאִמְרוּ אָמֵן.
+יְראוּ אֶת יְהֹוָה קְדֹשָׁיו כִּי אֵין מַחְסוֹר לִירֵאָיו.
+כְּפִירִים רָשׁוּ וְרָעֵבוּ וְדֹרְשֵׁי יְהֹוָה לֹא יַחְסְרוּ כָל טוֹב.
+הוֹדוּ לַיהֹוָה כִּי טוֹב כִּי לְעוֹלָם חַסְדּוֹ.
+פּוֹתֵחַ אֶת יָדֶךָ וּמַשְׂבִּיעַ לְכָל חַי רָצוֹן.
+בָּרוּךְ הַגֶּבֶר אֲשֶׁר יִבְטַח בַּיהֹוָה וְהָיָה יְהֹוָה מִבְטַחוֹ.
+נַעַר הָיִיתִי גַּם זָקַנְתִּי וְלֹא רָאִיתִי צַדִּיק נֶעֱזָב וְזַרְעוֹ מְבַקֶּשׁ לָחֶם.
+יְהֹוָה עֹז לְעַמּוֹ יִתֵּן יְהֹוָה יְבָרֵךְ אֶת עַמּוֹ בַשָּׁלוֹם.`,
+    transliteration: `Shir hama'alot. B'shuv Adonai et shivat Tziyon, hayinu k'cholmim.
+Az yimmalei s'chok pinu u'l'shoneinu rinah; az yomru vagoyim: higdil Adonai la'asot im eileh.
+Higdil Adonai la'asot imanu; hayinu s'mechim.
+Shuvah Adonai et sh'viteinu ka'afikim banegev.
+Hazzor'im b'dim'ah b'rinah yiktzoru.
+Halokh yeilekh u'vacho nosei meshech hazara; bo yavo v'rinah nosei alumotav.
+Baruch ata Adonai Eloheinu Melech ha'olam, hazan et ha'olam kulo b'tuvo b'chen b'chesed u'v'rachamim; hu noten lechem l'chol basar ki l'olam chasdo. Uv'tuvo hagadol tamid lo chasar lanu v'al yechsar lanu mazon l'olam va'ed ba'avur sh'mo hagadol, ki hu El zan u'm'far'nes lakol u'meitiv lakol u'mechin mazon l'chol b'riyotav asher bara. Baruch ata Adonai, hazan et hakol.
+Nodeh l'cha Adonai Eloheinu al shehinchalta la'avoteinu eretz chemdah tovah u'r'chavah, v'al shehotzetanu Adonai Eloheinu me'eretz Mitzrayim u'fditanu mibeit avadim, v'al b'rit'cha shechatamta bivsareinu, v'al Torat'cha shelimadtanu, v'al chukecha shehodatanu, v'al chayim chen vachesed shechonantanu, v'al achilat mazon she'atah zan u'm'far'nes otanu tamid b'chol yom u'v'chol et u'v'chol sha'ah.
+V'al hakol Adonai Eloheinu anachnu modim lach u'mevarchim otach; yitbarach shimcha b'fi kol chai tamid l'olam va'ed, kakatuv: V'achalta v'savata u'verachta et Adonai Elohecha al ha'aretz hatovah asher natan lach. Baruch ata Adonai al ha'aretz v'al hamazon.
+Rachem na Adonai Eloheinu al Yisrael amecha, v'al Yerushalayim irecha, v'al Tziyon mishkan k'vodecha, v'al malchut beit David m'shichecha, v'al habayit hagadol v'hakadosh shenikra shimcha alav.
+Eloheinu Avinu re'einu, zuneinu, parn'seinu v'chalkeleinu v'harvicheinu, v'harvach lanu Adonai Eloheinu meheirah mikol tzaroteinu.
+V'na al tatzrichenu Adonai Eloheinu lo lidei matnat basar vadam v'lo lidei halva'atam, ki im l'yad'cha ha'mele'ah ha'ptuchah ha'k'doshah v'har'chavah, shelo nevosh v'lo nikalem l'olam va'ed.
+Uv'neh Yerushalayim ir hakodesh bim'heirah v'yameinu. Baruch ata Adonai, boneh b'rachamav Yerushalayim. Amen.
+Baruch ata Adonai Eloheinu Melech ha'olam, ha'El Avinu Malkeinu, Adireinu, Boreinu, Go'aleinu, Yotzreinu, K'dosheinu, K'dosh Yaakov, Ro'einu, Ro'eh Yisrael, haMelech haTov v'haMeitiv lakol, sheb'chol yom v'yom hu heitiv, hu meitiv, hu yeitiv lanu; hu g'malanu, hu gomleinu, hu yig'mleinu la'ad, l'chen u'l'chesed u'l'rachamim u'l'revach hatzalah v'hatzlachah, b'rachah v'yeshu'ah, nechamah, parnasah v'chalcalah v'rachamim v'chayim v'shalom v'chol tov, u'mikol tov l'olam al yechasreinu.
+Harachaman hu yimloch aleinu l'olam va'ed.
+Harachaman hu yitbarach bashamayim u'va'aretz.
+Harachaman hu yishtabach l'dor dorim v'yitpa'ar banu la'ad u'l'netzach nitzachim v'yit'hadar banu l'olam u'l'olmei olamim.
+Harachaman hu y'farn'seinu b'kavod.
+Harachaman hu yishbor ulenu me'al tzavareinu v'hu yolichenu kom'miyut l'artzeinu.
+Harachaman hu yishlach lanu b'rachah m'rubah babayit hazeh v'al shulchan zeh she'achalnu alav.
+Harachaman hu yishlach lanu et Eliyahu hanavi zachur latov, v'yivaser lanu b'sorot tovot yeshu'ot v'nechamat.
+Harachaman hu yevarech et avi mori ba'al habayit hazeh, v'et imi morati ba'alat habayit hazeh, otam v'et beitam v'et zar'am v'et kol asher lahem.
+Harachaman hu yevarech et kol hamesubim kan, otanu v'et kol asher lanu, k'mo shenitbarchu avoteinu Avraham Yitzchak v'Yaakov, bakol mikol kol; ken yevarech otanu kulanu yachad b'vrachah sh'leimah v'nomar Amen.
+Bamarom y'lamdu aleihem v'aleinu z'chut shet'heh l'mishmeret shalom, v'nisa b'rachah me'et Adonai u'tzedakah me'Elohei yish'einu, v'nimtza chen v'sechel tov b'einei Elohim v'adam.
+Harachaman hu yanchilenu yom shekulo Shabbat u'menuchah l'chayei ha'olamim.
+Harachaman hu yanchilenu yom shekulo tov.
+Harachaman hu y'zakeinu limot haMashiach u'l'chayei ha'olam haba.
+Migdal yeshu'ot malko v'oseh chesed lim'shicho l'David u'l'zaro ad olam.
+Oseh shalom bimromav, hu ya'aseh shalom aleinu v'al kol Yisrael, v'imru Amen.
+Yir'u et Adonai k'doshav ki ein machsor lire'av.
+K'firim rashu v'ra'eivu, v'dorshei Adonai lo yach'seru kol tov.
+Hodu laAdonai ki tov, ki l'olam chasdo.
+Pote'ach et yadecha u'masbia l'chol chai ratzon.
+Baruch hagever asher yivtach baAdonai, v'hayah Adonai mivtacho.
+Na'ar hayiti gam zakanti v'lo ra'iti tzadik ne'ezav v'zaro m'vakesh lachem.
+Adonai oz l'amo yiten; Adonai yevarech et amo bashalom.`
   }
 ];
 
@@ -547,8 +766,17 @@ const PRAYER_CATEGORIES = [
     description: "Morning gratitude and Torah-centered commitments for every day.",
     links: [
       { id: "modeh-ani", label: "Modeh Ani" },
+      { id: "birkot-hashachar", label: "Birkot HaShachar" },
       { id: "shema", label: "Shema Yisrael" },
       { id: "birkat-hatorah", label: "Birkat HaTorah" }
+    ]
+  },
+  {
+    id: "meals",
+    title: "Meals & Gratitude",
+    description: "Blessings of thanks after eating, centered on Birkat HaMazon.",
+    links: [
+      { id: "birkat-hamazon", label: "Birkat HaMazon" }
     ]
   },
   {
@@ -607,9 +835,12 @@ const PRAYER_CATEGORIES = [
   {
     id: "shabbat",
     title: "Shabbat Lights",
-    description: "Prepare for holy time with blessings that welcome and depart Shabbat.",
+    description: "Welcome and depart Shabbat with candle lighting, Friday night prayers, and Havdalah.",
     links: [
       { id: "shabbat-candles", label: "Shabbat Candle Lighting" },
+      { id: "shalom-aleichem", label: "Shalom Aleichem" },
+      { id: "vshamru", label: "V'shamru" },
+      { id: "friday-night-kiddush", label: "Friday Night Kiddush" },
       { id: "havdalah", label: "Havdalah Blessings" }
     ]
   },

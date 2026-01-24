@@ -629,6 +629,30 @@ select {
     background: linear-gradient(to right, #dbeafe 0%, #fef3c7 2%, #ffffff 4%);
 }
 
+.verse-container.has-important {
+    background: linear-gradient(to left, #f3e8ff 0%, #ffffff 3%);
+    border-left: none;
+    border-right: 4px solid #9333ea;
+}
+
+.verse-container.has-commentary.has-important {
+    background: linear-gradient(to right, #dbeafe 0%, #ffffff 2%);
+    border-left: 4px solid #3b82f6;
+    border-right: 4px solid #9333ea;
+}
+
+.verse-container.has-keywords.has-important {
+    background: linear-gradient(to right, #fef3c7 0%, #ffffff 2%);
+    border-left: 4px solid #f59e0b;
+    border-right: 4px solid #9333ea;
+}
+
+.verse-container.has-commentary.has-keywords.has-important {
+    background: linear-gradient(to right, #dbeafe 0%, #fef3c7 2%, #ffffff 4%);
+    border-left: 4px solid #3b82f6;
+    border-right: 4px solid #9333ea;
+}
+
 /* Verse Content Wrapper - PROPER ALIGNMENT */
 .verse-content-wrapper {
     display: flex;
@@ -677,6 +701,30 @@ select {
     font-size: 1.05rem;
     line-height: 1.8;
     text-align: left;
+}
+
+/* Important Verse Asterisk - Purple Star in Bottom Right */
+.important-verse-asterisk {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #9333ea;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    z-index: 10;
+    line-height: 1;
+    user-select: none;
+}
+
+.important-verse-asterisk:hover {
+    color: #7e22ce;
+    background: rgba(147, 51, 234, 0.1);
+    transform: scale(1.2) rotate(15deg);
+    box-shadow: 0 2px 8px rgba(147, 51, 234, 0.3);
 }
 
 /* Keyword Styling - BOLD AND OBVIOUS - NO EMOJIS */
@@ -1935,8 +1983,8 @@ select {
 .header-main {
     position: relative;
     overflow: visible;
-    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
-    box-shadow: 0 4px 20px rgba(30, 64, 175, 0.3);
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #60a5fa 100%);
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
     padding-bottom: 20px;
 }
 

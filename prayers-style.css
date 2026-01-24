@@ -1,4 +1,60 @@
 /* Additional styles for prayers page */
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600&display=swap');
+
+:root {
+    --prayer-ink: #0f1f4f;
+    --prayer-soft: #f4f7ff;
+    --prayer-border: #dbe7ff;
+    --prayer-accent: #2563eb;
+}
+
+.prayers-compact .daily-inspiration-card {
+    padding: 0.5rem 1rem;
+}
+
+/* Ensure community status bar displays properly on prayers page */
+#community-status-bar {
+    padding: 0.5rem 0;
+}
+
+#community-status-content {
+    padding: 0 1rem;
+}
+
+.status-leading-dot {
+    width: 8px;
+    height: 8px;
+}
+
+.status-section {
+    display: flex;
+    align-items: center;
+}
+
+.status-section--with-divider {
+    position: relative;
+    padding-left: 1rem;
+    margin-left: 1rem;
+}
+
+.status-section--with-divider::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 16px;
+    width: 1px;
+    background: #cbd5e1;
+}
+
+.prayer-finder-sticky {
+    position: sticky;
+    top: 16px;
+    z-index: 30;
+    backdrop-filter: blur(10px);
+    margin-top: -0.5rem;
+}
 
 .category-card {
     background: linear-gradient(135deg, #f8fbff 0%, #eef4ff 100%);
@@ -101,6 +157,55 @@
     color: #475569;
 }
 
+.prayer-autocomplete {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid #2563eb;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2);
+    z-index: 1000;
+    margin-top: -10px;
+}
+
+.prayer-autocomplete.hidden {
+    display: none;
+}
+
+.autocomplete-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid #e2e8f0;
+    transition: background 0.15s ease;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.selected {
+    background: #eff6ff;
+}
+
+.autocomplete-item-title {
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 0.25rem;
+}
+
+.autocomplete-item-category {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
 .finder-languages {
     margin-top: 1.5rem;
     padding-top: 1.5rem;
@@ -189,20 +294,24 @@
 .directory-link {
     display: block;
     padding: 1rem 1.25rem;
-    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-    border: 2px solid #93c5fd;
+    background: #ffffff;
+    border: 1px solid #bfdbfe;
     border-radius: 8px;
     color: #1e40af;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.2s ease;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    line-height: 1.4;
 }
 
 .directory-link:hover {
-    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    background: #e0edff;
     border-color: #3b82f6;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.2);
 }
 
 .quick-links-grid {
@@ -211,24 +320,181 @@
     gap: 0.75rem;
 }
 
+.quick-access-bar {
+    background: #ffffff;
+    border: 1px solid var(--prayer-border);
+    border-radius: 18px;
+    padding: 1rem 1.5rem 1rem 1.5rem;
+    margin-top: 4.75rem;
+    margin-bottom: 1.75rem;
+    box-shadow: 0 8px 22px rgba(15, 31, 79, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.quick-access-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.quick-access-title {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: #1e3a8a;
+}
+
+.quick-access-subtitle {
+    color: #475569;
+    font-weight: 500;
+}
+
+.quick-access-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+}
+
 .quick-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 1rem;
     border-radius: 12px;
     border: 1px solid #c7d2fe;
-    color: #1e40af;
-    background: linear-gradient(135deg, #eef2ff 0%, #ffffff 50%);
+    color: #1e3a8a;
+    background: #f1f5ff;
     font-weight: 700;
     text-decoration: none;
     transition: all 0.18s ease;
 }
 
 .quick-link:hover {
-    border-color: #818cf8;
-    background: linear-gradient(135deg, #e0e7ff 0%, #ffffff 60%);
+    border-color: #6366f1;
+    background: #e0e7ff;
     transform: translateY(-1px);
+}
+
+.nav-hub {
+    position: relative;
+}
+
+.nav-hub-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+}
+
+.nav-hub-tabs {
+    display: inline-flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.hub-tab {
+    border: 1px solid #bfdbfe;
+    border-radius: 999px;
+    padding: 0.45rem 1rem;
+    font-weight: 700;
+    color: #1e40af;
+    background: #f8fbff;
+    transition: all 0.2s ease;
+}
+
+.hub-tab.active {
+    background: #e0edff;
+    border-color: #3b82f6;
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.18);
+}
+
+.nav-hub-panels {
+    display: grid;
+    grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+    gap: 1.5rem;
+}
+
+@media (min-width: 900px) {
+    .nav-hub-header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .nav-hub-tabs {
+        justify-content: flex-end;
+    }
+}
+
+.nav-hub-panel {
+    background: var(--prayer-soft);
+    border: 1px solid var(--prayer-border);
+    border-radius: 16px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.nav-hub-panel-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.category-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.category-nav-item {
+    text-align: left;
+    border: 1px solid #c7d2fe;
+    border-radius: 12px;
+    padding: 0.75rem 0.95rem;
+    background: #ffffff;
+    color: #1e3a8a;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    transition: all 0.2s ease;
+}
+
+.category-nav-item:hover {
+    border-color: #60a5fa;
+    box-shadow: 0 10px 18px rgba(37, 99, 235, 0.12);
+    transform: translateY(-1px);
+}
+
+.category-nav-item.active {
+    border-color: #2563eb;
+    background: #e0edff;
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+}
+
+.category-nav-title {
+    font-weight: 700;
+    color: #1e40af;
+    font-size: 0.98rem;
+}
+
+.category-nav-desc {
+    font-size: 0.85rem;
+    color: #475569;
+    line-height: 1.4;
+}
+
+.directory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
 }
 
 .directory-index {
@@ -248,21 +514,49 @@
 
 .prayer-section {
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    margin-bottom: 2rem;
-    border: 2px solid #e5e7eb;
-    scroll-margin-top: 80px; /* Account for sticky header */
+    border-radius: 18px;
+    box-shadow: 0 12px 28px rgba(15, 31, 79, 0.08);
+    margin-bottom: 2.25rem;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    scroll-margin-top: 160px; /* Account for sticky header + finder */
+}
+
+.prayer-section summary {
+    list-style: none;
+}
+
+.prayer-section summary::-webkit-details-marker {
+    display: none;
+}
+
+.prayer-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.6rem 1.8rem;
+    cursor: pointer;
+}
+
+.prayer-section[open] .prayer-header {
+    background: #f8fbff;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.prayer-header-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
 }
 
 .prayer-title {
-    color: #1e40af;
-    font-size: 1.75rem;
+    color: var(--prayer-ink);
+    font-size: 1.5rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 3px solid #3b82f6;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
 }
 
 .prayer-index {
@@ -272,8 +566,8 @@
 }
 
 .prayer-meta {
-    margin-top: -0.5rem;
-    margin-bottom: 0.75rem;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .category-chip {
@@ -288,26 +582,49 @@
     font-size: 0.9rem;
 }
 
-.prayer-content {
-    display: grid;
-    gap: 1.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
 .prayer-summary {
-    background: #eef4ff;
-    border-left: 4px solid #3b82f6;
-    padding: 0.85rem 1rem;
-    border-radius: 6px;
+    background: #f4f7ff;
+    border-left: 3px solid #3b82f6;
+    padding: 0.75rem 0.95rem;
+    border-radius: 8px;
     color: #1e3a8a;
     font-size: 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0;
+}
+
+.prayer-toggle-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #1e40af;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.prayer-toggle-icon {
+    width: 1rem;
+    height: 1rem;
+    transition: transform 0.2s ease;
+}
+
+.prayer-section[open] .prayer-toggle-icon {
+    transform: rotate(180deg);
+}
+
+.prayer-body {
+    padding: 0 1.8rem 1.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .prayer-details {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1rem;
+    margin-top: 0.75rem;
     margin-bottom: 1.5rem;
 }
 
@@ -366,10 +683,78 @@
     font-size: 1.05rem;
 }
 
+.english-section .section-text {
+    font-family: 'Crimson Pro', 'Georgia', serif;
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: #1a2559;
+}
+
 .hebrew-section .section-text {
     font-family: 'SBL Hebrew', 'Ezra SIL', 'Frank Ruehl CLM', 'David CLM', 'Times New Roman', serif;
-    font-size: 1.3rem;
-    line-height: 2;
+    font-size: 1.35rem;
+    line-height: 2.3;
+}
+
+.language-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 0.65rem;
+    margin-top: 2rem;
+    border-radius: 12px;
+    background: #f1f5ff;
+    border: 1px solid #dbe7ff;
+}
+
+.prayer-details + .language-switcher {
+    margin-top: 1.25rem;
+}
+
+.language-tab {
+    border: none;
+    background: transparent;
+    color: #1e40af;
+    font-weight: 700;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.language-tab.active {
+    background: #1d4ed8;
+    color: #ffffff;
+    box-shadow: 0 8px 18px rgba(29, 78, 216, 0.25);
+}
+
+.prayer-content {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+}
+
+.prayer-section[data-language-view="english"] [data-language-block="hebrew"],
+.prayer-section[data-language-view="english"] [data-language-block="transliteration"] {
+    display: none;
+}
+
+.prayer-section[data-language-view="hebrew"] [data-language-block="english"],
+.prayer-section[data-language-view="hebrew"] [data-language-block="transliteration"] {
+    display: none;
+}
+
+.prayer-section[data-language-view="transliteration"] [data-language-block="english"],
+.prayer-section[data-language-view="transliteration"] [data-language-block="hebrew"] {
+    display: none;
+}
+
+.prayer-section[data-language-view="both"] [data-language-block="transliteration"] {
+    display: none;
+}
+
+.prayer-section[data-language-view="both"] .prayer-content {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
 #back-to-top {
@@ -405,17 +790,25 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .prayer-section {
-        padding: 1.5rem;
-    }
-    
     .prayer-title {
         font-size: 1.5rem;
     }
-    
-    .finder-languages {
+
+    .prayer-header {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .prayer-body {
+        padding: 0 1.5rem 1.6rem;
+    }
+
+    .prayer-section {
+        overflow: visible;
+    }
+
+    .prayer-finder-sticky {
+        top: 72px;
     }
 
     .section-text {
@@ -425,6 +818,36 @@
     .hebrew-section .section-text {
         font-size: 1.2rem;
     }
+
+    .language-switcher {
+        position: sticky;
+        bottom: 0;
+        z-index: 10;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 -12px 22px rgba(15, 31, 79, 0.12);
+        padding: 0.75rem;
+    }
+
+    .language-tab {
+        flex: 1 1 calc(50% - 0.6rem);
+        text-align: center;
+    }
+}
+
+@media (max-width: 900px) {
+    .nav-hub-panels {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-hub-panel {
+        display: none;
+    }
+
+    .nav-hub[data-hub-view="categories"] .nav-hub-panel[data-hub-panel="categories"],
+    .nav-hub[data-hub-view="directory"] .nav-hub-panel[data-hub-panel="directory"] {
+        display: flex;
+    }
 }
 
 /* Print Styles */
@@ -432,6 +855,9 @@
     .category-card,
     .category-link,
     .directory-link,
+    .nav-hub,
+    .quick-access-bar,
+    #prayer-finder,
     #back-to-top,
     header,
     footer {

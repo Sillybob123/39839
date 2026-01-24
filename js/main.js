@@ -2,6 +2,7 @@
 import { TORAH_PARSHAS } from './config.js';
 import { fetchCurrentParsha, fetchParshaText, loadCommentaryData, loadMitzvahChallenges } from './api.js';
 import { state, setState } from './state.js';
+import { isImportantVerse, getImportantVerseData } from './important-verses.js';
 import { getDisplayNameFromEmail } from './name-utils.js';
 import {
     showLoading,
@@ -16,6 +17,7 @@ import {
     showInfoPanel,
     showKeywordDefinition,
     showCommentary,
+    showVerseSignificance,
     openCommentsPanel,
     closeCommentsPanel,
     displayComments,
@@ -3101,11 +3103,13 @@ function createVerseElement(englishText, hebrewText, verseRef, verseNumber) {
     
     const hasCommentary = checkForCommentary(verseRef);
     const hasKeywords = checkForKeywords(verseRef);
-    
-    if (hasCommentary || hasKeywords) {
+    const isImportant = isImportantVerse(verseRef);
+
+    if (hasCommentary || hasKeywords || isImportant) {
         container.classList.add('has-content');
         if (hasCommentary) container.classList.add('has-commentary');
         if (hasKeywords) container.classList.add('has-keywords');
+        if (isImportant) container.classList.add('has-important');
     }
     
     const contentWrapper = document.createElement('div');
@@ -3124,7 +3128,7 @@ function createVerseElement(englishText, hebrewText, verseRef, verseNumber) {
     hebrewDiv.setAttribute('lang', 'he');
     hebrewDiv.setAttribute('dir', 'rtl');
     hebrewDiv.innerHTML = hebrewText;
-    
+
     const englishDiv = document.createElement('div');
     englishDiv.className = 'english-text';
     const cleanedEnglish = cleanSefariaAnnotationsFromText(englishText);
@@ -3133,9 +3137,10 @@ function createVerseElement(englishText, hebrewText, verseRef, verseNumber) {
     verseDisplayTexts[verseRef] = {
         english: cleanedEnglish.trim()
     };
-    
+
     textContainer.appendChild(hebrewDiv);
     textContainer.appendChild(englishDiv);
+
     contentWrapper.appendChild(textContainer);
     
     container.appendChild(contentWrapper);
@@ -3221,6 +3226,23 @@ function createVerseElement(englishText, hebrewText, verseRef, verseNumber) {
     reactionsSection.appendChild(heartBtn);
     reactionsSection.appendChild(bookmarkBtn);
     container.appendChild(reactionsSection);
+
+    // Add purple asterisk for extremely important verses (bottom right of container)
+    if (isImportantVerse(verseRef)) {
+        const asterisk = document.createElement('div');
+        asterisk.className = 'important-verse-asterisk';
+        asterisk.innerHTML = '*';
+        asterisk.setAttribute('title', 'Click to see why this verse is extremely important');
+        asterisk.setAttribute('data-verse-ref', verseRef);
+        asterisk.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const verseData = getImportantVerseData(verseRef);
+            if (verseData) {
+                showVerseSignificance(verseRef, verseData.explanation);
+            }
+        });
+        container.appendChild(asterisk);
+    }
 
     // Store bookmark button reference for later updates
     container.dataset.bookmarkBtn = true;

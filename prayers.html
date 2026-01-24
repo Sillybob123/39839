@@ -97,7 +97,7 @@
     </div>
 
     <!-- Daily Inspiration -->
-    <section id="daily-inspiration" class="daily-inspiration-header-section">
+    <section id="daily-inspiration" class="daily-inspiration-header-section prayers-compact">
         <div class="container mx-auto px-4 py-1">
             <div class="daily-inspiration-card">
                 <div class="daily-inspiration-content">
@@ -208,9 +208,9 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
+    <main class="container mx-auto px-4 pt-2 pb-8">
         <!-- Prayer Finder (moved to top) -->
-        <section id="prayer-finder" class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8 border border-blue-100">
+        <section id="prayer-finder" class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8 border border-blue-100 prayer-finder-sticky">
             <div class="finder-header">
                 <div>
                     <h3 class="text-xl font-semibold text-blue-900">Find a Prayer</h3>
@@ -222,7 +222,10 @@
             <div class="finder-grid">
                 <label class="filter-field" aria-label="Search prayers">
                     <span class="filter-label">Search</span>
-                    <input type="search" id="prayer-search" class="filter-input" placeholder="Search by title: Shabbat, Shema, Modeh Ani…">
+                    <div style="position: relative;">
+                        <input type="search" id="prayer-search" class="filter-input" placeholder="Search by title: Shabbat, Shema, Modeh Ani…" autocomplete="off">
+                        <div id="prayer-autocomplete" class="prayer-autocomplete hidden"></div>
+                    </div>
                     <span class="filter-helper">Live results update as you type.</span>
                 </label>
                 <label class="filter-field" aria-label="Filter prayers by focus area">
@@ -233,36 +236,19 @@
                     <span class="filter-helper">Includes Shabbat, daily, praise, healing, and more.</span>
                 </label>
             </div>
-            <div class="finder-languages" role="group" aria-label="Toggle text sections">
-                <span class="filter-label">Text Display</span>
-                <div class="toggle-group">
-                    <label class="toggle-pill">
-                        <input type="checkbox" data-language-toggle="english" checked>
-                        <span>English</span>
-                    </label>
-                    <label class="toggle-pill">
-                        <input type="checkbox" data-language-toggle="hebrew" checked>
-                        <span>Hebrew</span>
-                    </label>
-                    <label class="toggle-pill">
-                        <input type="checkbox" data-language-toggle="transliteration" checked>
-                        <span>Transliteration</span>
-                    </label>
-                </div>
-            </div>
             <div class="finder-footer">
                 <p id="prayer-count" class="prayer-count text-blue-900 font-semibold">Showing 0 prayers</p>
                 <button type="button" id="reset-prayer-filters" class="reset-button" data-reset-filters>Reset filters</button>
             </div>
         </section>
 
-        <!-- Quick Access: Frequently Used -->
-        <section class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8 border border-gray-200">
-            <div class="flex flex-col gap-2 mb-4">
-                <h3 class="text-xl font-semibold text-blue-900">Frequently Used</h3>
-                <p class="text-blue-800 text-sm">Jump straight to the most common prayers.</p>
+        <!-- Quick Access -->
+        <section class="quick-access-bar">
+            <div class="quick-access-header">
+                <span class="quick-access-title">Quick Access</span>
+                <span class="quick-access-subtitle">Jump to frequently used prayers.</span>
             </div>
-            <div class="quick-links-grid">
+            <div class="quick-access-pills">
                 <a href="#shabbat-candles" class="quick-link">Shabbat Candle Lighting</a>
                 <a href="#havdalah" class="quick-link">Havdalah</a>
                 <a href="#modeh-ani" class="quick-link">Modeh Ani</a>
@@ -271,28 +257,36 @@
             </div>
         </section>
 
-        <!-- Prayer List Navigation -->
-        <section class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8 border border-gray-200">
-            <div class="md:flex md:items-center md:justify-between gap-6 mb-6">
+        <!-- Navigation Hub -->
+        <section id="navigation-hub" class="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-10 border border-gray-200 nav-hub" data-hub-view="categories">
+            <div class="nav-hub-header">
                 <div>
-                    <h2 class="text-2xl md:text-3xl font-bold text-blue-900">Important Prayers & Readings</h2>
+                    <h2 class="text-2xl md:text-3xl font-bold text-blue-900">Navigation Hub</h2>
                     <p class="text-blue-800 mt-2 max-w-2xl">
-                        Choose a focus area to quickly find the prayer you need. Every entry links straight to the
-                        full English, Hebrew, and transliteration text below.
+                        Filter by focus area, then open the prayer you need. The directory stays in sync with your search.
                     </p>
                 </div>
+                <div class="nav-hub-tabs" role="tablist" aria-label="Navigation views">
+                    <button type="button" class="hub-tab active" data-hub-tab="categories" role="tab" aria-selected="true">Categories</button>
+                    <button type="button" class="hub-tab" data-hub-tab="directory" role="tab" aria-selected="false">Directory</button>
+                </div>
             </div>
-            <div id="category-cards" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-        </section>
-
-        <section class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8 border border-gray-200">
-            <div class="flex flex-col gap-2 mb-4">
-                <h3 class="text-xl font-semibold text-blue-900">Complete Prayer Directory</h3>
-                <p class="text-blue-800 text-sm">
-                    Tap any title to scroll to its section. The directory stays in sync with your filters.
-                </p>
+            <div class="nav-hub-panels">
+                <div class="nav-hub-panel" data-hub-panel="categories">
+                    <div class="nav-hub-panel-header">
+                        <h3 class="text-lg font-semibold text-blue-900">Focus Areas</h3>
+                        <p class="text-blue-700 text-sm">Select a category to filter the prayer directory.</p>
+                    </div>
+                    <div id="category-nav" class="category-nav"></div>
+                </div>
+                <div class="nav-hub-panel" data-hub-panel="directory">
+                    <div class="nav-hub-panel-header">
+                        <h3 class="text-lg font-semibold text-blue-900">Prayer Directory</h3>
+                        <p class="text-blue-700 text-sm">Tap a title to open the prayer below.</p>
+                    </div>
+                    <div id="prayer-directory" class="directory-grid"></div>
+                </div>
             </div>
-            <div id="prayer-directory" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
         </section>
 
         <!-- Back to Top Button -->
