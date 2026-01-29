@@ -136,158 +136,179 @@
         reflection: "Ben Hei Hei emphasizes that the struggle itself gives value to the achievement. The harder the struggle, the greater the spiritual growth; the value of a Mitzvah is measured by the difficulty you overcame to perform it."
       },
       {
-        id: 22,        hebrew: "וּבָחַרְתָּ֙ בַּחַיִּ֔ים",
-        translation: "Therefore, choose life.",
-        source: "Deuteronomy 30:19",
-        reflection: "In his final address, Moses frames free will as a choice between life and death. Every day we are faced with choices that lead toward vitality and meaning or toward negativity; actively choose the path that brings life."
+        id: 22,
+        hebrew: "הַפֶּה הוּא קוֹלְמוֹס הַלֵּב, אֲבָל הַנְּגִינָה הִיא קוֹלְמוֹס הַנֶּפֶשׁ.",
+        translation: "The mouth is the pen of the heart, but song is the pen of the soul.",
+        source: "The Baal Shem Tov",
+        reflection: "Words can communicate your thoughts, but music and spirit communicate your essence. This is a 'clever' insight into the limits of logic: sometimes, to solve a problem or connect with another, you must stop 'writing' with your mouth and start 'singing' with your soul—accessing a frequency of joy that transcends mere argument."
       },
       {
-        id: 23,        hebrew: "אֱמֹר מְעַט וַעֲשֵׂה הַרְבֵּה",
-        translation: "Say little and do much.",
+        id: 23,
+        hebrew: "לְעוֹלָם יִחְיֶה אָדָם בְּתוֹךְ אֶמְצָעָיו, אֲבָל יְכַבֵּד אֶת אִשְׁתּוֹ יוֹתֵר מִמָּה שֶׁיֵּשׁ לוֹ.",
+        translation: "A person should live within their means, but honor their spouse above their means.",
+        source: "Talmud, Chullin 84b",
+        reflection: "This is a masterpiece of relational ethics. The Sages suggest that while you should be frugal and disciplined with yourself, you should be radically generous with your partner's dignity. By treating your spouse as if they have 'infinite' worth, you create an atmosphere of abundance and respect that far outweighs physical wealth."
+      },
+      {
+        id: 24,
+        hebrew: "מִצְוָה הַבָּאָה לְיָדְךָ, אַל תַּחְמִיצֶנָּה.",
+        translation: "When a good deed comes to your hand, do not let it become 'leavened'—do not let it sour.",
+        source: "Mekhilta d'Rabbi Ishmael / Rashi",
+        reflection: "There is a clever wordplay here between 'Mitzvah' and 'Matzah.' Just as Matzah becomes 'Chametz' (sour/leavened) if left too long, a good intention 'sours' if you procrastinate. The energy of a good idea is like a spark; you must act while the heat is there. Procrastination is the 'leavening' of the soul that turns an inspired act into a heavy burden."
+      },
+      {
+        id: 25,
+        hebrew: "אֵין הַקָּדוֹשׁ בָּרוּךְ הוּא בָּא בִּטְרוּנְיָא עִם בְּרִיּוֹתָיו.",
+        translation: "The Holy One does not act as a tyrant over His creations.",
+        source: "Talmud, Avodah Zarah 3a",
+        reflection: "This teaching establishes the 'Fairness of the Infinite.' You are never given a test or a task that you do not have the internal tools to handle. If you find yourself in a difficult situation, it is a 'clever' proof of your own hidden strength; the Almighty only expects from you exactly what He has empowered you to achieve."
+      },
+      {
+        id: 26,
+        hebrew: "לֹא מָצָאנוּ דָּבָר שֶׁיַּעֲמֹד בִּפְנֵי הָרָצוֹן.",
+        translation: "Nothing can stand in the face of the human will.",
+        source: "Zohar / Jewish Maxim",
+        reflection: "The Hebrew word for 'Will' (Ratzon) shares a root with the word for 'Run' (Ratz). When a person truly 'wills' something, their entire being is in motion. This isn't about wishing; it's about an integrated desire. When your heart and mind are unified on a single goal, the obstacles of the physical world lose their 'solidity' and become transparent."
+      },
+      {
+        id: 27,
+        hebrew: "הַכֹּל צָרִיךְ לְמַזָּל, אֲפִילוּ סֵפֶר תּוֹרָה שֶׁבַּהֵיכָל.",
+        translation: "Everything requires 'Mazal'—even the Torah scroll in the holy ark.",
+        source: "Zohar, Vayikra 16a",
+        reflection: "The word 'Mazal' literally means 'to flow down.' This is a clever insight into humility: even the holiest object needs the right 'timing' and 'flow' to be recognized. It teaches that while you must work hard, you must also be patient with the timing of your life. Success is a partnership between your effort and the Divine 'flow' of the universe."
+      },
+      {
+        id: 28,
+        hebrew: "אִם אֵין בִּינָה, אֵין דַּעַת. אִם אֵין דַּעַת, אֵין בִּינָה.",
+        translation: "If there is no understanding (Binah), there is no knowledge (Da'at); if there is no knowledge, there is no understanding.",
+        source: "Pirkei Avot 3:17",
+        reflection: "This is a clever loop of intellectual growth. 'Da'at' is raw information, but 'Binah' is the ability to deduce one thing from another. You cannot build a structure without bricks (knowledge), but you cannot live in a pile of bricks without a blueprint (understanding). True wisdom is the synergy of both—seeing the facts and the meaning simultaneously."
+      },
+      {
+        id: 29,
+        hebrew: "הַמְּרַחֵם עַל הָאַכְזָרִים, סוֹפוֹ שֶׁיִּתְאַכְזֵר עַל הָרַחְמָנִים.",
+        translation: "One who is merciful to the cruel will eventually become cruel to the merciful.",
+        source: "Midrash Tanchuma",
+        reflection: "This is a sharp, 'clever' warning about misplaced compassion. Ethics require boundaries. If you tolerate evil and toxicity out of a sense of 'pity,' you inevitably drain the resources and safety intended for the innocent. True mercy (Rachamim) requires the 'Gevurah' (strength) to say no to those who destroy."
+      },
+      {
+        id: 30,
+        hebrew: "לֹא יָגַעְתָּ וּמָצָאתָ—אַל תַּאֲמִין.",
+        translation: "If someone says, 'I did not toil but I found success'—do not believe them.",
+        source: "Talmud, Megillah 6b",
+        reflection: "This is the Jewish law of 'Spiritual Sweat.' Luck is an illusion; 'finding' something without 'toiling' for it means you won't know how to keep it. The Sages want you to be a 'Toiler' (Yage'a). Real success is an organic growth from your own labor; if it’s unearned, it’s not really yours."
+      },
+      {
+        id: 31,
+        hebrew: "כָּל זְמַן שֶׁהַנֵּר דּוֹלֵק, אֶפְשָׁר עוֹד לְתַקֵּן.",
+        translation: "As long as the candle is still burning, it is still possible to repair.",
+        source: "Rabbi Yisrael Salanter",
+        reflection: "This famous Mussar quote uses the 'candle' as a metaphor for the human soul. Procrastination says 'it's too late,' but the Sages say 'as long as you breathe, the light is on.' There is no such thing as a 'final' failure; the only real failure is the decision to stop trying to fix what you have broken."
+      },
+      {
+        id: 32,
+        hebrew: "הָאֱמֶת כְּבֵדָה, לְפִיכָךְ נוֹשְׂאֶיהָ מועטים.",
+        translation: "Truth is heavy, and therefore its carriers are few.",
+        source: "Midrash",
+        reflection: "Truth (Emet) is heavy because it is solid—it doesn't change based on who is looking. Most people prefer the 'lightness' of convenient lies or popularity. But carrying the weight of truth builds the 'muscles' of the soul. It is better to be a strong, lonely carrier of truth than a weak follower of a light-weight lie."
+      },
+      {
+        id: 33,
+        hebrew: "חֲנֹךְ לַנַּעַר עַל־פִּי דַרְכּוֹ.",
+        translation: "Educate a person according to their own unique way.",
+        source: "Proverbs 22:6",
+        reflection: "This is the foundation of Jewish education (Chinuch). You cannot force a soul into a generic mold. To truly help someone grow, you must identify their specific 'Derech' (path) and mentor them from within their own strengths. A teacher’s job isn't to change the student, but to polish the unique gem that the student already is."
+      },
+      {
+        id: 34,
+        hebrew: "אֵין חָכָם כְּבַעַל נִסָּיוֹן.",
+        translation: "There is no wise person like one with experience.",
+        source: "Jewish Proverb / Midrash",
+        reflection: "You can read every book on swimming, but you only understand the water when you jump in. Experience (Nissayon) is the only teacher that integrates wisdom into your body. Respect your past trials and your scars; they are the 'Ph.D.' of your soul that no library can provide."
+      },
+      {
+        id: 35,
+        hebrew: "מִי שֶׁטָּרַח בְּעֶרֶב שַׁבָּת, יֹאכַל בְּשַׁבָּת.",
+        translation: "He who toils on the eve of the Sabbath will eat on the Sabbath.",
+        source: "Talmud, Avodah Zarah 3a",
+        reflection: "This is a clever metaphor for the investment of life. 'Shabbat' represents the destination—peace, success, and the afterlife. 'Erev Shabbat' is the here and now. You cannot expect a peaceful harvest if you were too lazy to plant the seeds. The quality of your 'Rest' is determined by the integrity of your 'Toil.'"
+      },
+      {
+        id: 36,
+        hebrew: "גָּדוֹל הַמְעַשֶּׂה יוֹתֵר מִן הָעוֹשֶׂה.",
+        translation: "Greater is the one who enables others to act than the one who acts alone.",
+        source: "Talmud, Bava Batra 9a",
+        reflection: "This redefines leadership. Performing a good deed is great, but inspiring 100 people to do that same deed is 'Awesome.' The highest level of character is being a catalyst—one who creates an ecosystem of goodness where others are empowered to shine."
+      },
+      {
+        id: 37,
+        hebrew: "אֵין שִׂמְחָה כְּהַתָּרַת הַסְּפֵקוֹת.",
+        translation: "There is no joy like the resolution of doubt.",
+        source: "Metzudat David / Rabbi Nachman of Breslov",
+        reflection: "Doubt (Safek) is a state of spiritual friction that drains your energy. The 'clever' path to happiness isn't necessarily getting what you want, but getting 'clarity' on where you are going. When the doubt is resolved, your energy is released, and you can move with the speed and joy of a soul that knows its purpose."
+      },
+      {
+        id: 38,
+        hebrew: "הַלֵּב וְהָעֵינַיִם הֵם שְׁנֵי סַרְסוּרֵי הַחֵטְא.",
+        translation: "The heart and the eyes are the two 'agents' of missing the mark.",
+        source: "Rashi / Midrash",
+        reflection: "This is a psychological breakdown of impulse. The eye sees, the heart desires, and the body acts. To master yourself, you cannot just fight the body; you must 'fire' the agents. Guard your eyes (what you focus on) and guard your heart (what you value), and the 'missed marks' of life will disappear on their own."
+      },
+      {
+        id: 39,
+        hebrew: "כָּל מַה דְּעָבִיד רַחֲמָנָא, לְטָב עָבִיד.",
+        translation: "Whatever the Compassionate One does, He does for the good.",
+        source: "Rabbi Akiva (Talmud, Berakhot 60b)",
+        reflection: "This is the mantra of ultimate 'Bitachon' (Trust). It is not a naive statement that 'everything is pleasant,' but a radical belief that even 'unpleasant' events are ingredients in a larger, benevolent design. By training yourself to say this, you take the power of 'tragedy' away and transform it into 'growth.'"
+      },
+      {
+        id: 40,
+        hebrew: "הֱוֵי מְקַבֵּל אֶת כָּל הָאָדָם בְּסֵבֶר פָּנִים יָפוֹת.",
+        translation: "Receive every person with a pleasant and radiant face.",
         source: "Pirkei Avot 1:15",
-        reflection: "Shammai, often seen as strict, emphasized integrity by teaching that over-promising leads to disappointment. Promises are cheap, but action is everything; let your character be defined by what you do, not just by what you say."
+        reflection: "Shammai teaches that your face is 'public property.' You have a duty to not 'pollute' the world with your bad mood. A radiant face (Sever Panim Yafot) is a form of charity that costs nothing but can save a person's life by reminding them of their own dignity. Be a source of light, not a drain of energy."
       },
       {
-        id: 24,        hebrew: "כֹּ֠ל אֲשֶׁ֨ר תִּמְצָ֧א יָֽדְךָ֛ לַעֲשֹׂ֥ות בְּכֹחֲךָ֖ עֲשֵׂ֑ה",
-        translation: "Whatever your hand finds to do, do it with all your might.",
-        source: "Ecclesiastes 9:10",
-        reflection: "Reflecting on the fleeting nature of life, King Solomon urges us to engage fully with the present task. Don't live life halfway; whatever task is in front of you, give it your full passion and energy."
+        id: 41,
+        hebrew: "אֵין אָדָם עוֹבֵר עֲבֵרָה אֶלָּא אִם כֵּן נִכְנַס בּוֹ רוּחַ שְׁטוּת.",
+        translation: "A person does not miss the mark unless a spirit of 'folly' enters them.",
+        source: "Talmud, Sotah 3a",
+        reflection: "This is a deeply compassionate view of human failure. You are essentially good; when you fail, it is because you became 'temporarily insane' or 'foolish.' This 'clever' insight allows you to separate your core identity from your mistakes. Don't say 'I am bad'; say 'I acted foolishly,' and then use your intellect to evict the spirit of folly."
       },
       {
-        id: 25,        hebrew: "צֶ֥דֶק צֶ֖דֶק תִּרְדֹּ֑ף",
-        translation: "Justice, justice shall you pursue.",
-        source: "Deuteronomy 16:20",
-        reflection: "The repetition of the word 'Justice' (Tzedek) teaches that the means used to get justice must also be just. We must not just wait for justice to happen; we must actively chase it with integrity."
+        id: 42,
+        hebrew: "טוֹב פַּת חֲרֵבָה וְשַׁלְוָה־בָהּ, מִבַּיִת מָלֵא זִבְחֵי־רִיב.",
+        translation: "Better a dry crust with peace than a house full of feasting with strife.",
+        source: "Proverbs 17:1",
+        reflection: "Wealth is the 'flavor' of your life, but Peace (Shalom) is the 'appetite.' If you have a feast but your home is full of fighting, the food tastes like ash. But if you have very little and your home is peaceful, even a dry crust feels like a luxury. Prioritize the emotional atmosphere of your home over the physical luxury of your things."
       },
       {
-        id: 26,        hebrew: "עֵ֥ת לִבְכּ֖וֹת וְעֵ֣ת לִשְׂח֑וֹק",
-        translation: "A time to weep and a time to laugh.",
-        source: "Ecclesiastes 3:4",
-        reflection: "King Solomon acknowledges that the human experience requires a full range of emotions. Life is a cycle; it is healthy to embrace sadness when it comes, just as it is vital to embrace joy. Wisdom is knowing which season you are in."
-      },
-
-      // --- Part IV: Hope & Faith (Bitachon) ---
-      {
-        id: 27,        hebrew: "גַּם֩ כִּֽי־אֵלֵ֜ךְ בְּגֵ֣יא צַלְמָ֗וֶת לֹא־אִ֘ירָ֤א רָ֗ע כִּי־אַתָּ֥ה עִמָּדִ֑י",
-        translation: "Though I walk through the valley of the shadow of death, I will fear no evil, for You are with me.",
-        source: "Psalm 23:4",
-        reflection: "King David often wrote from caves while fleeing enemies, visualizing Hashem not as a distant observer, but as a companion in the dark. Even in your darkest moments, you are never truly alone."
+        id: 43,
+        hebrew: "בְּכָל־עֶצֶב יִהְיֶה מוֹתָר, וּדְבַר־שְׂפָתַיִם אַךְ־לְמַחְסוֹר.",
+        translation: "In all toil there is profit, but mere talk leads only to lack.",
+        source: "Proverbs 14:23",
+        reflection: "Action has 'Motar' (surplus)—it leaves something behind. Talk is 'Machsor' (lack)—it consumes your energy and leaves you empty. The clever person knows that the more they talk about their plans, the less energy they have to execute them. Let your results be your noise; let your work be your silence."
       },
       {
-        id: 28,        hebrew: "פּוֹתֵ֥חַ אֶת־יָדֶ֑ךָ וּמַשְׂבִּ֖יעַ לְכָל־חַ֣י רָצֽוֹן",
-        translation: "You open Your hand and satisfy the desire of every living thing.",
-        source: "Psalm 145:16",
-        reflection: "This verse is central to the 'Ashrei' prayer. It is an affirmation that Hashem is the ultimate Provider. We put in our effort (Hishtadlut), but we trust that the outcome and our sustenance ultimately come from the Creator's open hand."
+        id: 44,
+        hebrew: "הֱוֵי זָנָב לָאֲרָיוֹת, וְאַל תְּהִי רֹאשׁ לַשּׁוּעָלִים.",
+        translation: "Be a tail to lions rather than a head to foxes.",
+        source: "Pirkei Avot 4:15",
+        reflection: "This is the law of environment. If you are the 'head' of a group of foxes (small-minded or petty people), you will stop growing because you have no challenge. But if you are the 'tail' of a group of lions (giants of character and wisdom), their momentum will pull you upward. Always choose the room where you are the least knowledgeable person."
       },
       {
-        id: 29,        hebrew: "וְקוֹיֵ֤ יְהוָה֙ יַחֲלִ֣יפוּ כֹ֔חַ",
-        translation: "Those who hope in Hashem will renew their strength.",
-        source: "Isaiah 40:31",
-        reflection: "Isaiah compares those who trust in God to eagles who soar without growing weary. Hope (Tikvah) is a source of energy; when you are exhausted, connecting to the Eternal can recharge your spirit."
+        id: 45,
+        hebrew: "חָכְמַת סוֹפְרִים תִּסְרַח... וִירֵאֵי חֵטְא יִמָּאֲסוּ.",
+        translation: "The wisdom of the scholars will decay... and those who fear missing the mark will be loathed.",
+        source: "Mishnah, Sotah 9:15",
+        reflection: "This is a 'clever' prophecy about the end of days. It warns of a time when intellect is used for cynicism and good people are mocked. Recognizing this trend allows you to stand strong; when the world calls your integrity 'foolish,' know that you are simply preserving the light in a time of planned darkness."
       },
       {
-        id: 30,        hebrew: "קָר֣וֹב יְ֭הוָה לְנִשְׁבְּרֵי־לֵ֑ב",
-        translation: "Hashem is close to the brokenhearted.",
-        source: "Psalm 34:19",
-        reflection: "King David realized that while humans often avoid broken people, God cherishes them. Heartbreak does not mean you are abandoned; on the contrary, vulnerability creates a unique opening for spiritual closeness."
-      },
-      {
-        id: 31,        hebrew: "זֶה־הַ֭יּוֹם עָשָׂ֣ה יְהוָ֑ה נָגִ֖ילָה וְנִשְׁמְחָ֣ה בֽוֹ",
-        translation: "This is the day Hashem has made; let us rejoice and be glad in it.",
-        source: "Psalm 118:24",
-        reflection: "This declaration from the Hallel prayer is made despite difficulties, thanking God for the gift of the present moment. Happiness is a choice we make in the present; don't wait for a special occasion, but find the joy in this specific day."
-      },
-      {
-        id: 32,        hebrew: "הִנֵּ֣ה לֹֽא־יָ֭נוּם וְלֹ֣א יִישָׁ֑ן שׁ֝וֹמֵ֗ר יִשְׂרָאֵֽל",
-        translation: "Behold, the Guardian of Israel neither slumbers nor sleeps.",
-        source: "Psalm 121:4",
-        reflection: "Travelers reciting this Psalm knew that while they must sleep, the Guardian does not. There is a constant, watchful force of protection over us; you can rest, knowing that the Almighty is watching over the Jewish people."
-      },
-      {
-        id: 33,        hebrew: "אֲנִי לְדוֹדִי וְדוֹדִי לִי",
-        translation: "I am my beloved's and my beloved is mine.",
-        source: "Song of Songs 6:3",
-        reflection: "King Solomon's Song of Songs is interpreted by the Sages as a metaphor for the love between Hashem and the Jewish people. This verse encapsulates the mutual, deep, and personal relationship every Jew has with the Creator."
-      },
-      {
-        id: 34,        hebrew: "קוּמִי אוֹרִי כִּי בָא אוֹרֵךְ",
-        translation: "Arise, shine, for your light has come.",
-        source: "Isaiah 60:1",
-        reflection: "Isaiah addressed a Jerusalem in ruins, prophesying a time when it would be a beacon of light. Wake up to your potential; the light you have been waiting for is already within you, you just need to stand up and reflect it."
-      },
-      {
-        id: 35,        hebrew: "הַזֹּרְעִ֥ים בְּדִמְעָה בְּרִנָּ֥ה יִקְצֹֽרוּ",
-        translation: "Those who sow in tears will reap in joy.",
-        source: "Psalm 126:5",
-        reflection: "This Psalm, sung before Birkat Hamazon, acknowledges that building is painful (tears) but promises a harvest of happiness. Pain is often the seed of future growth; the struggles you endure today are planting the fields for tomorrow's happiness."
-      },
-      {
-        id: 36,        hebrew: "בְּטַ֣ח אֶל־יְ֭הוָה בְּכָל־לִבֶּ֑ךָ",
-        translation: "Trust in Hashem with all your heart.",
-        source: "Proverbs 3:5",
-        reflection: "King Solomon advises against relying solely on human intellect. Sometimes you have to let go of your need to control everything and simply trust (Bitachon) that you are being guided in the right direction."
-      },
-
-      // --- Part V: Wisdom & Learning ---
-      {
-        id: 37,        hebrew: "רֵאשִׁית חָכְמָה יִרְאַת יְהוָה",
-        translation: "The beginning of wisdom is awe of Hashem.",
-        source: "Psalm 111:10",
-        reflection: "The word 'Yirah' means both fear and awe. Wisdom isn't just data; it starts with the humility of realizing there is something vast and mysterious beyond us. True intelligence starts with the realization that the Creator is infinite."
-      },
-      {
-        id: 38,        hebrew: "אוֹ חַבְרוּתָא אוֹ מִיתוּתָא",
-        translation: "Either friendship or death.",
-        source: "Taanit 23a",
-        reflection: "The Talmud tells the story of Choni HaMa'agel to illustrate that loneliness is a form of death. We are social beings who need connection to survive; learning and living are best done with a partner (chavruta) who challenges and supports us."
-      },
-      {
-        id: 39,        hebrew: "סְיָג לַחָכְמָה שְׁתִיקָה",
-        translation: "A fence for wisdom is silence.",
-        source: "Pirkei Avot 3:13",
-        reflection: "Rabbi Akiva taught that just as a fence protects a garden, silence protects wisdom. Sometimes the smartest thing you can say is nothing at all; silence allows you to listen, observe, and learn before you speak."
-      },
-      {
-        id: 40,        hebrew: "דִּבְרֵ֣י חֲכָמִ֔ים בְּנַ֖חַת נִשְׁמָעִ֑ים",
-        translation: "The words of the wise are heard when spoken softly.",
-        source: "Ecclesiastes 9:17",
-        reflection: "King Solomon observed that shouting indicates insecurity, while quiet confidence commands attention. You don't need to shout to be heard; truth has its own quiet power that penetrates the heart more effectively than noise."
-      },
-      {
-        id: 41,        hebrew: "לֹא הַבַּיְשָׁן לָמֵד, וְלֹא הַקַּפְּדָן מְלַמֵּד",
-        translation: "The bashful cannot learn, and the impatient cannot teach.",
-        source: "Pirkei Avot 2:5",
-        reflection: "Hillel the Elder was known for his extreme patience. Growth requires vulnerability (to ask questions without shame) and patience (to explain answers without anger); both student and teacher must be open."
-      },
-      {
-        id: 42,        hebrew: "בַּרְזֶ֣ל בְּבַרְזֶ֣ל יָ֑חַד וְ֝אִ֗ישׁ יַ֣חַד פְּנֵֽי־רֵעֵֽהוּ",
-        translation: "As iron sharpens iron, so one person sharpens another.",
-        source: "Proverbs 27:17",
-        reflection: "King Solomon noted that a knife cannot sharpen itself; it needs friction against another stone. We improve through healthy debate (Machloket); surround yourself with people who challenge you to be sharper and better."
-      },
-      {
-        id: 43,        hebrew: "חוֹתָמוֹ שֶׁל הַקָּדוֹשׁ בָּרוּךְ הוּא אֱמֶת",
-        translation: "The seal of the Holy One, Blessed be He, is Truth.",
-        source: "Shabbat 55a",
-        reflection: "Rabbi Chanina taught that just as a seal authenticates a document, Truth (Emet) is the signature of God on reality. Living authentically and truthfully is the ultimate way to align yourself with the Divine."
-      },
-      {
-        id: 44,        hebrew: "טֽוֹבָה־חָכְמָ֥ה מִפְּנִינִ֑ים",
-        translation: "Wisdom is better than pearls.",
-        source: "Proverbs 8:11",
-        reflection: "Though King Solomon possessed vast wealth, he consistently wrote that wisdom was the only asset with intrinsic, eternal value. Material possessions are temporary, but the Torah wisdom you acquire becomes part of your soul forever."
-      },
-      {
-        id: 45,        hebrew: "אַל תִּסְתַּכֵּל בְּקַנְקַן, אֶלָּא בְמַה שֶּׁיֵּשׁ בּוֹ",
-        translation: "Do not look at the flask, but at what is inside.",
-        source: "Pirkei Avot 4:20",
-        reflection: "Rabbi Meir explained that a new flask can hold old, valuable wine, and an old flask can be empty. Don't judge people or situations by their external appearance; true value is found in the content of the character, not the packaging."
-      },
-      {
-        id: 46,        hebrew: "הֲשִׁיבֵ֨נוּ יְהוָ֤ה ׀ אֵלֶ֙יךָ֙ וְֽנָשׁ֔וּבָה",
-        translation: "Turn us back to You, O Lord, and we shall return.",
-        source: "Lamentations 5:21",
-        reflection: "This is the penultimate verse of Lamentations, recited to end on a note of hope. It is never too late to fix a relationship or start over; the door to return (Teshuvah) is always open."
+        id: 46,
+        hebrew: "כָּל כְּנֵסִיָּה שֶׁהִיא לְשֵׁם שָׁמַיִם, סוֹפָהּ לְהִתְקַיֵּם.",
+        translation: "Every assembly that is for the sake of Heaven is destined to endure.",
+        source: "Pirkei Avot 4:11",
+        reflection: "The 'clever' secret of longevity is 'L'shem Shamayim' (altruistic intent). If a project or relationship is built on ego, it will crumble when the ego is frustrated. But if it is built on a higher purpose, it becomes part of the eternal structure of the world. Check your 'why' to predict your 'how long.'"
       },
 
       // --- Part VI: World & Society ---
@@ -1348,6 +1369,182 @@
         translation: "Do not try to appease your friend in the hour of their anger.",
         source: "Pirkei Avot 4:18",
         reflection: "This is a timeless piece of advice for navigating conflict. When a person is in the grip of 'ka'as' (anger), their mind is closed and they are incapable of truly listening. Trying to reason with them at that moment often makes things worse. The wise approach is to give them space and approach them again only after their anger has subsided."
+      },
+      // --- Part IX: Legacy Wisdom (Moved and Re-indexed) ---
+      {
+        id: 206,
+        hebrew: "אֲבָנִים שָׁחֲקוּ מַיִם. אִם הַמַּיִם הָרַכִּים נִקְּבוּ אֶת הָאֶבֶן הַקָּשָׁה, דִּבְרֵי תוֹרָה שֶׁקָּשִׁים כְּבַרְזֶל עַל אַחַת כַּמָּה וְכַמָּה שֶׁיַּחְקְקוּ אֶת לִבִּי.",
+        translation: "Water wears away stone. If soft water can pierce a hard rock through persistence, how much more can the words of wisdom carve a path into a heart of iron?",
+        source: "Rabbi Akiva (Avot D'Rabbi Natan 6:2)",
+        reflection: "Rabbi Akiva was an illiterate shepherd until age 40. He saw water dripping on a rock and noticed the stone had been hollowed out. He realized that 'soft' consistency is more powerful than 'hard' force. This is the 'clever' secret of growth: you don't need to be a genius or a hero today; you only need to be the water that never stops dripping until the stone of your ego gives way."
+      },
+      {
+        id: 207,
+        hebrew: "כָּל אָדָם צָרִיךְ שֶׁיִּהְיוּ לוֹ שְׁנֵי כִּיסִים. בְּכִיס אֶחָד: 'בִּשְׁבִילִי נִבְרָא הָעוֹלָם', וּבַכִּיס הַשֵּׁנִי: 'וְאָנֹכִי עָפָר וָאֵפֶר'.",
+        translation: "Every person should have two pockets. In one: 'For my sake the world was created.' In the other: 'I am but dust and ashes.'",
+        source: "Rabbi Simcha Bunim of Peshischa",
+        reflection: "This is the ultimate Jewish psychological 'hack' for balance. When you feel discouraged and small, reach into the pocket that reminds you of your infinite, cosmic value. When you feel arrogant and superior, reach into the pocket that reminds you of your mortality. Wisdom is knowing exactly which pocket to reach into at any given moment."
+      },
+      {
+        id: 208,
+        hebrew: "אֵיזֶהוּ גִּבּוֹר שֶׁבַּגִּבּוֹרִים? מִי שֶׁעוֹשֶׂה שׂוֹנְאוֹ אוֹהֲבוֹ.",
+        translation: "Who is the greatest of heroes? The one who turns an enemy into a friend.",
+        source: "Abot de-Rabbi Natan 23",
+        reflection: "While a standard hero defeats an enemy, a 'super-hero' eliminates the very existence of the enemy by transforming them. This requires the 'cleverness' of empathy. It is easy to destroy; it is hard to reconcile. True strength (Gevurah) is the courage to lower your guard and find the common ground that makes conflict unnecessary."
+      },
+      {
+        id: 209,
+        hebrew: "נַהֲמָא דְּכִסּוּפָא—כָּל מַאן דְּאָכֵל דְּלָא דִּילֵיהּ, בָּהֵית לְאִסְתַּכָּלָא בְּאַנְפֵּיהּ.",
+        translation: "The Bread of Shame—one who eats that which is not earned is ashamed to look the giver in the face.",
+        source: "Zohar / Jerusalem Talmud",
+        reflection: "This Kabbalistic concept explains why humans crave accomplishment. We don't just want things; we want to 'earn' them. Receiving without giving (Nahama D'Kissufa) creates a spiritual weight and a loss of dignity. This teaches that true happiness isn't getting what you want for free, but the pride that comes from being a 'creator' of your own success."
+      },
+      {
+        id: 210,
+        hebrew: "לְעוֹלָם יִרְאֶה אָדָם עַצְמוֹ כְּאִלּוּ חֶצְיוֹ חַיָּב וְחֶצְיוֹ זַכַּאי... עָשָׂה מִצְוָה אַחַת—הִכְרִיעַ אֶת עַצְמוֹ וְאֶת כָּל הָעוֹלָם כֻּלּוֹ לְכַף זְכוּת.",
+        translation: "A person should always see the world as perfectly balanced between merit and guilt. One single good deed tips the scale for yourself and the entire world toward salvation.",
+        source: "Rambam (Hilchot Teshuvah 3:4) / Talmud Kiddushin 40b",
+        reflection: "Maimonides provides a powerful antidote to feeling insignificant. In a globalized world, we feel like a drop in the ocean. But the Sages teach that the scale is always at a 50/50 'tie.' Your next choice—a kind word, a focused moment, a small gift—is the deciding vote for the destiny of the entire planet. Your agency is absolute."
+      },
+      {
+        id: 211,
+        hebrew: "אִם אֲנִי הוּא אֲנִי כִּי אַתָּה הוּא אַתָּה, וְאַתָּה הוּא אַתָּה כִּי אֲנִי הוּא אֲנִי—אָז אֲנִי לֹא אֲנִי וְאַתָּה לֹא אַתָּה. אֲבָל אִם אֲנִי הוּא אֲנִי כִּי אֲנִי הוּא אֲנִי, וְאַתָּה הוּא אַתָּה כִּי אַתָּה הוּא אַתָּה—אָז אֲנִי אֲנִי וְאַתָּה אַתָּה.",
+        translation: "If I am I because you are you, then I am not I. But if I am I because I am I, then I am truly myself.",
+        source: "The Kotzker Rebbe",
+        reflection: "This is a clever play on the nature of identity and comparison. If your self-worth depends on being better or different than someone else, you have no real self. True character is 'independent.' When you stop defining yourself against others and start living by your own internal truth, you become an authentic being that cannot be shaken."
+      },
+      {
+        id: 212,
+        hebrew: "שִׁבְעָה דְבָרִים בְּחָכָם... אֵינוֹ נִכְנָס לְתוֹךְ דִּבְרֵי חֲבֵרוֹ, וְאֵינוֹ נִבְהָל לְהָשִׁיב.",
+        translation: "There are seven traits of a wise man... he does not interrupt the words of his fellow, and he is not in a rush to answer.",
+        source: "Pirkei Avot 5:7",
+        reflection: "Wisdom is defined here not by what you say, but by how you listen. A 'clod' (Gולם) speaks over others to show off. A wise person (Chacham) realizes that you cannot learn while your mouth is moving. By giving others the 'Revacha' (space) to finish their thoughts, you gain their respect and the information you need to make a better decision."
+      },
+      {
+        id: 213,
+        hebrew: "מְעַט אוֹר דּוֹחֶה הַרְבֵּה מִן הַחֹשֶׁךְ.",
+        translation: "A little bit of light dispels much darkness.",
+        source: "Rabbi Shneur Zalman of Liadi (Tanya)",
+        reflection: "This is a law of spiritual physics. Darkness has no 'substance'; it is merely the absence of light. Therefore, you don't need to 'fight' the darkness in your life with force. You only need to ignite a small flame of goodness. A single act of kindness doesn't just push back the dark—it reveals that the darkness was never as solid as it appeared."
+      },
+      {
+        id: 214,
+        hebrew: "חָכְמָה מִסְכֵּן בְּזוּיָה וּדְבָרָיו אֵינָם נִשְׁמָעִים... טוֹבָה חָכְמָה מִכְּלֵי קְרָב.",
+        translation: "The wisdom of a poor man is often despised, yet wisdom is better than weapons of war.",
+        source: "Ecclesiastes 9:16-18",
+        reflection: "King Solomon tells a story of a small city saved from a great king by a single poor, wise man. The world often listens to the loudest or the wealthiest, but the 'clever' person knows that a quiet, well-timed insight is more effective than an entire army. Don't measure the value of an idea by the status of the person who said it."
+      },
+      {
+        id: 215,
+        hebrew: "אֱמֶת מֵאֶרֶץ תִּצְמָח.",
+        translation: "Truth shall spring up from the earth.",
+        source: "Psalm 85:12",
+        reflection: "Truth (Emet) is compared to a seed. You can bury it, cover it with dirt, and try to hide it, but its nature is to grow. You don't have to defend the truth with anxiety; you only have to plant it. Eventually, reality will align with what is true, and the 'growth' of the facts will become undeniable to everyone."
+      },
+      {
+        id: 216,
+        hebrew: "נִכְנַס יַיִן, יָצָא סוֹד.",
+        translation: "When wine enters, the secret emerges.",
+        source: "Talmud, Eruvin 65a",
+        reflection: "The Hebrew words for Wine (Yayin) and Secret (Sod) both have the numerical value of 70. This clever 'Gematria' teaches that what a person hides when sober is what they truly are. True character is not what you show when you are in control, but what leaks out when your defenses are down. Strive to be a person whose 'secrets' are as noble as their public face."
+      },
+      {
+        id: 217,
+        hebrew: "שֶׁקֶר הַחֵן וְהֶבֶל הַיֹּפִי, אִשָּׁה יִרְאַת־יְהוָה הִיא תִתְהַלָּל.",
+        translation: "Grace is false and beauty is vain, but one who fears God shall be praised.",
+        source: "Proverbs 31:30",
+        reflection: "King Solomon warns against 'Cheyn' (surface charm) and 'Yofi' (external beauty), calling them deceptive and fleeting. The 'clever' person looks for 'Yirah' (inner depth and integrity). Charm is a mask; beauty is a sunset; but a soul aligned with the Divine is a sun that never sets. Value substance over packaging."
+      },
+      {
+        id: 218,
+        hebrew: "תּוֹחֶלֶת מְמֻשָּׁכָה מַחֲלָה־לֵב, וְעֵץ חַיִּים תַּאֲוָה בָאָה.",
+        translation: "Hope deferred makes the heart sick, but a desire fulfilled is a tree of life.",
+        source: "Proverbs 13:12",
+        reflection: "There is a deep link between your mental health and your goals. Living in a state of 'waiting' without action drains the heart's energy. But when you finally take the step and manifest a desire ('Ta'avah Ba'ah'), it revitalizes you like the Tree of Life. Don't just hope; create a 'win' to feed your spirit."
+      },
+      {
+        id: 219,
+        hebrew: "וְאֹרַח צַדִּיקִים כְּאוֹר נֹגַהּ, הוֹלֵךְ וָאוֹר עַד־נְכוֹן הַיּוֹם.",
+        translation: "The path of the righteous is like the light of dawn, shining ever brighter until the full day.",
+        source: "Proverbs 4:18",
+        reflection: "Growth in character isn't a sudden explosion of light; it’s like the sunrise. It starts as a dim gray and slowly, almost imperceptibly, increases. The 'clever' insight here is to not be discouraged by your small beginnings. As long as you are on the 'Orach' (the path), your light is mathematically destined to reach its full noon."
+      },
+      {
+        id: 220,
+        hebrew: "דָּבָר בְּעִתּוֹ מַה־טּוֹב.",
+        translation: "A word spoken in its proper season—how good it is!",
+        source: "Proverbs 15:23",
+        reflection: "Communication is about timing, not just content. Even a 'good' word spoken at the wrong time can be destructive. The Sages teach that silence is often the best seasoning for speech. When you wait for the 'Et' (the right moment), your words carry a weight and a power they would otherwise lack."
+      },
+      {
+        id: 221,
+        hebrew: "קָשֶׁה הָאֱמֶת לִסְבֹּל.",
+        translation: "Truth is a heavy thing to bear.",
+        source: "Midrash",
+        reflection: "Truth (Emet) is heavy because it requires change. It is much lighter to live in a convenient lie. But the 'clever' person knows that while a lie is light to carry, it eventually crushes the person beneath it. Truth is heavy to pick up, but once you carry it, it strengthens the 'muscles' of your soul until you are unbreakable."
+      },
+      {
+        id: 222,
+        hebrew: "סוֹד יְהוָה לִירֵאָיו.",
+        translation: "The secrets of the Lord are for those who stand in awe.",
+        source: "Psalm 25:14",
+        reflection: "Depth is not a matter of IQ; it is a matter of 'Yirah' (awe). You cannot understand the secrets of life if you treat life with casual arrogance. When you approach reality with reverence, the 'Sod' (the hidden dimension) begins to reveal itself to you. God doesn't hide secrets; we hide from them through our own lack of attention."
+      },
+      {
+        id: 223,
+        hebrew: "הוֹלֵךְ אֶת־חֲכָמִים וַחֲכָם.",
+        translation: "He who walks with the wise shall become wise.",
+        source: "Proverbs 13:20",
+        reflection: "Wisdom is contagious. You don't even have to be a genius; you just have to be in the right room. By simply 'walking' with people who have higher standards and deeper insights, their habits and perspectives will naturally rub off on you. Your environment is your destiny; choose your 'walking' companions carefully."
+      },
+      {
+        id: 224,
+        hebrew: "מַעֲנֶה־רַּךְ יָשִׁיב חֵמָה, וּדְבַר־עֶצֶב יַעֲלֶה־אָף.",
+        translation: "A soft answer turns away wrath, but a provocative word stirs up anger.",
+        source: "Proverbs 15:1",
+        reflection: "This is the 'Aikido' of speech. When someone attacks you with anger, the 'hard' response creates a collision that explodes. The 'soft' response (Ma'aneh Rach) absorbs the energy and diffuses it. You win the argument by refusing to participate in the fight. Gentleness is not weakness; it is the ultimate form of emotional control."
+      },
+      {
+        id: 225,
+        hebrew: "וְנָתַתִּי לָכֶם לֵב חָדָשׁ... וַהֲסִרֹתִי אֶת־לֵב הָאֶבֶן מִבְּשַׂרְכֶם וְנָתַתִּי לָכֶם לֵב בָּשָׂר.",
+        translation: "I will remove the heart of stone from your flesh and give you a heart of flesh.",
+        source: "Ezekiel 36:26",
+        reflection: "A 'heart of stone' is a heart that has become numb to protect itself from pain. But a stone cannot feel joy, either. A 'heart of flesh' (Lev Basar) is vulnerable, but it is alive. The 'clever' choice is to choose feeling over numbness, even if it hurts, because only a soft heart can be a vessel for the Divine."
+      },
+      {
+        id: 226,
+        hebrew: "כָּל כְּנֵסִיָּה שֶׁהִיא לְשֵׁם שָׁמַיִם, סוֹפָהּ לְהִתְקַיֵּם.",
+        translation: "Every assembly that is for the sake of Heaven is destined to endure.",
+        source: "Pirkei Avot 4:11",
+        reflection: "The 'clever' secret of longevity is 'L'shem Shamayim' (altruistic intent). If a project or relationship is built on ego, it will crumble when the ego is frustrated. But if it is built on a higher purpose, it becomes part of the eternal structure of the world. Check your 'why' to predict your 'how long.'"
+      },
+      {
+        id: 227,
+        hebrew: "שְׁלֹשָׁה כְּתָרִים הֵם... וְכֶתֶר שֵׁם טוֹב עוֹלֶה עַל גַּבֵּיהֶן.",
+        translation: "There are three crowns... but the crown of a Good Name rises above them all.",
+        source: "Pirkei Avot 4:13",
+        reflection: "You can have the crown of Learning, the crown of Priesthood, or the crown of Royalty—all of which represent status and power. But the 'Shem Tov' (Good Name) is the crown of character. It is the only crown that isn't given to you by an institution; it is the one you forge yourself through every small act of integrity."
+      },
+      {
+        id: 228,
+        hebrew: "לֵב חָכָם לִימִינוֹ, וְלֵב כְּסִיל לִשְׂמֹאלוֹ.",
+        translation: "The heart of the wise man is to his right, but the heart of the fool is to his left.",
+        source: "Ecclesiastes 10:2",
+        reflection: "In Jewish thought, the 'Right' represents Mercy (Chesed) and the 'Left' represents Judgment (Din). A wise person leads with their 'right'—approaching the world with kindness and a benefit of the doubt. A fool leads with their 'left'—looking for faults and reasons to judge. The direction of your heart determines the flavor of your life."
+      },
+      {
+        id: 229,
+        hebrew: "נֵר־רְשָׁעִים יִדְעָךְ... אוֹר־צַדִּיקִים יִשְׂמָח.",
+        translation: "The lamp of the wicked will go out, but the light of the righteous rejoices.",
+        source: "Proverbs 13:9",
+        reflection: "A 'lamp' (Ner) needs external oil to burn; a 'light' (Or) comes from within. Success built on negativity is like a lamp—it eventually runs out of fuel. But success built on righteousness is like the sun—it 'rejoices' (Yismach) because its energy is internal and self-sustaining. Be the source, not the consumer."
+      },
+      {
+        id: 230,
+        hebrew: "כָּל הַמִּתְגָּאֶה, אוֹמֵר הַקָּדוֹשׁ בָּרוּךְ הוּא: אֵין אֲנִי וְהוּא יְכוֹלִים לָדוּר בָּעוֹלָם.",
+        translation: "Regarding anyone who is arrogant, God says: 'I and he cannot dwell in the same world together.'",
+        source: "Talmud, Sotah 5a",
+        reflection: "Arrogance (Ga'avah) is the ultimate spiritual 'space-taker.' When you are full of yourself, there is no room for God or anyone else. Humility is the 'clever' act of making space. The less you try to be 'everything,' the more room you create for the Infinite to fill your life."
       }
 
     ];
