@@ -127,139 +127,139 @@
         id: 20,        hebrew: "לֹא עָלֶיךָ הַמְּלָאכָה לִגְמֹר, וְלֹא אַתָּה בֶן חוֹרִין לִבָּטֵל מִמֶּנָּה",
         translation: "It is not your duty to finish the work, but neither are you free to neglect it.",
         source: "Pirkei Avot 2:16",
-        reflection: "Rabbi Tarfon lived through the destruction of the Temple and saw the massive task of rebuilding. He encourages us not to be paralyzed by the size of the world's problems; you don't have to fix everything (Tikkun Olam), but you must do your part."
+        reflection: "The Hebrew word `libatel` (to neglect) also means to nullify oneself. In an age of overwhelming problems, we're tempted to think our small efforts are pointless. Rabbi Tarfon teaches that inaction isn't just laziness; it's an erasure of your unique purpose in the cosmic blueprint. You are not commanded to complete the world's repair, but you are forbidden from nullifying the specific role only you can play."
       },
       {
         id: 21,        hebrew: "לְפוּם צַעֲרָא אַגְרָא",
         translation: "According to the effort is the reward.",
         source: "Pirkei Avot 5:23",
-        reflection: "Ben Hei Hei emphasizes that the struggle itself gives value to the achievement. The harder the struggle, the greater the spiritual growth; the value of a Mitzvah is measured by the difficulty you overcame to perform it."
+        reflection: "The Aramaic word `Tza'ara` implies not just effort, but the painful struggle. In a world obsessed with shortcuts, this teaches that the process, not the product, is where the real value lies. The reward isn't just the destination, but the spiritual muscles you build during the climb. You aren't just achieving a goal; you are refining the architecture of the soul."
       },
       {
         id: 22,
         hebrew: "הַפֶּה הוּא קוֹלְמוֹס הַלֵּב, אֲבָל הַנְּגִינָה הִיא קוֹלְמוֹס הַנֶּפֶשׁ.",
         translation: "The mouth is the pen of the heart, but song is the pen of the soul.",
         source: "The Baal Shem Tov",
-        reflection: "Words can communicate your thoughts, but music and spirit communicate your essence. This is a 'clever' insight into the limits of logic: sometimes, to solve a problem or connect with another, you must stop 'writing' with your mouth and start 'singing' with your soul—accessing a frequency of joy that transcends mere argument."
+        reflection: "The Hebrew `kolmos` (pen) is used for both heart and soul, but they write in different inks. We often get stuck trying to solve deep human dilemmas with the logical 'pen of the heart.' The Baal Shem Tov teaches that some truths can only be accessed with the 'pen of the soul'—song (`niggun`). When words fail to bridge a gap, you aren't failing; you are simply being called to use a higher form of communication."
       },
       {
         id: 23,
         hebrew: "לְעוֹלָם יִחְיֶה אָדָם בְּתוֹךְ אֶמְצָעָיו, אֲבָל יְכַבֵּד אֶת אִשְׁתּוֹ יוֹתֵר מִמָּה שֶׁיֵּשׁ לוֹ.",
         translation: "A person should live within their means, but honor their spouse above their means.",
         source: "Talmud, Chullin 84b",
-        reflection: "This is a masterpiece of relational ethics. The Sages suggest that while you should be frugal and disciplined with yourself, you should be radically generous with your partner's dignity. By treating your spouse as if they have 'infinite' worth, you create an atmosphere of abundance and respect that far outweighs physical wealth."
+        reflection: "The Hebrew places a sharp contrast between living 'within your means' and honoring your spouse 'more than you have.' In a world that tells us to budget everything, the Talmud makes a radical exception for dignity in relationships. This isn't financial advice; it's soul advice. By treating your partner with a generosity that transcends calculation, you are not being irresponsible; you are creating an emotional abundance that no budget can buy."
       },
       {
         id: 24,
         hebrew: "מִצְוָה הַבָּאָה לְיָדְךָ, אַל תַּחְמִיצֶנָּה.",
         translation: "When a good deed comes to your hand, do not let it become 'leavened'—do not let it sour.",
         source: "Mekhilta d'Rabbi Ishmael / Rashi",
-        reflection: "There is a clever wordplay here between 'Mitzvah' and 'Matzah.' Just as Matzah becomes 'Chametz' (sour/leavened) if left too long, a good intention 'sours' if you procrastinate. The energy of a good idea is like a spark; you must act while the heat is there. Procrastination is the 'leavening' of the soul that turns an inspired act into a heavy burden."
+        reflection: "The Hebrew `al tachmitzenah` ('do not let it sour') is a brilliant pun on `chametz`, or leavened bread. Just as matzah becomes forbidden if delayed, a good intention 'sours' with the yeast of procrastination. This isn't just a call to act; it's a command to capture the divine energy of a generous impulse before it becomes a heavy burden of regret."
       },
       {
         id: 25,
         hebrew: "אֵין הַקָּדוֹשׁ בָּרוּךְ הוּא בָּא בִּטְרוּנְיָא עִם בְּרִיּוֹתָיו.",
         translation: "The Holy One does not act as a tyrant over His creations.",
         source: "Talmud, Avodah Zarah 3a",
-        reflection: "This teaching establishes the 'Fairness of the Infinite.' You are never given a test or a task that you do not have the internal tools to handle. If you find yourself in a difficult situation, it is a 'clever' proof of your own hidden strength; the Almighty only expects from you exactly what He has empowered you to achieve."
+        reflection: "The word used here, `b'trunya`, comes from the Greek for tyranny, implying a demand that cannot be met. We often view life's hardest challenges as an unfair cosmic burden. This Talmudic principle reframes our struggles entirely: God is not a tyrant. The very presence of a difficult test in your life is divine proof that you possess the precise, hidden strengths required to overcome it."
       },
       {
         id: 26,
         hebrew: "לֹא מָצָאנוּ דָּבָר שֶׁיַּעֲמֹד בִּפְנֵי הָרָצוֹן.",
         translation: "Nothing can stand in the face of the human will.",
         source: "Zohar / Jewish Maxim",
-        reflection: "The Hebrew word for 'Will' (Ratzon) shares a root with the word for 'Run' (Ratz). When a person truly 'wills' something, their entire being is in motion. This isn't about wishing; it's about an integrated desire. When your heart and mind are unified on a single goal, the obstacles of the physical world lose their 'solidity' and become transparent."
+        reflection: "The Hebrew word for will, `Ratzon`, shares a root with the word 'to run,' suggesting it's not a passive wish but a dynamic, forward-moving force. In a world where we often feel stuck, this teaches that when our desire is unified and total, it creates its own reality. A focused will transforms you into a force of nature that obstacles cannot withstand."
       },
       {
         id: 27,
         hebrew: "הַכֹּל צָרִיךְ לְמַזָּל, אֲפִילוּ סֵפֶר תּוֹרָה שֶׁבַּהֵיכָל.",
         translation: "Everything requires 'Mazal'—even the Torah scroll in the holy ark.",
         source: "Zohar, Vayikra 16a",
-        reflection: "The word 'Mazal' literally means 'to flow down.' This is a clever insight into humility: even the holiest object needs the right 'timing' and 'flow' to be recognized. It teaches that while you must work hard, you must also be patient with the timing of your life. Success is a partnership between your effort and the Divine 'flow' of the universe."
+        reflection: "The Hebrew `Mazal` is often mistranslated as 'luck,' but it literally means 'a flow from above.' Even the holiest object, the Torah, needs the right `mazal` to be taken from the ark and read. This teaching transforms the command to 'work hard' into an opportunity to partner with a divine flow you do not control, turning exhausting hustle into humble partnership."
       },
       {
         id: 28,
         hebrew: "אִם אֵין בִּינָה, אֵין דַּעַת. אִם אֵין דַּעַת, אֵין בִּינָה.",
         translation: "If there is no understanding (Binah), there is no knowledge (Da'at); if there is no knowledge, there is no understanding.",
         source: "Pirkei Avot 3:17",
-        reflection: "This is a clever loop of intellectual growth. 'Da'at' is raw information, but 'Binah' is the ability to deduce one thing from another. You cannot build a structure without bricks (knowledge), but you cannot live in a pile of bricks without a blueprint (understanding). True wisdom is the synergy of both—seeing the facts and the meaning simultaneously."
+        reflection: "The Hebrew word `Da'at` means raw data, while `Binah` means the insight to connect that data into a meaningful structure. In an age of information overload, we are drowning in `Da'at` but starved for `Binah`. This teaching reframes the goal of learning: it is not to accumulate facts, but to build a coherent inner world. By seeking to understand the connections between the data points, you transform information into wisdom."
       },
       {
         id: 29,
         hebrew: "הַמְּרַחֵם עַל הָאַכְזָרִים, סוֹפוֹ שֶׁיִּתְאַכְזֵר עַל הָרַחְמָנִים.",
         translation: "One who is merciful to the cruel will eventually become cruel to the merciful.",
         source: "Midrash Tanchuma",
-        reflection: "This is a sharp, 'clever' warning about misplaced compassion. Ethics require boundaries. If you tolerate evil and toxicity out of a sense of 'pity,' you inevitably drain the resources and safety intended for the innocent. True mercy (Rachamim) requires the 'Gevurah' (strength) to say no to those who destroy."
+        reflection: "The Hebrew `merachem` (merciful) is juxtaposed with `achzar` (cruel), creating a stark choice. In our desire to be 'nice,' we can enable destructive behavior, which the Midrash warns is itself a form of cruelty to the virtuous. True compassion (`Rachamim`) requires the wisdom and strength (`Gevurah`) to set boundaries that protect the innocent from the toxic."
       },
       {
         id: 30,
         hebrew: "לֹא יָגַעְתָּ וּמָצָאתָ—אַל תַּאֲמִין.",
         translation: "If someone says, 'I did not toil but I found success'—do not believe them.",
         source: "Talmud, Megillah 6b",
-        reflection: "This is the Jewish law of 'Spiritual Sweat.' Luck is an illusion; 'finding' something without 'toiling' for it means you won't know how to keep it. The Sages want you to be a 'Toiler' (Yage'a). Real success is an organic growth from your own labor; if it’s unearned, it’s not really yours."
+        reflection: "The Hebrew contrasts `yaga'ta` (toiling) with `matzata` (finding). Our culture celebrates 'overnight success,' which the Talmud calls a lie. Lasting achievement is not 'found' like a lucky object; it is forged in the sweat of `yegiah` (toil). This reframes effort not as a burden, but as the only authentic path to creating value that you can truly call your own."
       },
       {
         id: 31,
         hebrew: "כָּל זְמַן שֶׁהַנֵּר דּוֹלֵק, אֶפְשָׁר עוֹד לְתַקֵּן.",
         translation: "As long as the candle is still burning, it is still possible to repair.",
         source: "Rabbi Yisrael Salanter",
-        reflection: "This famous Mussar quote uses the 'candle' as a metaphor for the human soul. Procrastination says 'it's too late,' but the Sages say 'as long as you breathe, the light is on.' There is no such thing as a 'final' failure; the only real failure is the decision to stop trying to fix what you have broken."
+        reflection: "The Hebrew `ner` (candle) is a metaphor for the soul's life force. The modern struggle is the feeling of being 'too far gone' to fix our mistakes. This teaching is a powerful rebuke to despair. As long as the candle of life burns, the potential for `tikkun` (repair) is not just possible, but required. Failure is not a state, but an event that can be overturned by your next right choice."
       },
       {
         id: 32,
         hebrew: "הָאֱמֶת כְּבֵדָה, לְפִיכָךְ נוֹשְׂאֶיהָ מועטים.",
         translation: "Truth is heavy, and therefore its carriers are few.",
         source: "Midrash",
-        reflection: "Truth (Emet) is heavy because it is solid—it doesn't change based on who is looking. Most people prefer the 'lightness' of convenient lies or popularity. But carrying the weight of truth builds the 'muscles' of the soul. It is better to be a strong, lonely carrier of truth than a weak follower of a light-weight lie."
+        reflection: "The Hebrew word for truth, `Emet` (אמת), is composed of the first, middle, and last letters of the alphabet, symbolizing its solid, all-encompassing nature. This is why it's 'heavy.' In a world that prefers light, convenient narratives, carrying the weight of truth builds the spiritual 'muscles' of the soul. This transforms the burden of honesty into an empowering act of character-building."
       },
       {
         id: 33,
         hebrew: "חֲנֹךְ לַנַּעַר עַל־פִּי דַרְכּוֹ.",
         translation: "Educate a person according to their own unique way.",
         source: "Proverbs 22:6",
-        reflection: "This is the foundation of Jewish education (Chinuch). You cannot force a soul into a generic mold. To truly help someone grow, you must identify their specific 'Derech' (path) and mentor them from within their own strengths. A teacher’s job isn't to change the student, but to polish the unique gem that the student already is."
+        reflection: "The Hebrew `al-pi darko` means 'according to *his* way,' not a generic way. The dilemma in modern education is forcing a one-size-fits-all model onto unique individuals. This verse reframes a mentor's role from being a sculptor who imposes a form, to being a polisher who reveals the inherent, unique beauty of the gem that is already there."
       },
       {
         id: 34,
         hebrew: "אֵין חָכָם כְּבַעַל נִסָּיוֹן.",
         translation: "There is no wise person like one with experience.",
         source: "Jewish Proverb / Midrash",
-        reflection: "You can read every book on swimming, but you only understand the water when you jump in. Experience (Nissayon) is the only teacher that integrates wisdom into your body. Respect your past trials and your scars; they are the 'Ph.D.' of your soul that no library can provide."
+        reflection: "The Hebrew word for experience, `nissayon` (נסיון), is the same as the word for a 'test.' We often see trials as painful interruptions to our lives. This proverb reframes them as the curriculum of wisdom. Book knowledge is theory, but a `nissayon` is the final exam that integrates that knowledge into your very being. Your scars are not signs of damage, but the credentials of a soul that has been truly educated."
       },
       {
         id: 35,
         hebrew: "מִי שֶׁטָּרַח בְּעֶרֶב שַׁבָּת, יֹאכַל בְּשַׁבָּת.",
         translation: "He who toils on the eve of the Sabbath will eat on the Sabbath.",
         source: "Talmud, Avodah Zarah 3a",
-        reflection: "This is a clever metaphor for the investment of life. 'Shabbat' represents the destination—peace, success, and the afterlife. 'Erev Shabbat' is the here and now. You cannot expect a peaceful harvest if you were too lazy to plant the seeds. The quality of your 'Rest' is determined by the integrity of your 'Toil.'"
+        reflection: "This quote hinges on the relationship between `Erev Shabbat` (preparation) and `Shabbat` (rest). We often want the peace of Shabbat without the work of Friday. This teaching reframes the entire week: your experience of 'rest' is not a gift, but a direct result of the quality of your 'toil.' By investing effort during the week, you are not just working; you are actively creating the peace you will soon inhabit."
       },
       {
         id: 36,
         hebrew: "גָּדוֹל הַמְעַשֶּׂה יוֹתֵר מִן הָעוֹשֶׂה.",
         translation: "Greater is the one who enables others to act than the one who acts alone.",
         source: "Talmud, Bava Batra 9a",
-        reflection: "This redefines leadership. Performing a good deed is great, but inspiring 100 people to do that same deed is 'Awesome.' The highest level of character is being a catalyst—one who creates an ecosystem of goodness where others are empowered to shine."
+        reflection: "The Hebrew pivots on the distinction between `oseh` (the one who does) and `me'aseh` (the one who *causes* to do). Our culture celebrates the individual hero. The Talmud reframes greatness as influence and empowerment. Performing one good deed is commendable, but creating an environment where a hundred good deeds can flourish is the true definition of leadership."
       },
       {
         id: 37,
         hebrew: "אֵין שִׂמְחָה כְּהַתָּרַת הַסְּפֵקוֹת.",
         translation: "There is no joy like the resolution of doubt.",
         source: "Metzudat David / Rabbi Nachman of Breslov",
-        reflection: "Doubt (Safek) is a state of spiritual friction that drains your energy. The 'clever' path to happiness isn't necessarily getting what you want, but getting 'clarity' on where you are going. When the doubt is resolved, your energy is released, and you can move with the speed and joy of a soul that knows its purpose."
+        reflection: "The Hebrew `hatarat ha'sfekot` means the 'untying of the knots of doubt.' We often think joy (`simcha`) comes from getting what we want. Rabbi Nachman teaches that the deepest joy comes from clarity. Doubt (`safek`) is a spiritual friction that drains our energy; resolving it is like untying a knot in the soul, releasing a flow of focused, joyful power."
       },
       {
         id: 38,
         hebrew: "הַלֵּב וְהָעֵינַיִם הֵם שְׁנֵי סַרְסוּרֵי הַחֵטְא.",
         translation: "The heart and the eyes are the two 'agents' of missing the mark.",
         source: "Rashi / Midrash",
-        reflection: "This is a psychological breakdown of impulse. The eye sees, the heart desires, and the body acts. To master yourself, you cannot just fight the body; you must 'fire' the agents. Guard your eyes (what you focus on) and guard your heart (what you value), and the 'missed marks' of life will disappear on their own."
+        reflection: "The Hebrew `sarsurim` means 'brokers' or 'agents.' The eye and heart are the two agents that bring a sinful 'deal' to the body to sign. This brilliant psychological model reframes the battle for self-control. Instead of fighting the final action, the wise person 'fires the brokers.' By guarding your eyes from temptation and training your heart to value holiness, you prevent the illicit deal from ever reaching your desk."
       },
       {
         id: 39,
         hebrew: "כָּל מַה דְּעָבִיד רַחֲמָנָא, לְטָב עָבִיד.",
         translation: "Whatever the Compassionate One does, He does for the good.",
         source: "Rabbi Akiva (Talmud, Berakhot 60b)",
-        reflection: "This is the mantra of ultimate 'Bitachon' (Trust). It is not a naive statement that 'everything is pleasant,' but a radical belief that even 'unpleasant' events are ingredients in a larger, benevolent design. By training yourself to say this, you take the power of 'tragedy' away and transform it into 'growth.'"
+        reflection: "The key here is the Aramaic phrase `l'tav avid`, 'He does for the good.' This is not a naive claim that everything *is* good, but a radical statement of faith that everything is *for* the good. It reframes tragedy not as divine punishment, but as a hidden, purposeful ingredient in a larger recipe. This mantra doesn't deny pain; it transforms it into an opportunity for growth and trust."
       },
       {
         id: 40,
