@@ -428,6 +428,72 @@ async function getBookmarkCountsForBook(bookName) {
   }
 }
 
+// Get users who have interacted with a specific verse (for hover tooltips)
+async function getVerseInteractors(verseRef, interactionType) {
+  // interactionType: 'emphasize', 'heart', or 'bookmark'
+  const MAX_USERS = 20; // Limit to prevent overwhelming tooltips
+
+  try {
+    const isIndexError = (error) => {
+      if (!error) return false;
+      if (error.code === 'failed-precondition') return true;
+      const message = typeof error.message === 'string' ? error.message.toLowerCase() : '';
+      return message.includes('index');
+    };
+
+    const buildQuery = (collectionName, constraints, includeOrderBy) => {
+      const queryConstraints = [...constraints];
+      if (includeOrderBy) {
+        queryConstraints.push(orderBy('timestamp', 'desc'));
+      }
+      queryConstraints.push(limit(MAX_USERS));
+      return query(collection(db, collectionName), ...queryConstraints);
+    };
+
+    const collectionName = interactionType === 'bookmark' ? 'bookmarks' : 'reactions';
+    const baseConstraints = interactionType === 'bookmark'
+      ? [where('verseRef', '==', verseRef)]
+      : [
+          where('verseRef', '==', verseRef),
+          where('reactionType', '==', interactionType)
+        ];
+
+    let snapshot;
+    try {
+      snapshot = await getDocs(buildQuery(collectionName, baseConstraints, true));
+    } catch (error) {
+      if (isIndexError(error)) {
+        snapshot = await getDocs(buildQuery(collectionName, baseConstraints, false));
+      } else {
+        throw error;
+      }
+    }
+
+    // Fetch user info for each userId
+    const userPromises = [];
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      if (data.userId) {
+        userPromises.push(
+          getUserInfo(data.userId).then(userInfo => ({
+            user: userInfo,
+            timestamp: data.timestamp
+          }))
+        );
+      }
+    });
+
+    const userResults = await Promise.all(userPromises);
+    const filteredResults = userResults.filter(r => r.user !== null);
+
+    return filteredResults;
+
+  } catch (error) {
+    console.error(`Error fetching ${interactionType} users for ${verseRef}:`, error);
+    return [];
+  }
+}
+
 async function getBookmarkCountsForVerses(verseRefs) {
   const counts = {};
 
@@ -1798,6 +1864,7 @@ export {
   getReactionCounts,
   getUserReactions,
   getReactionCountsForBook,
+  getVerseInteractors,
   getBookmarkCountsForBook,
   getBookmarkCountsForVerses,
   addBookmark,

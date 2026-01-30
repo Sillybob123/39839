@@ -3381,6 +3381,73 @@ body.torah-text-size-xlarge #parsha-text .english-text {
     outline-offset: 3px;
 }
 
+/* Interaction tooltips on reaction buttons (desktop only) */
+.reaction-btn.status-tooltip[data-tooltip] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Boost z-index of verse container when tooltip is active */
+.verse-container:has(.reaction-btn.status-tooltip[data-tooltip]:hover) {
+    z-index: 10001 !important;
+    position: relative;
+}
+
+/* Only show tooltips on true hover devices (desktop) */
+@media (hover: hover) and (pointer: fine) and (min-width: 768px) {
+    .reaction-btn.status-tooltip[data-tooltip]:hover::after {
+        opacity: 1;
+        transform: translate(-50%, 2px);
+        white-space: pre-line; /* Preserve line breaks in tooltip */
+        min-width: 240px;
+        max-width: 320px;
+        z-index: 10000; /* Very high z-index to appear above all verses */
+    }
+
+    .reaction-btn.status-tooltip[data-tooltip]:hover::before {
+        opacity: 1;
+        transform: translate(-50%, 2px);
+        z-index: 9999; /* Arrow just below tooltip */
+    }
+
+    /* Left-aligned tooltips (for buttons near left edge) */
+    .reaction-btn.status-tooltip.tooltip-align-left[data-tooltip]:hover::after {
+        left: 0;
+        transform: translateY(2px);
+    }
+
+    .reaction-btn.status-tooltip.tooltip-align-left[data-tooltip]:hover::before {
+        left: 20px;
+        transform: translateY(2px);
+    }
+
+    /* Right-aligned tooltips (for buttons near right edge) */
+    .reaction-btn.status-tooltip.tooltip-align-right[data-tooltip]:hover::after {
+        left: auto;
+        right: 0;
+        transform: translateY(2px);
+    }
+
+    .reaction-btn.status-tooltip.tooltip-align-right[data-tooltip]:hover::before {
+        left: auto;
+        right: 20px;
+        transform: translateY(2px);
+    }
+}
+
+/* Disable tooltips entirely on touch/mobile devices */
+@media (hover: none) or (pointer: coarse) {
+    .reaction-btn.status-tooltip[data-tooltip]::after,
+    .reaction-btn.status-tooltip[data-tooltip]::before {
+        display: none !important;
+    }
+}
+
+/* Loading state styling */
+.reaction-btn.status-tooltip.loading {
+    cursor: wait;
+}
+
 .status-scroll {
     flex-wrap: nowrap;
     white-space: nowrap;

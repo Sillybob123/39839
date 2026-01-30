@@ -266,42 +266,42 @@
         hebrew: "הֱוֵי מְקַבֵּל אֶת כָּל הָאָדָם בְּסֵבֶר פָּנִים יָפוֹת.",
         translation: "Receive every person with a pleasant and radiant face.",
         source: "Pirkei Avot 1:15",
-        reflection: "Shammai teaches that your face is 'public property.' You have a duty to not 'pollute' the world with your bad mood. A radiant face (Sever Panim Yafot) is a form of charity that costs nothing but can save a person's life by reminding them of their own dignity. Be a source of light, not a drain of energy."
+        reflection: "The Hebrew `sever panim yafot` means more than 'pleasant'; it implies a 'radiant countenance.' Shammai teaches that your face is not private property; it affects the emotional climate for everyone you meet. In a world of digital isolation, this reframes a simple smile from a social nicety into a profound act of charity (`tzedakah`). You are not just being friendly; you are actively radiating light into another person's world."
       },
       {
         id: 41,
         hebrew: "אֵין אָדָם עוֹבֵר עֲבֵרָה אֶלָּא אִם כֵּן נִכְנַס בּוֹ רוּחַ שְׁטוּת.",
         translation: "A person does not miss the mark unless a spirit of 'folly' enters them.",
         source: "Talmud, Sotah 3a",
-        reflection: "This is a deeply compassionate view of human failure. You are essentially good; when you fail, it is because you became 'temporarily insane' or 'foolish.' This 'clever' insight allows you to separate your core identity from your mistakes. Don't say 'I am bad'; say 'I acted foolishly,' and then use your intellect to evict the spirit of folly."
+        reflection: "The Hebrew `ruach shtut` means a 'spirit of folly.' This is a profoundly compassionate insight into human failure. It teaches that your core self doesn't sin; rather, a moment of 'folly' or temporary insanity enters and takes over. This reframes failure not as your identity ('I am bad'), but as a temporary state ('I acted foolishly'). It empowers you to evict this spirit of folly and return to your true, essential self."
       },
       {
         id: 42,
         hebrew: "טוֹב פַּת חֲרֵבָה וְשַׁלְוָה־בָהּ, מִבַּיִת מָלֵא זִבְחֵי־רִיב.",
         translation: "Better a dry crust with peace than a house full of feasting with strife.",
         source: "Proverbs 17:1",
-        reflection: "Wealth is the 'flavor' of your life, but Peace (Shalom) is the 'appetite.' If you have a feast but your home is full of fighting, the food tastes like ash. But if you have very little and your home is peaceful, even a dry crust feels like a luxury. Prioritize the emotional atmosphere of your home over the physical luxury of your things."
+        reflection: "This verse contrasts `pat chareva` (a dry crust) with a `bayit malei zivchei-riv` (a house full of offerings of strife). We often chase material abundance at the cost of relational peace. King Solomon teaches that the emotional quality of your environment is the true measure of wealth. A crust of bread with `shalvah` (tranquility) is a five-star meal, while a banquet with `riv` (strife) tastes like ash. This commands us to prioritize atmosphere over abundance."
       },
       {
         id: 43,
         hebrew: "בְּכָל־עֶצֶב יִהְיֶה מוֹתָר, וּדְבַר־שְׂפָתַיִם אַךְ־לְמַחְסוֹר.",
         translation: "In all toil there is profit, but mere talk leads only to lack.",
         source: "Proverbs 14:23",
-        reflection: "Action has 'Motar' (surplus)—it leaves something behind. Talk is 'Machsor' (lack)—it consumes your energy and leaves you empty. The clever person knows that the more they talk about their plans, the less energy they have to execute them. Let your results be your noise; let your work be your silence."
+        reflection: "The Hebrew contrasts `etzev` (toil) which creates `motar` (surplus), with `d'var-sfatayim` (lip-service) which leads `ach-l'machsor` (only to lack). We live in an age of endless talk—meetings, branding, social media—that feels productive but often isn't. This proverb is a powerful call to action. It reframes 'talk' as an energy drain and 'toil' as the only true path to creating a surplus in your life and in the world."
       },
       {
         id: 44,
         hebrew: "הֱוֵי זָנָב לָאֲרָיוֹת, וְאַל תְּהִי רֹאשׁ לַשּׁוּעָלִים.",
         translation: "Be a tail to lions rather than a head to foxes.",
         source: "Pirkei Avot 4:15",
-        reflection: "This is the law of environment. If you are the 'head' of a group of foxes (small-minded or petty people), you will stop growing because you have no challenge. But if you are the 'tail' of a group of lions (giants of character and wisdom), their momentum will pull you upward. Always choose the room where you are the least knowledgeable person."
+        reflection: "The metaphor contrasts being a `zanav l'arayot` (a tail to lions) with a `rosh l'shu'alim` (a head to foxes). We are often tempted to be the 'big fish in a small pond.' This teaching reframes growth as a function of environment. Being the least accomplished person in a room of 'lions' (giants of wisdom) pulls you up, while leading 'foxes' (mediocre people) will cause you to shrink. This is an empowering command to always choose the room that challenges you most."
       },
       {
         id: 45,
         hebrew: "חָכְמַת סוֹפְרִים תִּסְרַח... וִירֵאֵי חֵטְא יִמָּאֲסוּ.",
         translation: "The wisdom of the scholars will decay... and those who fear missing the mark will be loathed.",
         source: "Mishnah, Sotah 9:15",
-        reflection: "This is a 'clever' prophecy about the end of days. It warns of a time when intellect is used for cynicism and good people are mocked. Recognizing this trend allows you to stand strong; when the world calls your integrity 'foolish,' know that you are simply preserving the light in a time of planned darkness."
+        reflection: "The prophecy that 'wisdom of scholars will decay' (`tisrach` - תסרח, literally 'will stink') is a terrifying warning for an age where intellect is unmoored from morality. This Mishna reframes integrity as a radical act. In a time when those who 'fear sin are loathed,' maintaining your moral compass is not about being popular; it is about preserving a pocket of sanity in a world that has chosen to go mad."
       },
       {
         id: 46,

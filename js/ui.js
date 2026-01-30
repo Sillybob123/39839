@@ -543,7 +543,7 @@ function convertToDate(timestamp) {
     return new Date(timestamp);
 }
 
-function formatRelativeTime(timestamp) {
+export function formatRelativeTime(timestamp) {
     const date = convertToDate(timestamp);
     if (!date) {
         return 'just now';
@@ -657,7 +657,7 @@ function applyStatusClasses(element, classPool, newClass) {
     }
 }
 
-function resolveDisplayName(user) {
+export function resolveDisplayName(user) {
     if (!user) {
         return 'Friend';
     }

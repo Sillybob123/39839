@@ -297,6 +297,13 @@
         transform: translate(-50%, 0) !important;
     }
 
+    /* Ensure reaction button tooltips never show on mobile */
+    .reaction-btn.status-tooltip[data-tooltip]::after,
+    .reaction-btn.status-tooltip[data-tooltip]::before {
+        display: none !important;
+        opacity: 0 !important;
+    }
+
     /* Hover effects - more subtle on mobile */
     #header-online-users-list .status-badge:hover {
         transform: translateY(-0.4px);

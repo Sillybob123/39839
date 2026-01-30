@@ -29,7 +29,9 @@ import {
     displayOnlineUsers,
     hideOnlineUsers,
     displayLastLogin,
-    hideLastLogin
+    hideLastLogin,
+    resolveDisplayName,
+    formatRelativeTime
 } from './ui.js';
 
 import {
@@ -50,6 +52,7 @@ import {
     getReactionCountsForBook,
     getBookmarkCountsForBook,
     getBookmarkCountsForVerses,
+    getVerseInteractors,
     addBookmark,
     removeBookmark,
     isVerseBookmarked,
@@ -88,6 +91,11 @@ let verseBookmarkCounts = {};
 let bookmarkedQuoteIds = new Set();
 let cachedQuoteBookmarks = [];
 const verseDisplayTexts = {};
+
+// Cache for verse interactor data (to avoid redundant fetches)
+const verseInteractorsCache = new Map(); // key: `${verseRef}__${interactionType}`
+const INTERACTORS_CACHE_TTL = 60000; // 1 minute cache
+let activeTooltipFetch = null;
 
 // User presence tracking
 let lastUserId = null;
@@ -2520,6 +2528,10 @@ async function handleReactionClick(verseRef, reactionType) {
             userReactions[verseRef] = userReactions[verseRef].filter(r => r !== reactionType);
         }
 
+        // Invalidate tooltip cache for this interaction
+        const cacheKey = `${verseRef}__${reactionType}`;
+        verseInteractorsCache.delete(cacheKey);
+
         // Update UI for this verse
         const verseContainer = document.querySelector(`[data-ref="${verseRef}"]`);
         if (verseContainer) {
@@ -2696,10 +2708,18 @@ function applyBookmarkStateToVisibleVerses() {
             const countText = displayCount > 0
                 ? `${displayCount} ${displayCount === 1 ? 'person has' : 'people have'} bookmarked this verse`
                 : 'No bookmarks yet';
-            btn.setAttribute(
-                'title',
-                isActive ? `Remove bookmark • ${countText}` : `Bookmark this verse • ${countText}`
-            );
+
+            // Only set title on mobile - desktop uses custom tooltip
+            if (!isDesktopHoverTooltipEnabled()) {
+                btn.setAttribute(
+                    'title',
+                    isActive ? `Remove bookmark • ${countText}` : `Bookmark this verse • ${countText}`
+                );
+            } else {
+                // Remove title on desktop to prevent interference with custom tooltip
+                btn.removeAttribute('title');
+            }
+
             btn.setAttribute(
                 'aria-label',
                 `${isActive ? 'Remove your bookmark.' : 'Bookmark this verse.'} ${countText}.`
@@ -2749,6 +2769,10 @@ async function handleBookmarkClick(verseRef, bookmarkBtn) {
             bookmarkedVerses.add(verseRef);
             verseBookmarkCounts[verseRef] = (verseBookmarkCounts[verseRef] || 0) + 1;
         }
+
+        // Invalidate tooltip cache for bookmark interaction
+        const cacheKey = `${verseRef}__bookmark`;
+        verseInteractorsCache.delete(cacheKey);
 
         // Ensure all instances stay in sync (e.g., if verse appears twice)
         applyBookmarkStateToVisibleVerses();
@@ -2901,10 +2925,212 @@ function updateAllCommentBadges() {
     });
 }
 
+// ========================================
+// TOOLTIP FUNCTIONS FOR VERSE INTERACTIONS
+// ========================================
+
+function isDesktopHoverTooltipEnabled() {
+    return window.matchMedia('(hover: hover) and (pointer: fine)').matches
+        && window.matchMedia('(min-width: 768px)').matches;
+}
+
+function attachInteractionTooltips(container, verseRef) {
+    if (!container || !verseRef) return;
+
+    // Only attach on desktop - check if hover is supported
+    if (!isDesktopHoverTooltipEnabled()) return;
+
+    const emphasizeBtn = container.querySelector('.emphasize-btn');
+    const heartBtn = container.querySelector('.heart-btn');
+    const bookmarkBtn = container.querySelector('.bookmark-btn');
+
+    if (emphasizeBtn) {
+        setupTooltipBehavior(emphasizeBtn, verseRef, 'emphasize');
+    }
+
+    if (heartBtn) {
+        setupTooltipBehavior(heartBtn, verseRef, 'heart');
+    }
+
+    if (bookmarkBtn) {
+        setupTooltipBehavior(bookmarkBtn, verseRef, 'bookmark');
+    }
+}
+
+function setupTooltipBehavior(button, verseRef, interactionType) {
+    let hoverTimeout = null;
+
+    // Remove native title attribute to prevent interference with custom tooltip
+    button.removeAttribute('title');
+
+    // Use mouseenter instead of mouseover to avoid bubbling issues
+    button.addEventListener('mouseenter', () => {
+        if (!isDesktopHoverTooltipEnabled()) {
+            return;
+        }
+
+        // Check button position and adjust tooltip alignment to prevent cutoff
+        const rect = button.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const buttonCenter = rect.left + (rect.width / 2);
+
+        // Remove any existing alignment classes
+        button.classList.remove('tooltip-align-left', 'tooltip-align-right');
+
+        // If button is in the left 30% of viewport, align tooltip to the left
+        if (buttonCenter < viewportWidth * 0.3) {
+            button.classList.add('tooltip-align-left');
+        }
+        // If button is in the right 30% of viewport, align tooltip to the right
+        else if (buttonCenter > viewportWidth * 0.7) {
+            button.classList.add('tooltip-align-right');
+        }
+
+        // Clear any existing timeout
+        if (hoverTimeout) {
+            clearTimeout(hoverTimeout);
+        }
+
+        // Debounce: only fetch after 300ms of hover
+        hoverTimeout = setTimeout(() => {
+            loadAndShowInteractorTooltip(button, verseRef, interactionType);
+            hoverTimeout = null;
+        }, 300);
+    });
+
+    button.addEventListener('mouseleave', () => {
+        // Cancel pending fetch if user moves away quickly
+        if (hoverTimeout) {
+            clearTimeout(hoverTimeout);
+            hoverTimeout = null;
+        }
+        // Note: We don't remove the tooltip here - CSS :hover handles visibility
+        // The data-tooltip attribute stays on the button for instant display on next hover
+    });
+}
+
+async function loadAndShowInteractorTooltip(button, verseRef, interactionType) {
+    if (!button || !verseRef) return;
+
+    // Check cache first
+    const cacheKey = `${verseRef}__${interactionType}`;
+    const cached = verseInteractorsCache.get(cacheKey);
+    const now = Date.now();
+
+    if (cached && (now - cached.fetchedAt < INTERACTORS_CACHE_TTL)) {
+        // Use cached data - instant display
+        applyTooltipToButton(button, cached.users, interactionType);
+        return;
+    }
+
+    // Prevent duplicate fetches
+    if (activeTooltipFetch === cacheKey) {
+        return;
+    }
+
+    // Don't show loading state immediately to avoid flicker
+    // Only show if button is still hovered after a brief delay
+    let loadingShown = false;
+    const loadingTimeout = setTimeout(() => {
+        if (button.matches(':hover')) {
+            button.classList.add('status-tooltip');
+            button.setAttribute('data-tooltip', 'Loading...');
+            loadingShown = true;
+        }
+    }, 100);
+
+    try {
+        activeTooltipFetch = cacheKey;
+
+        const interactors = await getVerseInteractors(verseRef, interactionType);
+
+        // Clear loading timeout
+        clearTimeout(loadingTimeout);
+
+        // Cache the result
+        verseInteractorsCache.set(cacheKey, {
+            users: interactors,
+            fetchedAt: now
+        });
+
+        // Only apply tooltip if button is still being hovered
+        if (button.matches(':hover')) {
+            applyTooltipToButton(button, interactors, interactionType);
+        }
+
+    } catch (error) {
+        clearTimeout(loadingTimeout);
+        console.error('Error loading interactors:', error);
+        if (button.matches(':hover')) {
+            button.setAttribute('data-tooltip', 'Error loading data');
+        }
+    } finally {
+        activeTooltipFetch = null;
+    }
+}
+
+function applyTooltipToButton(button, interactors, interactionType) {
+    if (!button) return;
+
+    button.classList.add('status-tooltip');
+
+    // Handle empty state
+    if (!interactors || interactors.length === 0) {
+        button.removeAttribute('data-tooltip');
+        button.classList.remove('status-tooltip');
+        return;
+    }
+
+    // Build tooltip content
+    const tooltipHTML = buildInteractorsTooltipContent(interactors, interactionType);
+    button.setAttribute('data-tooltip', tooltipHTML);
+}
+
+function buildInteractorsTooltipContent(interactors, interactionType) {
+    if (!interactors || interactors.length === 0) {
+        return '';
+    }
+
+    // Get verb for interaction type
+    const verbs = {
+        'emphasize': 'exclaimed',
+        'heart': 'liked',
+        'bookmark': 'bookmarked'
+    };
+    const verb = verbs[interactionType] || 'interacted with';
+
+    // Build list of users with timestamps
+    const lines = interactors.slice(0, 10).map(({ user, timestamp }) => {
+        const displayName = resolveDisplayName(user);
+        const timeAgo = formatRelativeTime(timestamp);
+        return `${displayName} • ${timeAgo}`;
+    });
+
+    // Handle "and X more" case
+    const remaining = interactors.length - 10;
+    if (remaining > 0) {
+        lines.push(`and ${remaining} more...`);
+    }
+
+    // Join with line breaks
+    const usersList = lines.join('\n');
+
+    // Add header if multiple users
+    if (interactors.length === 1) {
+        return usersList;
+    } else {
+        return `${interactors.length} ${verb} this:\n${usersList}`;
+    }
+}
+
 async function loadParsha(parshaRef) {
     if (parshaRef && state.currentParshaRef !== parshaRef) {
         setState({ currentParshaRef: parshaRef });
     }
+
+    // Clear tooltip cache when loading new content
+    verseInteractorsCache.clear();
+
     showLoading();
     hideError();
 
@@ -3246,6 +3472,9 @@ function createVerseElement(englishText, hebrewText, verseRef, verseNumber) {
 
     // Store bookmark button reference for later updates
     container.dataset.bookmarkBtn = true;
+
+    // Attach hover tooltips to reaction buttons (desktop only)
+    attachInteractionTooltips(container, verseRef);
 
     return container;
 }
