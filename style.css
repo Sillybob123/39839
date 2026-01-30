@@ -559,17 +559,6 @@ select {
     position: relative;
 }
 
-.chapter-header::before {
-    content: '';
-    position: absolute;
-    top: -2.5rem; /* Adjusted for new margin */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #93c5fd, transparent);
-}
-
 /* Current Parsha Highlight */
 .current-parsha-highlight {
     background: #eff6ff;
