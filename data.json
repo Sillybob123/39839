@@ -3663,7 +3663,458 @@
     {
       "name": "Mishpatim",
       "reference": "Exodus 21:1-24:18",
-      "verses": [],
+      "verses": [
+        {
+          "ref": "Exodus 21:2",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Six-Year Limit: When you acquire a male Hebrew slave, he shall serve six years; in the seventh year he shall go free.\n\nThe Logic: This law is the Torah's first step toward the eventual abolition of slavery. By capping service at six years, the Torah mimics the 'Sabbath' cycle, reminding the master that he does not 'own' this man; he only has a temporary lease on his labor. Humans were created in the Image of God and are meant to be servants to the Divine, not to other men. We follow this to recognize that only God is the ultimate Master, and every person deserves a path back to dignity and autonomy."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:3",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Pre-existing Families: If he came single, he shall leave single; if he had a wife, his wife shall leave with him.\n\nThe Logic: The Torah protects the sanctity of the family unit above the financial interests of the master. Even in a state of servitude, the slave's role as a husband is sacred. The master has a claim on the man's labor due to debt or theft, but no claim on his personal identity or his pre-existing marriage. This ensures that poverty does not tear apart the fabric of the Jewish family."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:4",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Master-Provided Wife: If his master gave him a wife... the wife and her children shall belong to the master.\n\nThe Logic: This is a difficult law that deals with legal jurisdiction. In the ancient world, a master-provided servant was under a different contract. The 'Why' here is to create clear legal boundaries: a slave cannot 'acquire' or take with him people who were legally under the master's roof before the slave's term ended. It highlights the tragic reality of slavery and serves as a subtle nudge from the Torah that such arrangements are far from the Divine ideal."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:5",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Choice to Stay: If the slave declares, 'I love my master, my wife and children: I do not wish to go free.'\n\nThe Logic: The Torah acknowledges human complexity. Sometimes, a person finds more security and love within their service than they fear they will find in the outside world. However, the Torah views this choice with sadness. While it allows for the slave to stay for the sake of his family, it requires a public, judicial process to ensure the slave isn't being coerced."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:6",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Pierced Ear: His master shall take him before God... and pierce his ear with an awl.\n\nThe Logic: Why the ear? The Sages explain that the ear heard at Sinai, 'For the Children of Israel are servants to Me,' yet this man chose to remain a servant to a human. The doorpost represents the exit to freedom he refused to take. The piercing is a mark of spiritual failure; it serves as a permanent physical reminder that he traded his Divine destiny for human comfort. It is a sign that he has 'deafened' himself to the call of freedom."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:7",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Daughter as a Maidservant: When someone sells their daughter as a slave...\n\nThe Logic: This was a desperate social safety net for families in extreme famine. In the Torah's context, this was actually a protected marriage contract. The girl was placed in a home where the master or his son was obligated to marry her. It was a way to ensure a girl from a starving family was elevated into a secure home rather than being left to the streets. The 'Why' is the preservation of life and the future of the girl through marriage."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:8",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Redemption Rights: If she proves displeasing to her master... he must let her be redeemed.\n\nThe Logic: Because the 'sale' was intended for marriage, if the master decides not to marry her, he has 'broken faith' with the contract. He cannot keep her as a common laborer or sell her to others. He must facilitate her return to her family. This protects young women from being exploited as cheap labor under the guise of a marriage arrangement."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:9",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Designation to a Son: If he designated her for a son, he shall deal with her as a free maiden.\n\nThe Logic: Once the son is chosen as the groom, her status immediately shifts from 'servant' to 'daughter-in-law.' The Torah demands she be treated with the full honor of any free-born Jewish woman. This law erases the stigma of her humble beginnings and forces the family to embrace her as a complete equal."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:10",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Three Rights: He must not withhold her food, her clothing, or her conjugal rights.\n\nThe Logic: This is the bedrock of Jewish marriage law. It teaches that a wife is not a piece of property, but a partner with basic human rights. Even if the husband takes another wife, he cannot diminish the physical, emotional, or material support he owes the first. It protects women from being neglected or 'cast aside' in favor of a newer relationship."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:11",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Breach of Contract: If he fails her in these three ways, she shall go free.\n\nThe Logic: The Torah uses 'freedom' as the ultimate penalty for a husband's negligence. If the man refuses to act as a proper provider and partner, he loses all legal connection to her. It provides an 'exit' for the woman, ensuring she is not trapped in a marriage of neglect."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:12",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Capital Punishment for Murder: One who fatally strikes another shall be put to death.\n\nThe Logic: Human life is the most sacred thing in the universe. To intentionally destroy a person is to strike at God Himself, in whose image we are made. By making murder a capital offense, the Torah creates a 'fence' around life, teaching society that some lines can never be crossed without the ultimate price."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:13",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The City of Refuge: If it was not by design... I will assign you a place to which that person can flee.\n\nThe Logic: This distinguishes between 'evil' and 'accident.' God recognizes that sometimes things happen beyond our intent. The refuge prevents 'blood-feuds'—where families keep killing each other in revenge—and allows for a cool-headed judicial process. It balances the need for atonement with the need for mercy."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:14",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "No Sanctuary for the Schemer: You shall take that person from My very altar to be put to death.\n\nThe Logic: You cannot hide from justice behind a cloak of religiosity. Even the most holy place on earth (the Altar) will not protect a cold-blooded, calculating killer. This teaches that true 'Holiness' cannot exist without 'Justice.'"
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:15",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Striking a Parent: One who strikes their father or mother shall be put to death.\n\nThe Logic: Parents are the bridge between the child and God; they are the source of one's physical existence and moral heritage. To strike a parent is to commit a form of 'spiritual suicide,' attacking the very root of one's life. It is treated with extreme severity to preserve the hierarchy of respect that allows a culture to survive across generations."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:16",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Kidnapping: One who kidnaps another... shall be put to death.\n\nThe Logic: Kidnapping is the 'theft of a soul.' By stealing a person's freedom and agency, you have essentially 'killed' who they are. The Torah treats human trafficking as a capital crime to ensure that people are never treated as mere merchandise or tools for profit."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:17",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Cursing a Parent: One who insults their father or mother shall be put to death.\n\nThe Logic: In the Torah, words are as powerful as weapons. Cursing a parent is an act of total rebellion against the structure of authority God established. It reflects a heart that has become so calloused that it can spit upon the very people who gave it life."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:18",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Assault and Battery: If one strikes the other... and he does not die but has to take to bed...\n\nThe Logic: Justice is about making the victim 'whole.' If you hurt someone, you can't just say 'sorry.' You must pay for their Medical Bills (the Cure) and their Lost Wages (the Idleness). This ensures that the attacker carries the financial burden of the victim's recovery, fostering a sense of personal responsibility."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:20",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Protection of Slaves: When someone strikes their slave... and he dies there and then, this must be avenged.\n\nThe Logic: This was a massive ethical disruption in the ancient world. It declared that a slave is a person under God's protection, not a piece of furniture. If a master kills a slave, he is treated as a murderer. It places a Divine limit on the power of the strong over the weak."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:22",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Pregnant Woman: If parties fight and one pushes a pregnant woman and a miscarriage results...\n\nThe Logic: This law helps us understand the Torah's view on potential life versus actual life. If only the miscarriage happens, it is a civil case (a fine). If the mother dies, it is a capital case. This balance shows that while a fetus is highly valued (requiring a fine for its loss), the life of the mother is the primary focus of capital law."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:24",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Eye for an Eye: Eye for eye, tooth for tooth, hand for hand...\n\nThe Logic: This is often misunderstood as 'vengeance.' The Oral Tradition (Talmud) makes it clear that this refers to Monetary Compensation. It means the value of an eye for an eye. Why this phrasing? To teach that the loss of a limb is so grave that money can never truly pay for it; it should have been your eye, but the law mercifully allows you to pay its value instead. It also ensures 'Blind Justice'—the rich man cannot simply pay a small fee to blind a poor man; he must pay the actual, heavy value of the loss."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:26",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Freedom Price for Injury: If someone strikes the eye of their slave... the slave shall go free.\n\nThe Logic: Physical integrity is a God-given right that even a master cannot touch. If a master is so cruel as to maim his servant, he instantly forfeits his right to that servant's labor. It is a powerful deterrent against abuse, reminding the master that the servant's body ultimately belongs to God."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:28",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Goring Ox: If an ox gores a person to death, the ox shall be stoned... but the owner is not to be punished.\n\nThe Logic: This deals with the 'unforeseeable.' If an animal has never been aggressive, the owner cannot be blamed. However, the animal is stoned to show that human life has been diminished and the 'danger' must be removed from the world. It honors the victim by treating the cause of death with gravity."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:29",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Negligence of the Owner: If however that ox has been in the habit of goring... and its owner failed to guard it...\n\nThe Logic: Negligence is a crime in the eyes of God. If you know you own a 'weapon' and you don't secure it, you are responsible for the blood it spills. We are responsible for the environment we create; if our carelessness leads to death, the Torah considers it a capital offense because we 'enabled' the tragedy."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:32",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "**The Slave Gored:** 30 Shekels fine if an ox kills a slave.\n\n**The Logic:** 30 shekels was the standardized 'market value' for a servant's contract in that era. It creates a fixed legal liability for the owner."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:33",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Open Pit: When someone opens a pit... and does not cover it, and an ox falls into it...\n\nThe Logic: You are responsible for the 'stumbling blocks' you put in front of others. Even if the pit is on public land, if you dug it, you own its consequences. This teaches us to be hyper-aware of how our actions (or inactions) might harm our neighbors' livelihoods."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 21:35",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "**The Ox Fight:** If one ox kills another, the owners split the value of the live and dead ones.\n\n**The Logic:** 'Fairness in Uncertainty.' If neither ox was known to be dangerous, the loss is shared equally between the two neighbors. It promotes peace between neighbors."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 22:1",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Thief's Restitution: Five oxen for an ox, and four sheep for a sheep.\n\nThe Logic: Why the difference? An ox is a work animal; by stealing it, you stop a farmer from plowing and earning a living. The 'Why' is about Deterrence. The thief must lose much more than he hoped to gain, making the 'business' of crime unprofitable and emphasizing the value of honest labor."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 22:2",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Night Thief: If the thief is seized while tunneling and beaten to death, there is no bloodguilt.\n\nThe Logic: This is the Law of Self-Defense. If someone breaks into your home in the dark, you have to assume they are ready to kill you to avoid being caught. You have a right to defend your life. But if 'the sun has risen' (meaning the situation is clear and you are safe), you cannot kill him; you must let the courts handle it. It balances personal safety with the rule of law."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 22:4",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Grazing Damage: If a field or vineyard is grazed bare, restitution must be made.\n\nThe Logic: You are responsible for your property (your animals). If your lack of supervision causes a neighbor loss, you must pay back from your best land. This ensures you don't 'pay off' a neighbor with poor-quality crops. It teaches us to guard what we own so it doesn't become a burden to others."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 22:5",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "**The Fire Law:** The one who starts a fire must pay for the damage.\n\n**The Logic:** Fire is 'your' fire even after it leaves your hand. You are responsible for the natural consequences of your actions."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 22:6",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Unpaid Guardian: When one person gives goods for safekeeping and they are stolen...\n\nThe Logic: If I am doing you a favor for free ($Shomer$ $Chinam$), I should not be punished for things outside my control (like a sneaky thief). I am only liable if I was grossly negligent. This encourages people to do favors for each other without fearing legal ruin."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 22:9",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "**The Court Oath:** If the thief isn't found, the guard swears before God he didn't steal it.\n\n**The Logic:** Since there are no witnesses, we appeal to the highest authority (God). An oath in God's name was the ultimate 'truth serum' in the ancient world."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 22:10",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Paid Guardian: Responsible if the animal is stolen, but not if it dies of natural causes.\n\nThe Logic: Since this person is being paid to watch the animal, they have a higher 'Duty of Care.' They should have been watching closely enough to prevent a thief. However, even a paid guard cannot prevent a 'Heart Attack of God.' The risk is shared based on the benefit received."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 22:11",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "**The Paid Guard:** Must pay for theft, but not for 'Acts of God' (death/injury).\n\n**The Logic:** Since he is being paid, he is expected to watch it extra closely (preventing theft), but he still can't stop a lightning strike or a heart attack of a cow."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 22:13",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Borrower: Responsible for everything, even accidents.\n\nThe Logic: The borrower gets 100% of the benefit of the object and pays nothing for it. Therefore, he takes 100% of the risk. If you borrow a neighbor's lawnmower and it breaks—even if it's not your fault—you pay. Why? Because you enjoyed the use of it. It teaches us to treat borrowed items with even more care than our own."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 22:15",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "**The Seducer:** Must marry the girl and pay the bride-price.\n\n**The Logic:** In that society, a non-virgin girl had no marriage prospects. The law protects her future by forcing the man to take responsibility for her well-being for life."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 22:20",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Stranger: You shall not wrong or oppress a stranger, for you were strangers in Egypt.\n\nThe Logic: This is the most repeated command in the Torah. God knows that humans naturally fear or exploit 'the outsider.' The Torah uses our own national trauma (Egypt) to build National Empathy. We follow this to remind us that every human is a guest in God's world, and we must never become the oppressors we once fled."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 22:21",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "**Widow and Orphan:** Do not ill-treat them.\n\n**The Logic:** God is the 'Father of the Fatherless.' Since they have no human protector, God warns that He will personally intervene if they are bullied."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 22:24",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Interest-Free Loans: If you lend money to the poor... exact no interest from them.\n\nThe Logic: A loan to a struggling brother is not a business opportunity; it is an act of $Chesed$ (Kindness). Charging interest 'bites' ($Neshech$) the person who is already down. We follow this to ensure that money serves as a tool for community building, not for the exploitation of the needy."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 23:1",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Judicial Integrity: You must not carry false rumors or join hands with the guilty.\n\nThe Logic: A society stands or falls on the truth of its courts. To spread a rumor is to poison the well of public discourse. To lie in court is to break the very foundation of civilization. God demands absolute honesty because Truth ($Emet$) is His very signature."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 23:4",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Returning the Enemy's Property: When you encounter your enemy's ox wandering, you must take it back.\n\nThe Logic: This is psychological warfare against our own ego. It is easy to help a friend; it is holy to help an enemy. By forcing us to save our enemy's livelihood, the Torah helps us overcome our hatred and recognize that even someone we dislike is a human being with needs. It is the ultimate path to peace."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 23:10",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "**The Shmita (7th Year):** Leave the land fallow every 7 years.\n\n**The Logic:** To remind us that the land belongs to God, not us. It also creates a 'common' year where everyone (rich and poor) eats from the same fields as equals."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 23:19",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "Milk and Meat: You shall not boil a kid in its mother's milk.\n\nThe Logic: This is an act of supreme sensitivity. Milk is the substance of life, meant to nurture a young animal. To take that very milk and use it as a tool to cook the dead animal is a cruel irony that 'blunts' the human soul. Jews follow the laws of Kosher separation (Milk and Meat) to maintain a sense of compassion and boundary-awareness, even in the most mundane act of eating."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 24:3",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "**The Covenant Acceptance:** The people say, 'All that God said, we will do!'\n\n**The Why:** They accepted the 'terms of service' because they trusted the Lawgiver."
+            }
+          ],
+          "keywords": []
+        },
+        {
+          "ref": "Exodus 24:7",
+          "commentary": [
+            {
+              "source": "Mishpatim Laws Explained",
+              "explanation": "The Great Commitment: 'All that God has spoken we will faithfully do and we will hear!' ($Na'aseh$ $V'Nishma$).\n\nThe Logic: This is the climax of the Parsha. The people commit to the Doing (Action) before the Hearing (Understanding). Why? Because Jewish life is about 'Living the Law' to understand its beauty. You don't wait to be an expert in music before you play the piano; you play, and the music makes sense. We follow the laws because we trust that the One who made us knows what is best for our souls."
+            }
+          ],
+          "keywords": []
+        }
+      ],
       "significance": "Name Meaning: Mishpatim (מִשְׁפָּטִים) means \\\"Judgments\\\" or \\\"Laws.\\\"\n\nContext: This parsha immediately follows the revelation of the Ten Commandments at Sinai. If Yitro was the transcendent 'fireworks,' Mishpatim is the practical application. The setting is still at Mount Sinai, as God elaborates on the laws for the newly formed nation.\n\nParsha Summary: The parsha is a dense legal code, covering a huge range of civil and criminal law. It includes laws on slavery (and the rights of Hebrew servants), personal injury (an 'eye for an eye'), property damage, theft, lending, and judicial integrity. It also contains numerous ethical laws: the proper treatment of strangers, widows, and orphans; the command to 'not follow a crowd to do evil'; the mitzvah of the Sabbatical year (Shmita); and the observance of the three pilgrimage festivals. The parsha concludes with the people making a formal covenant with God, and Moses ascending the mountain for 40 days to receive the tablets.\n\nSignificance: Mishpatim's significance lies in its placement: it teaches that the sublime, spiritual experience of Sinai ('I am the Lord your God') is meaningless unless it is immediately 'grounded' in everyday justice ('Do not wrong a stranger'). Holiness is not found in the clouds; it's found in the courtroom, the workplace, and the home. The laws show a radical concern for social justice, protecting the most vulnerable members of society—the slave, the widow, the orphan, and the stranger. The takeaway is that a holy society is defined by its *mishpatim* (its 'judgments'), and that spirituality and ethics are two sides of the same coin."
     },
     {
