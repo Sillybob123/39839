@@ -179,7 +179,23 @@ function displaySong(entry) {
   const titleEnglish = entry.title_english || "";
   const titleHebrew = entry.title_hebrew || "";
   const pageTitle = titleEnglish || titleHebrew || "Entry";
+  const artist = entry.artist || "";
+  const overview = entry.overview || "";
   document.title = `${pageTitle} - Songs and Poems - A Letter in the Scroll`;
+
+  // Update Open Graph meta tags for link previews
+  const ogTitle = artist ? `${pageTitle} — ${artist}` : pageTitle;
+  const ogDesc = overview || `${isPoem ? "Poem" : "Song"}: ${pageTitle}. Listen, reflect, read, and sing.`;
+  const metaUpdates = {
+    'og:title': ogTitle,
+    'og:description': ogDesc,
+    'twitter:title': ogTitle,
+    'twitter:description': ogDesc
+  };
+  Object.entries(metaUpdates).forEach(function(pair) {
+    var el = document.querySelector('meta[property="' + pair[0] + '"], meta[name="' + pair[0] + '"]');
+    if (el) el.setAttribute("content", pair[1]);
+  });
 
   const songTitleEl = document.getElementById("song-title");
   if (songTitleEl) {
