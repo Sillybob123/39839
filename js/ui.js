@@ -133,10 +133,14 @@ export function showCommentary(verseRef, commentaries) {
     let html = `<h4 class="text-lg font-bold mb-4 text-blue-900 border-b-2 border-blue-200 pb-2">${escapeHtml(verseRef)}</h4>`;
     
     commentaries.forEach(commentary => {
+        const formattedExplanation = commentary.source === 'Mishpatim Laws Explained'
+            ? formatMishpatimCommentaryText(commentary.explanation)
+            : formatText(commentary.explanation);
+
         html += `
             <div class="commentary-item">
                 <div class="commentary-source">${escapeHtml(commentary.source)}</div>
-                <div class="commentary-text">${formatText(commentary.explanation)}</div>
+                <div class="commentary-text">${formattedExplanation}</div>
             </div>
         `;
     });
@@ -473,6 +477,71 @@ function formatText(text) {
     escaped = escaped.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
 
     return escaped;
+}
+
+function formatMishpatimCommentaryText(text) {
+    if (!text) return '';
+
+    // Escape first to keep rendering safe.
+    let escaped = escapeHtml(text).replace(/\r\n/g, '\n').trim();
+
+    // Remove markdown markers so no stray asterisks appear.
+    escaped = escaped.replace(/\*\*([^*]+)\*\*/g, '$1');
+    escaped = escaped.replace(/\*([^*]+)\*/g, '$1');
+
+    // Split law section from explanatory section if present.
+    const logicSplit = escaped.split(/\n*\s*(?:The Logic|The Why|Explanation)\s*:?\s*\n*/i);
+    const lawRaw = (logicSplit[0] || '').trim();
+    const logicRaw = (logicSplit[1] || '').trim();
+
+    const parts = [];
+
+    const lawBlocks = lawRaw
+        ? lawRaw.split(/\n\s*\n/).map(block => block.trim()).filter(Boolean)
+        : [];
+
+    if (lawBlocks.length > 0) {
+        const summary = lawBlocks[0]
+            .replace(/^The Law\s*:?\s*\n?/i, '')
+            .replace(/^Law:\s*/i, '')
+            .replace(/\n/g, '<br>');
+        parts.push(`<div><strong>Law:</strong> ${summary}</div>`);
+
+        lawBlocks.slice(1).forEach((block) => {
+            const match = block.match(/^(How to follow today|How to follow|Practical takeaway|What to do|In simple terms|Context|Explanation)\s*:?\s*\n?([\s\S]*)$/i);
+            if (match) {
+                const label = match[1].toLowerCase();
+                const heading = label.startsWith('how to follow') ? 'How to follow'
+                    : label.startsWith('practical') ? 'Practical takeaway'
+                    : label.startsWith('what to do') ? 'What to do'
+                    : label.startsWith('in simple') ? 'In simple terms'
+                    : label.startsWith('context') ? 'Context'
+                    : label.startsWith('explanation') ? 'Explanation'
+                    : match[1];
+                const body = (match[2] || '').trim();
+                parts.push(`<div style="margin-top: 0.6rem;"><strong>${heading}</strong></div>`);
+                if (body) {
+                    parts.push(`<div>${body.replace(/\n/g, '<br>')}</div>`);
+                }
+                return;
+            }
+
+            parts.push(`<div style="margin-top: 0.55rem;">${block.replace(/\n/g, '<br>')}</div>`);
+        });
+    }
+
+    if (logicRaw) {
+        const hasExplanationHeading = /\bExplanation\s*\n/i.test(escaped);
+        const detailHeading = hasExplanationHeading ? 'Explanation' : 'The Logic';
+        parts.push(`<div style="margin-top: 1.9rem;"><strong style="font-weight: 800;">${detailHeading}</strong></div>`);
+        parts.push(`<div>${logicRaw.replace(/\n/g, '<br>')}</div>`);
+    }
+
+    if (parts.length === 0) {
+        return escaped.replace(/\n/g, '<br>');
+    }
+
+    return parts.join('');
 }
 
 // ========================================
