@@ -1,4 +1,4 @@
-// song-detail.js - Display individual song details
+// song-detail.js - display individual song and poem details
 
 const SONGS_URL = "songs.json";
 
@@ -9,6 +9,14 @@ function escapeHtml(value = "") {
     .replace(/>/g, "&gt;")
     .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+function normalizeText(value = "") {
+  return String(value).toLowerCase();
+}
+
+function getEntryType(entry = {}) {
+  return normalizeText(entry.category) === "poem" ? "poem" : "song";
 }
 
 function getYouTubeEmbedUrl(url = "") {
@@ -49,7 +57,6 @@ function buildLyricsHTML(lyrics = []) {
       const transliteration = (line.transliteration || "").trim();
       const english = (line.english || "").trim();
 
-      // Empty line spacer
       if (!hebrew && !transliteration && !english) {
         return `
           <div class="lyrics-detail-row lyrics-detail-spacer" aria-hidden="true">
@@ -86,13 +93,94 @@ function buildLyricsHTML(lyrics = []) {
   `;
 }
 
-function displaySong(song) {
-  // Update page title
-  const titleEnglish = song.title_english || "";
-  const titleHebrew = song.title_hebrew || "";
-  document.title = `${titleEnglish || titleHebrew} - Songs of Faith - A Letter in the Scroll`;
+function splitPoemIntoStanzas(lines = []) {
+  const stanzas = [];
+  let currentStanza = [];
 
-  // Display song title
+  lines.forEach(rawLine => {
+    const line = String(rawLine || "").trim();
+    if (!line) {
+      if (currentStanza.length) {
+        stanzas.push(currentStanza);
+        currentStanza = [];
+      }
+      return;
+    }
+
+    currentStanza.push(line);
+  });
+
+  if (currentStanza.length) {
+    stanzas.push(currentStanza);
+  }
+
+  return stanzas;
+}
+
+function buildPoemStanzaHTML(stanzas = [], options = {}) {
+  const { isHebrew = false, languageClass = "" } = options;
+  return stanzas
+    .map((stanza, stanzaIndex) => {
+      const lineHtml = stanza
+        .map((line, lineIndex) => {
+          const openingClass = !isHebrew && stanzaIndex === 0 && lineIndex === 0 ? " poem-line-opening" : "";
+          const languageLineClass = languageClass ? ` ${languageClass}` : "";
+          const languageAttrs = isHebrew ? ' lang="he" dir="rtl"' : "";
+          return `<p class="poem-line${openingClass}${languageLineClass}"${languageAttrs}>${escapeHtml(line)}</p>`;
+        })
+        .join("");
+
+      return `<section class="poem-stanza">${lineHtml}</section>`;
+    })
+    .join("");
+}
+
+function buildPoemHTML(poemLines = [], poemHebrewLines = []) {
+  const englishStanzas = splitPoemIntoStanzas(poemLines);
+  const hebrewStanzas = splitPoemIntoStanzas(poemHebrewLines);
+
+  if (!englishStanzas.length && !hebrewStanzas.length) {
+    return '<p class="lyrics-empty">Poem text coming soon.</p>';
+  }
+
+  if (!hebrewStanzas.length) {
+    const stanzaHtml = buildPoemStanzaHTML(englishStanzas);
+    return `<div class="poem-frame">${stanzaHtml}</div>`;
+  }
+
+  const englishColumn = englishStanzas.length
+    ? buildPoemStanzaHTML(englishStanzas)
+    : '<p class="lyrics-empty">English text coming soon.</p>';
+
+  const hebrewColumn = hebrewStanzas.length
+    ? buildPoemStanzaHTML(hebrewStanzas, { isHebrew: true, languageClass: "poem-line-hebrew" })
+    : '<p class="lyrics-empty">תרגום עברי יופיע בקרוב.</p>';
+
+  return `
+    <div class="poem-frame poem-frame-bilingual">
+      <div class="poem-bilingual-grid">
+        <section class="poem-language-column">
+          <h3 class="poem-language-title">ENGLISH</h3>
+          ${englishColumn}
+        </section>
+        <section class="poem-language-column poem-language-column-hebrew">
+          <h3 class="poem-language-title poem-language-title-hebrew" lang="he" dir="rtl">עברית</h3>
+          ${hebrewColumn}
+        </section>
+      </div>
+    </div>
+  `;
+}
+
+function displaySong(entry) {
+  const entryType = getEntryType(entry);
+  const isPoem = entryType === "poem";
+
+  const titleEnglish = entry.title_english || "";
+  const titleHebrew = entry.title_hebrew || "";
+  const pageTitle = titleEnglish || titleHebrew || "Entry";
+  document.title = `${pageTitle} - Songs and Poems - A Letter in the Scroll`;
+
   const songTitleEl = document.getElementById("song-title");
   if (songTitleEl) {
     const titleParts = [];
@@ -102,63 +190,106 @@ function displaySong(song) {
     if (titleHebrew) {
       titleParts.push(`<span class="song-title-hebrew" lang="he">${escapeHtml(titleHebrew)}</span>`);
     }
-    songTitleEl.innerHTML = titleParts.length ? titleParts.join("") : "Untitled Song";
+    songTitleEl.innerHTML = titleParts.length ? titleParts.join("") : "Untitled Entry";
   }
 
-  // Display artist
   const songArtistEl = document.getElementById("song-artist");
-  if (songArtistEl && song.artist) {
-    songArtistEl.textContent = song.artist;
-    songArtistEl.style.display = "block";
+  if (songArtistEl && entry.artist) {
+    songArtistEl.textContent = entry.artist;
+    songArtistEl.dataset.label = isPoem ? "Written by" : "Artist";
+    songArtistEl.style.display = "inline-flex";
   } else if (songArtistEl) {
     songArtistEl.style.display = "none";
   }
 
-  // Display overview
+  const songDateEl = document.getElementById("song-date");
+  if (songDateEl && entry.published_date) {
+    songDateEl.textContent = entry.published_date;
+    songDateEl.style.display = "inline-flex";
+  } else if (songDateEl) {
+    songDateEl.style.display = "none";
+  }
+
   const songOverviewEl = document.getElementById("song-overview");
-  if (songOverviewEl && song.overview) {
-    songOverviewEl.textContent = song.overview;
+  if (songOverviewEl && entry.overview) {
+    songOverviewEl.textContent = entry.overview;
     songOverviewEl.style.display = "block";
   } else if (songOverviewEl) {
     songOverviewEl.style.display = "none";
   }
 
-  // Display video
+  const videoSection = document.getElementById("video-section");
   const videoContainer = document.getElementById("video-container");
   const youtubeLink = document.getElementById("youtube-link");
-  const embedUrl = getYouTubeEmbedUrl(song.youtube_url || "");
+  const embedUrl = getYouTubeEmbedUrl(entry.youtube_url || "");
+  const hasMedia = !isPoem && (embedUrl || entry.youtube_url);
 
-  if (videoContainer && embedUrl) {
-    videoContainer.innerHTML = `
-      <iframe
-        title="${escapeHtml(titleEnglish || titleHebrew || "Song")}"
-        src="${escapeHtml(embedUrl)}"
-        loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
-      </iframe>
-    `;
+  if (videoSection) {
+    videoSection.style.display = hasMedia ? "block" : "none";
   }
 
-  if (youtubeLink && song.youtube_url) {
-    youtubeLink.href = song.youtube_url;
+  if (videoContainer) {
+    if (embedUrl) {
+      videoContainer.innerHTML = `
+        <iframe
+          title="${escapeHtml(pageTitle)}"
+          src="${escapeHtml(embedUrl)}"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      `;
+    } else if (hasMedia) {
+      videoContainer.innerHTML = '<p class="lyrics-empty">Video embed unavailable for this song.</p>';
+    } else {
+      videoContainer.innerHTML = "";
+    }
+  }
+
+  if (youtubeLink && !isPoem && entry.youtube_url) {
+    youtubeLink.href = entry.youtube_url;
     youtubeLink.style.display = "inline-flex";
   } else if (youtubeLink) {
     youtubeLink.style.display = "none";
   }
 
-  // Display lyrics
-  const lyricsContainer = document.getElementById("lyrics-container");
-  if (lyricsContainer) {
-    lyricsContainer.innerHTML = buildLyricsHTML(song.lyrics || []);
+  const lyricsSectionLabel = document.getElementById("lyrics-section-label");
+  if (lyricsSectionLabel) {
+    lyricsSectionLabel.textContent = isPoem ? "Poem" : "Lyrics";
   }
 
-  // Show content, hide loading
+  const lyricsContainer = document.getElementById("lyrics-container");
+  if (lyricsContainer) {
+    const poemLines = Array.isArray(entry.poem_lines)
+      ? entry.poem_lines
+      : Array.isArray(entry.lyrics)
+        ? entry.lyrics.map(line => line.english || line.transliteration || line.hebrew || "")
+        : [];
+    const poemHebrewLines = Array.isArray(entry.poem_hebrew_lines) ? entry.poem_hebrew_lines : [];
+
+    lyricsContainer.innerHTML = isPoem
+      ? buildPoemHTML(poemLines, poemHebrewLines)
+      : buildLyricsHTML(entry.lyrics || []);
+  }
+
+  const body = document.body;
+  if (body) {
+    body.classList.toggle("poem-mode", isPoem);
+  }
+
+  const songContent = document.getElementById("song-content");
+  if (songContent) {
+    songContent.setAttribute("data-entry-type", isPoem ? "poem" : "song");
+  }
+
   document.getElementById("loading-state").classList.add("hidden");
   document.getElementById("song-content").classList.remove("hidden");
 }
 
 function showError() {
+  if (document.body) {
+    document.body.classList.remove("poem-mode");
+  }
   document.getElementById("loading-state").classList.add("hidden");
   document.getElementById("error-state").classList.remove("hidden");
 }
@@ -174,25 +305,23 @@ async function loadAndDisplaySong() {
   try {
     const response = await fetch(SONGS_URL);
     if (!response.ok) {
-      throw new Error("Failed to load songs");
+      throw new Error("Failed to load songs and poems");
     }
 
-    const songs = await response.json();
+    const entries = await response.json();
 
-    if (!Array.isArray(songs) || songIndex >= songs.length) {
+    if (!Array.isArray(entries) || songIndex >= entries.length) {
       showError();
       return;
     }
 
-    const song = songs[songIndex];
-    displaySong(song);
+    displaySong(entries[songIndex]);
   } catch (error) {
-    console.error("Error loading song:", error);
+    console.error("Error loading entry:", error);
     showError();
   }
 }
 
-// Initialize on page load
 document.addEventListener("DOMContentLoaded", () => {
   loadAndDisplaySong();
 });

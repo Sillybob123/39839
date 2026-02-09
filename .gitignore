@@ -1,0 +1,24 @@
+# macOS system files
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+__MACOSX
+
+# Editor / tool files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+.claude/
+
+# Temp / junk files
+jq_err
+
+# Node
+node_modules/
+
+# Python
+__pycache__/
+*.pyc

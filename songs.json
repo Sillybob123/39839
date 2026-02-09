@@ -1820,5 +1820,810 @@
         "english": "Didn't survive, didn't survive, Sarah, mother, soul"
       }
     ]
+  },
+  {
+    "category": "poem",
+    "title_english": "The Cypress Tree",
+    "artist": "Aidan Schurr",
+    "published_date": "02/06/2026",
+    "overview": "A reflective poem about shared memory, Sinai, resilience, and renewal, written as a devotional meditation of faith and friendship.",
+    "poem_lines": [
+      "\"We were all there, on That mountain,",
+      "the baker, the blacksmith, and the shepherd.",
+      "Standing together, unstuck in time, with our breath held,",
+      "the moment the earth began to tremble,",
+      "shake in awe and wonder.",
+      "Holding us still, caressing us gently,",
+      "an eternal song echoing across The Land\"...",
+      "",
+      "This memory ebbs and flows, like moonstuff,",
+      "sometimes it is close, often it is ages ago,",
+      "a childhood dream yearning to be released.",
+      "Was I really there? I swear I saw you too,",
+      "the moment we met, I knew we were there together...",
+      "",
+      "You were like a cypress tree to me,",
+      "resilient, sprouting in the waters that flow from rock",
+      "",
+      "I look to you when the memory fades,",
+      "reminded to tend to our garden, our only garden",
+      "the ultimate gift, ages in the making,",
+      "but you are not waiting for the world to come...",
+      "",
+      "For the voice still echoes in your ears,",
+      "calling out softly, reverberating, touching, saying",
+      "\"Od Pa'am\", Again - I can do better.",
+      "Od Pa'am, you rise early, as the dew descends",
+      "With the Lord's name on your lips.",
+      "Od Pa'am, you stand tall, as the sun sets,",
+      "With songs writing the story of your soul.",
+      "",
+      "I know we were there together,",
+      "Your shade helped cool me from the",
+      "divine heat that We saw at Sinai.",
+      "Now we have a chance to give back",
+      "For 4,000 years, we have heard the call",
+      "And now we live in a time when we can answer,",
+      "and until that beautiful day,",
+      "Let us continue to be miracles.",
+      "",
+      "Someday, I am sure,",
+      "We will sit together again",
+      "underneath your shade,",
+      "In the Land of Israel",
+      "The way it was meant to be."
+    ],
+    "title_hebrew": "עץ הברוש",
+    "poem_hebrew_lines": [
+      "״כולנו היינו שם, על ההר ההוא,",
+      "האופה, הנפח והרועה.",
+      "עמדנו יחד, משוחררים מכבלי הזמן, ועצורים בנשימתנו,",
+      "ברגע שבו החלה האדמה לרעוד,",
+      "לנוע ביראה ובהשתאות.",
+      "מחזיקה בנו בדממה, מלטפת אותנו בעדינות,",
+      "ושיר נצחי מהדהד על פני כל הארץ״...",
+      "",
+      "הזיכרון הזה גואה ושוקע, כחומר ירח,",
+      "לעיתים הוא קרוב, ולעיתים רחוק שנות דור,",
+      "חלום ילדות הכוסף להשתחרר.",
+      "האם באמת הייתי שם? אני נשבע שגם אותך ראיתי,",
+      "וברגע שנפגשנו ידעתי שהיינו שם יחד...",
+      "",
+      "היית לי כברוש,",
+      "איתן, מצמיח חיים ממי הסלע הזורמים",
+      "",
+      "אליך אני נושא עיניים כשהזיכרון מיטשטש,",
+      "נזכר לטפח את גננו, גננו היחיד,",
+      "המתנה העליונה שנארגה במשך עידנים,",
+      "ואתה אינך ממתין לעולם שיבוא...",
+      "",
+      "כי הקול עודו מהדהד באוזניך,",
+      "קורא ברוך, מרעיד, נוגע, ולוחש:",
+      "״עוד פעם״, שוב - אני יכול להיות טוב יותר.",
+      "עוד פעם, אתה קם מוקדם, עם רדת הטל,",
+      "ושם ה׳ על שפתיך.",
+      "עוד פעם, אתה ניצב זקוף עם שקיעת החמה,",
+      "ושירים כותבים את סיפור נשמתך.",
+      "",
+      "אני יודע שהיינו שם יחד,",
+      "צילך צינן אותי",
+      "מן החום האלוהי שראינו בסיני.",
+      "עתה ניתנה לנו הזדמנות להשיב,",
+      "ארבעת אלפים שנה שמענו את הקריאה,",
+      "וכעת אנו חיים בזמן שבו אפשר לענות,",
+      "ועד לאותו יום יפהפה,",
+      "נמשיך להיות ניסים.",
+      "",
+      "יום אחד, אני בטוח,",
+      "נשב שוב יחד",
+      "מתחת לצילך,",
+      "בארץ ישראל,",
+      "כפי שנועד להיות."
+    ]
+  },
+  {
+    "title_hebrew": "תפילה",
+    "title_english": "Tefillah (Prayer)",
+    "artist": "Ofra Haza",
+    "overview": "A heartfelt prayer song asking God to guard us with compassion, grant light and youthful joy, and keep hope alive in difficult times.",
+    "youtube_url": "https://www.youtube.com/watch?v=mQiTfvht20I",
+    "lyrics": [
+      {
+        "hebrew": "הוא היושב לו אי שם במרומים",
+        "transliteration": "Hu hayoshev lo ei sham bameromim",
+        "english": "He who dwells somewhere up in the heavens"
+      },
+      {
+        "hebrew": "הוא הרופא כל חולים",
+        "transliteration": "Hu harofe kol cholim",
+        "english": "He is the healer of all who are ill"
+      },
+      {
+        "hebrew": "הוא הנותן רוב שמחה לילדים",
+        "transliteration": "Hu hanoten rov simcha layeladim",
+        "english": "He gives abundant joy to children"
+      },
+      {
+        "hebrew": "הוא העושה משפטים",
+        "transliteration": "Hu haose mishpatim",
+        "english": "He is the One who brings justice"
+      },
+      {
+        "hebrew": "הוא בשמיים והוא היחיד",
+        "transliteration": "Hu bashamayim vehu hayachid",
+        "english": "He is in heaven, and He is the only One"
+      },
+      {
+        "hebrew": "הוא הגדול הנורא",
+        "transliteration": "Hu hagadol hanora",
+        "english": "He is great and awe-inspiring"
+      },
+      {
+        "hebrew": "הוא השומר עלינו מצרה",
+        "transliteration": "Hu hashomer aleinu mitzara",
+        "english": "He is the One who guards us from distress"
+      },
+      {
+        "hebrew": "",
+        "transliteration": "",
+        "english": ""
+      },
+      {
+        "hebrew": "אלוה, שמור נא עלינו כמו ילדים",
+        "transliteration": "Eloha, shmor na aleinu kmo yeladim",
+        "english": "God, please guard us like children"
+      },
+      {
+        "hebrew": "שמור נא ואל תעזוב",
+        "transliteration": "Shmor na veal taazov",
+        "english": "Please protect us and do not leave us"
+      },
+      {
+        "hebrew": "תן לנו אור ושמחת נעורים",
+        "transliteration": "Ten lanu or vesimchat neurim",
+        "english": "Give us light and the joy of youth"
+      },
+      {
+        "hebrew": "תן לנו כוח עוד ועוד",
+        "transliteration": "Ten lanu koach od vaod",
+        "english": "Give us strength again and again"
+      },
+      {
+        "hebrew": "שמור נא עלינו כמו ילדים",
+        "transliteration": "Shmor na aleinu kmo yeladim",
+        "english": "Please guard us like children"
+      },
+      {
+        "hebrew": "שמור נא ואל תעזוב",
+        "transliteration": "Shmor na veal taazov",
+        "english": "Please protect us and do not leave us"
+      },
+      {
+        "hebrew": "תן לנו אור ושמחת נעורים",
+        "transliteration": "Ten lanu or vesimchat neurim",
+        "english": "Give us light and the joy of youth"
+      },
+      {
+        "hebrew": "תן לנו גם לאהוב",
+        "transliteration": "Ten lanu gam leehov",
+        "english": "Give us the ability to love as well"
+      },
+      {
+        "hebrew": "",
+        "transliteration": "",
+        "english": ""
+      },
+      {
+        "hebrew": "מה כבר נותר לנו עוד בימים",
+        "transliteration": "Ma kvar notar lanu od bayamim",
+        "english": "What truly remains for us in these days"
+      },
+      {
+        "hebrew": "מה כבר נותר כל היום",
+        "transliteration": "Ma kvar notar kol hayom",
+        "english": "What truly remains throughout the day"
+      },
+      {
+        "hebrew": "שמש תקווה והמון מבטים",
+        "transliteration": "Shemesh tikva vehamon mabatim",
+        "english": "A sun of hope and countless gazes"
+      },
+      {
+        "hebrew": "לילה ויום של חלום",
+        "transliteration": "Layla vayom shel chalom",
+        "english": "A night and a day of dream"
+      },
+      {
+        "hebrew": "הוא בשמיים והוא היחיד",
+        "transliteration": "Hu bashamayim vehu hayachid",
+        "english": "He is in heaven, and He is the only One"
+      },
+      {
+        "hebrew": "הוא הגדול הנורא",
+        "transliteration": "Hu hagadol hanora",
+        "english": "He is great and awe-inspiring"
+      },
+      {
+        "hebrew": "הוא השומר עלינו מצרה",
+        "transliteration": "Hu hashomer aleinu mitzara",
+        "english": "He is the One who guards us from distress"
+      },
+      {
+        "hebrew": "",
+        "transliteration": "",
+        "english": ""
+      },
+      {
+        "hebrew": "אלוה, שמור נא עלינו כמו ילדים...",
+        "transliteration": "Eloha, shmor na aleinu kmo yeladim...",
+        "english": "God, please guard us like children..."
+      }
+    ]
+  },
+  {
+    "title_hebrew": "כל עכבה לטובה",
+    "title_english": "Kol Akava Letova (Every Delay Is for the Good)",
+    "artist": "Ben Zion Chaim Tzur",
+    "overview": "An uplifting song of emunah about accepting life with love, holding onto hope through uncertainty, and remembering the divine spark within every person.",
+    "youtube_url": "https://www.youtube.com/watch?v=1u8-tOmOVyU",
+    "lyrics": [
+      {
+        "hebrew": "אני מאמין באמונה שלמה",
+        "transliteration": "Ani maamin beemunah shlema",
+        "english": "I believe with complete faith"
+      },
+      {
+        "hebrew": "שכל מה שקורה איתי זה רק לטובתי",
+        "transliteration": "Shekol ma shekore iti ze rak letovati",
+        "english": "That everything happening to me is only for my good"
+      },
+      {
+        "hebrew": "ובאמת שאני לא כועס על אף אחד",
+        "transliteration": "Uveemet sheani lo koes al af echad",
+        "english": "And truly, I am not angry at anyone"
+      },
+      {
+        "hebrew": "כל יום לומד איך לשחרר קצת מעצמי",
+        "transliteration": "Kol yom lomed eich leshacherer ktsat meatzmi",
+        "english": "Each day I learn how to let go of a little of myself"
+      },
+      {
+        "hebrew": "",
+        "transliteration": "",
+        "english": ""
+      },
+      {
+        "hebrew": "אפחד לא יודע מה יהיה בסוף",
+        "transliteration": "Af echad lo yodea ma yihiye basof",
+        "english": "No one knows what will be in the end"
+      },
+      {
+        "hebrew": "ככה החיים שלי זה אוף אנ אוף",
+        "transliteration": "Kacha hachayim sheli ze of an of",
+        "english": "That is my life, up and down"
+      },
+      {
+        "hebrew": "מה שמשנה באמת זה רק הנשמה",
+        "transliteration": "Ma shemeshane beemet ze rak haneshama",
+        "english": "What truly matters is only the soul"
+      },
+      {
+        "hebrew": "שמחה בריאות והפרנסה",
+        "transliteration": "Simcha briut vehaparnasa",
+        "english": "Joy, health, and livelihood"
+      },
+      {
+        "hebrew": "הים סוער ואני בתוך סירה",
+        "transliteration": "Hayam soer vaani betoch sira",
+        "english": "The sea is stormy and I am inside a boat"
+      },
+      {
+        "hebrew": "אני מיטלטל אבל תופס חזק",
+        "transliteration": "Ani mitaltel aval tofes chazak",
+        "english": "I am tossed around, but I hold on tight"
+      },
+      {
+        "hebrew": "אחרי הכל",
+        "transliteration": "Acharei hakol",
+        "english": "After everything"
+      },
+      {
+        "hebrew": "אני חלק אלוקה ממעל",
+        "transliteration": "Ani chelek Eloka mimaal",
+        "english": "I am a part of God above"
+      },
+      {
+        "hebrew": "",
+        "transliteration": "",
+        "english": ""
+      },
+      {
+        "hebrew": "כל עכבה לטובה",
+        "transliteration": "Kol akava letova",
+        "english": "Every delay is for the good"
+      },
+      {
+        "hebrew": "מקבל הכל באהבה",
+        "transliteration": "Mekabel hakol beahava",
+        "english": "I accept everything with love"
+      },
+      {
+        "hebrew": "גם אם לא נשאר לי שקל",
+        "transliteration": "Gam im lo nishar li shekel",
+        "english": "Even if I have no money left"
+      },
+      {
+        "hebrew": "יודע הכל זה הבל הבלים",
+        "transliteration": "Yodea hakol ze hevel havalim",
+        "english": "I know it is all vanity of vanities"
+      },
+      {
+        "hebrew": "מה שלא יבוא אין יאוש בעולם",
+        "transliteration": "Ma shelo yavo ein yeush baolam",
+        "english": "Whatever comes, there is no despair in the world"
+      },
+      {
+        "hebrew": "כל עכבה לטובה",
+        "transliteration": "Kol akava letova",
+        "english": "Every delay is for the good"
+      },
+      {
+        "hebrew": "",
+        "transliteration": "",
+        "english": ""
+      },
+      {
+        "hebrew": "כל בן אדם נופל ואז הוא קם",
+        "transliteration": "Kol ben adam nofel veaz hu kam",
+        "english": "Every person falls and then rises"
+      },
+      {
+        "hebrew": "קול בן אדם הולך ונעלם",
+        "transliteration": "Kol ben adam holech veneelam",
+        "english": "Every human voice goes and fades away"
+      },
+      {
+        "hebrew": "כל בן אדם",
+        "transliteration": "Kol ben adam",
+        "english": "Every person"
+      },
+      {
+        "hebrew": "כל בן אדם",
+        "transliteration": "Kol ben adam",
+        "english": "Every person"
+      },
+      {
+        "hebrew": "הוא חלק אלוקה ממעל",
+        "transliteration": "Hu chelek Eloka mimaal",
+        "english": "Is a part of God above"
+      },
+      {
+        "hebrew": "",
+        "transliteration": "",
+        "english": ""
+      },
+      {
+        "hebrew": "תני לי לדבר תקשיבי",
+        "transliteration": "Tni li ledaber takshivi",
+        "english": "Let me speak, listen"
+      },
+      {
+        "hebrew": "גם ככה אני היפראקטיבי",
+        "transliteration": "Gam kacha ani hiperaktivy",
+        "english": "Anyway, I am hyperactive"
+      },
+      {
+        "hebrew": "אני משתדל אני מתפלל",
+        "transliteration": "Ani mishtadel ani mitpalel",
+        "english": "I do my best, I pray"
+      },
+      {
+        "hebrew": "שאבא יהיה גאה בי",
+        "transliteration": "Sheabba yihiye gaeh bi",
+        "english": "That Father will be proud of me"
+      },
+      {
+        "hebrew": "עם מסר נכון בשירים",
+        "transliteration": "Im meser nachon bashirim",
+        "english": "With the right message in the songs"
+      },
+      {
+        "hebrew": "בסוף עוד נהיה עשירים",
+        "transliteration": "Basof od nihye ashirim",
+        "english": "In the end we will still become rich"
+      },
+      {
+        "hebrew": "לא נחכה לעשירי",
+        "transliteration": "Lo nechake laashiri",
+        "english": "We will not wait for the tenth"
+      },
+      {
+        "hebrew": "נשמה שלי בסוף תראי",
+        "transliteration": "Neshama sheli basof tiri",
+        "english": "My soul, in the end you will see"
+      },
+      {
+        "hebrew": "",
+        "transliteration": "",
+        "english": ""
+      },
+      {
+        "hebrew": "שכל עכבה לטובה",
+        "transliteration": "Shekol akava letova",
+        "english": "That every delay is for the good"
+      },
+      {
+        "hebrew": "מקבל הכל באהבה",
+        "transliteration": "Mekabel hakol beahava",
+        "english": "I accept everything with love"
+      },
+      {
+        "hebrew": "גם אם לא נשאר לי שקל",
+        "transliteration": "Gam im lo nishar li shekel",
+        "english": "Even if I have no money left"
+      },
+      {
+        "hebrew": "יודע הכל זה הבל הבלים",
+        "transliteration": "Yodea hakol ze hevel havalim",
+        "english": "I know it is all vanity of vanities"
+      },
+      {
+        "hebrew": "מה שלא יבוא אין יאוש בעולם",
+        "transliteration": "Ma shelo yavo ein yeush baolam",
+        "english": "Whatever comes, there is no despair in the world"
+      },
+      {
+        "hebrew": "כל עכבה לטובה",
+        "transliteration": "Kol akava letova",
+        "english": "Every delay is for the good"
+      },
+      {
+        "hebrew": "",
+        "transliteration": "",
+        "english": ""
+      },
+      {
+        "hebrew": "כל בן אדם נופל ואז הוא קם",
+        "transliteration": "Kol ben adam nofel veaz hu kam",
+        "english": "Every person falls and then rises"
+      },
+      {
+        "hebrew": "קול בן אדם הולך ונעלם",
+        "transliteration": "Kol ben adam holech veneelam",
+        "english": "Every human voice goes and fades away"
+      },
+      {
+        "hebrew": "כל בן אדם",
+        "transliteration": "Kol ben adam",
+        "english": "Every person"
+      },
+      {
+        "hebrew": "כל בן אדם",
+        "transliteration": "Kol ben adam",
+        "english": "Every person"
+      },
+      {
+        "hebrew": "הוא חלק אלוקה ממעל",
+        "transliteration": "Hu chelek Eloka mimaal",
+        "english": "Is a part of God above"
+      },
+      {
+        "hebrew": "",
+        "transliteration": "",
+        "english": ""
+      },
+      {
+        "hebrew": "אפחד לא יודע מה יהיה בסוף",
+        "transliteration": "Af echad lo yodea ma yihiye basof",
+        "english": "No one knows what will be in the end"
+      },
+      {
+        "hebrew": "ככה החיים האלה אוף אנ אוף",
+        "transliteration": "Kacha hachayim haele of an of",
+        "english": "That is this life, up and down"
+      },
+      {
+        "hebrew": "מה שמשנה באמת זה רק הנשמה",
+        "transliteration": "Ma shemeshane beemet ze rak haneshama",
+        "english": "What truly matters is only the soul"
+      },
+      {
+        "hebrew": "שמחה בריאות והפרנסה",
+        "transliteration": "Simcha briut vehaparnasa",
+        "english": "Joy, health, and livelihood"
+      },
+      {
+        "hebrew": "הים סוער ואני בתוך סירה",
+        "transliteration": "Hayam soer vaani betoch sira",
+        "english": "The sea is stormy and I am inside a boat"
+      },
+      {
+        "hebrew": "אני מיטלטל אבל תופס חזק",
+        "transliteration": "Ani mitaltel aval tofes chazak",
+        "english": "I am tossed around, but I hold on tight"
+      },
+      {
+        "hebrew": "אבל אחרי הכל",
+        "transliteration": "Aval acharei hakol",
+        "english": "But after everything"
+      },
+      {
+        "hebrew": "אני חלק אלוקה ממעל",
+        "transliteration": "Ani chelek Eloka mimaal",
+        "english": "I am a part of God above"
+      }
+    ]
+  },
+  {
+    "category": "poem",
+    "title_hebrew": "יָהּ, אָנָה אֶמְצָאֶךָ?",
+    "title_english": "Lord, Where Shall I Find Thee?",
+    "artist": "Yehuda HaLevi",
+    "published_date": "12th Century",
+    "overview": "A medieval piyut that meditates on the paradox of divine transcendence and intimacy: God is beyond all worlds, yet near to the seeker’s heart.",
+    "poem_lines": [
+      "Lord, where shall I find Thee?",
+      "High and hidden is Thy place!",
+      "And where shall I not find Thee?",
+      "Thy glory fills the world!",
+      "I have sought Thy nearness,",
+      "With all my heart I called Thee,",
+      "And going out to meet Thee",
+      "I found Thee coming toward me!",
+      "And in the wonders of Thy might",
+      "In the sanctuary, I beheld Thee."
+    ],
+    "poem_hebrew_lines": [
+      "יָהּ, אָנָה אֶמְצָאֶךָ?",
+      "מְקוֹמְךָ נַעֲלֶה וְנֶעְלָם!",
+      "וְאָנָה לֹא אֶמְצָאֶךָ?",
+      "כְּבוֹדְךָ מָלֵא עוֹלָם!",
+      "דָּרַשְׁתִּי קִרְבָתְךָ,",
+      "בְּכָל לִבִּי קְרָאתִיךָ,",
+      "וּבְצֵאתִי לִקְרָאתְךָ",
+      "לִקְרָאתִי מְצָאתִיךָ!",
+      "וּבְפִלְאֵי גְבוּרָתְךָ",
+      "בַּקֹּדֶשׁ חֲזִיתִיךָ."
+    ]
+  },
+  {
+    "category": "poem",
+    "title_hebrew": "כֵּיוָן שֶׁאֲנִי אוֹרַחַת",
+    "title_english": "The Guest",
+    "artist": "Zelda",
+    "published_date": "20th Century",
+    "overview": "A contemplative poem of bitachon that reframes life as sacred hospitality in the Creator’s house.",
+    "poem_lines": [
+      "Because I am a guest in this world",
+      "and my days are brief,",
+      "I do not want to argue with God.",
+      "I want to love the world",
+      "as a guest loves a house",
+      "where he is staying for a night.",
+      "I want to love the light",
+      "that falls on the table,",
+      "the broken bread, the wine,",
+      "the silence in the corners.",
+      "Because I am a guest,",
+      "I want to be a good guest,",
+      "grateful for the hospitality",
+      "of the Creator."
+    ],
+    "poem_hebrew_lines": [
+      "כֵּיוָן שֶׁאֲנִי אוֹרַחַת בָּעוֹלָם הַזֶּה",
+      "וְיָמַי קְצָרִים,",
+      "אֵינִי רוֹצָה לָרִיב עִם אֱלֹהִים.",
+      "אֲנִי רוֹצָה לֶאֱהֹב אֶת הָעוֹלָם",
+      "כְּמוֹ שֶׁאוֹרֵחַ אוֹהֵב אֶת הַבַּיִת",
+      "שֶׁבּוֹ הוּא לָן לַיְלָה אֶחָד.",
+      "אֲנִי רוֹצָה לֶאֱהֹב אֶת הָאוֹר",
+      "שֶׁנּוֹפֵל עַל הַשֻּׁלְחָן,",
+      "אֶת הַלֶּחֶם הַבָּצוּעַ, אֶת הַיַּיִן,",
+      "אֶת הַדְּמָמָה שֶׁבַּזָּוִיוֹת.",
+      "כֵּיוָן שֶׁאֲנִי אוֹרַחַת,",
+      "אֲנִי רוֹצָה לִהְיוֹת אוֹרַחַת טוֹבָה,",
+      "אֲסִירַת תּוֹדָה עַל הַכְנָסַת הָאוֹרְחִים",
+      "שֶׁל הַבּוֹרֵא."
+    ]
+  },
+  {
+    "category": "poem",
+    "title_hebrew": "אֲנִי מַאֲמִין",
+    "title_english": "I Believe (Ani Ma'amin)",
+    "artist": "Attributed to Reb Azriel David Fastag",
+    "published_date": "Holocaust Era",
+    "overview": "A historic declaration of unwavering emunah, rooted in Maimonides’ principle of faith and sanctified by Jewish endurance in the Holocaust.",
+    "poem_lines": [
+      "I believe with perfect faith",
+      "in the coming of the Messiah;",
+      "and though he may tarry,",
+      "nonetheless, I will wait for him",
+      "every single day that he may come."
+    ],
+    "poem_hebrew_lines": [
+      "אֲנִי מַאֲמִין בֶּאֱמוּנָה שְׁלֵמָה",
+      "בְּבִיאַת הַמָּשִׁיחַ,",
+      "וְאַף עַל פִּי שֶׁיִּתְמַהְמֵהַּ,",
+      "עִם כָּל זֶה אֲחַכֶּה לּוֹ",
+      "בְּכָל יוֹם שֶׁיָּבוֹא."
+    ]
+  },
+  {
+    "category": "poem",
+    "title_hebrew": "אֲדוֹן עוֹלָם",
+    "title_english": "Master of the Universe (Adon Olam)",
+    "artist": "Attributed to Solomon ibn Gabirol",
+    "published_date": "11th Century",
+    "overview": "A timeless liturgical poem moving from cosmic sovereignty to deeply personal trust and surrender.",
+    "poem_lines": [
+      "Master of the world who reigned,",
+      "before any creature was created.",
+      "At the time when all was made by His will,",
+      "then was His name proclaimed \"King.\"",
+      "And after all things shall cease to be,",
+      "He alone will reign in awe.",
+      "He was, He is,",
+      "and He shall be in glory.",
+      "And He is One, there is no second,",
+      "to compare to Him, to be His equal.",
+      "Without beginning, without end,",
+      "power and dominion are His.",
+      "And He is my God, my living Redeemer,",
+      "my Rock in my pain in time of distress.",
+      "He is my banner and my refuge,",
+      "my portion on the day I call.",
+      "Into His hand I entrust my spirit,",
+      "when I sleep and when I wake.",
+      "And with my spirit, my body too;",
+      "The Lord is with me, I shall not fear."
+    ],
+    "poem_hebrew_lines": [
+      "אֲדוֹן עוֹלָם אֲשֶׁר מָלַךְ,",
+      "בְּטֶרֶם כָּל יְצִיר נִבְרָא.",
+      "לְעֵת נַעֲשָׂה בְחֶפְצוֹ כֹּל,",
+      "אֲזַי מֶלֶךְ שְׁמוֹ נִקְרָא.",
+      "וְאַחֲרֵי כִּכְלוֹת הַכֹּל,",
+      "לְבַדּוֹ יִמְלֹךְ נוֹרָא.",
+      "וְהוּא הָיָה וְהוּא הֹוֶה,",
+      "וְהוּא יִהְיֶה בְּתִפְאָרָה.",
+      "וְהוּא אֶחָד וְאֵין שֵׁנִי,",
+      "לְהַמְשִׁיל לוֹ לְהַחְבִּירָה.",
+      "בְּלִי רֵאשִׁית בְּלִי תַכְלִית,",
+      "וְלוֹ הָעֹז וְהַמִּשְׂרָה.",
+      "וְהוּא אֵלִי וְחַי גּוֹאֲלִי,",
+      "וְצוּר חֶבְלִי בְּעֵת צָרָה.",
+      "וְהוּא נִסִּי וּמָנוֹס לִי,",
+      "מְנָת כּוֹסִי בְּיוֹם אֶקְרָא.",
+      "בְּיָדוֹ אַפְקִיד רוּחִי,",
+      "בְּעֵת אִישָׁן וְאָעִירָה.",
+      "וְעִם רוּחִי גְּוִיָּתִי,",
+      "ה׳ לִי וְלֹא אִירָא."
+    ]
+  },
+  {
+    "category": "poem",
+    "title_hebrew": "צִיּוֹן הֲלֹא תִשְׁאֲלִי",
+    "title_english": "Zion, Will You Not Ask?",
+    "artist": "Yehuda HaLevi",
+    "published_date": "12th Century",
+    "overview": "The most renowned Zionide of medieval Hebrew poetry, voicing exile-longing for Zion as for a beloved.",
+    "poem_lines": [
+      "Zion, will you not ask the peace of your captives,",
+      "those who seek your peace, the remnant of your flocks?",
+      "From West and East, from North and South—the peace",
+      "of those far and near—enquire from all your sides.",
+      "To weep for your affliction, I am a jackal; but when I dream",
+      "of your captives’ return—I am a harp for your songs.",
+      "Who will give me wings that I might wander far away,",
+      "and carry the fragments of my heart to your mountains!",
+      "I will fall upon my face upon your land, I will cherish your stones",
+      "and I will be gracious to your very dust."
+    ],
+    "poem_hebrew_lines": [
+      "צִיּוֹן הֲלֹא תִשְׁאֲלִי לִשְׁלוֹם אֲסִירָיִךְ",
+      "דּוֹרְשֵׁי שְׁלוֹמֵךְ וְהֵם יֶתֶר עֲדָרָיִךְ?",
+      "מִיָּם וּמִזְרָח וּמִצָּפוֹן וְתֵימָן שְׁלוֹם",
+      "רָחוֹק וְקָרוֹב שְׂאִי מִכֹּל עֲבָרָיִךְ.",
+      "לִבְכּוֹת עֱנוּתֵךְ אֲנִי תַנִּים, וְעֵת אֶחֱלֹם",
+      "שִׁיבַת שְׁבוּתֵךְ אֲנִי כִנּוֹר לְשִׁירָיִךְ.",
+      "מִי יַעֲשֶׂה לִי כְנָפַיִם וְאַרְחִיק נְדוֹד,",
+      "אָנִיד לְבִתְרֵי לְבָבִי בֵּין בְּתָרָיִךְ!",
+      "אֶפֹּל לְאַפַּי עֲלֵי אַרְצֵךְ וְאֶרְצֶה אֲבָנַיִךְ",
+      "מְאֹד וַאֲחֹנֵן אֶת־עֲפָרָיִךְ."
+    ]
+  },
+  {
+    "category": "poem",
+    "title_hebrew": "אֶל הַצִּפּוֹר",
+    "title_english": "To the Bird",
+    "artist": "Chaim Nachman Bialik",
+    "published_date": "1891",
+    "overview": "A foundational Zionist poem in which the returning bird carries news and longing between exile and the Land of Israel.",
+    "poem_lines": [
+      "Greetings upon your return, sweet bird,",
+      "from the warm countries to my window—",
+      "how my soul longed for your pleasant voice",
+      "during the winter when you left my home.",
+      "Sing, tell me, my dear bird,",
+      "of wonders from the land of far-away,",
+      "is it also there, in that warm, beautiful land,",
+      "that troubles and hardships abound?",
+      "Do you bear me greetings from my brothers in Zion,",
+      "from my brothers who are distant yet close?",
+      "Does the dew fall like pearls on Mount Hermon,",
+      "or does it descend and fall like tears?"
+    ],
+    "poem_hebrew_lines": [
+      "שָׁלוֹם רָב שׁוּבֵךְ, צִפּוֹרָה נֶחְמֶדֶת,",
+      "מֵאַרְצוֹת הַחֹם אֶל חַלּוֹנִי –",
+      "אֶל קוֹלֵךְ כִּי עָרֵב מַה נַּפְשִׁי כָלָתָה",
+      "בַּחֹרֶף בְּעָזְבֵךְ מְעוֹנִי.",
+      "זַמְּרִי, סַפְּרִי, צִפּוֹרִי הַיְקָרָה,",
+      "מֵאֶרֶץ מֶרְחַקִּים נִפְלָאוֹת,",
+      "הֲגַם שָׁם בָּאָרֶץ הַחַמָּה, הַיָּפָה,",
+      "תִּרְבֶּינָה הָרָעוֹת, הַתְּלָאוֹת?",
+      "הֲתִשְׂאִי לִי שָׁלוֹם מֵאַחַי בְּצִיּוֹן,",
+      "מֵאַחַי הָרְחוֹקִים הַקְּרוֹבִים?",
+      "הֲיָרַד כְּפִנִינִים הַטַּל עַל הַר חֶרְמוֹן,",
+      "אִם יֵרֵד וְיִפֹּל כִּדְמָעוֹת?"
+    ]
+  },
+  {
+    "category": "poem",
+    "title_hebrew": "מַגַּשׁ הַכֶּסֶף",
+    "title_english": "The Silver Platter",
+    "artist": "Natan Alterman",
+    "published_date": "1947",
+    "overview": "A defining modern Israeli poem about the sacrifice of youth through which the state was won.",
+    "poem_lines": [
+      "And the land grows still, the red eye of the sky",
+      "slowly pales over smoking borders.",
+      "And a nation stands—heart-torn but breathing",
+      "to receive the miracle, the one and only.",
+      "Then from across, a girl and boy step forth",
+      "and slowly march toward the nation.",
+      "\"Who are you?\"—and the two are silent,",
+      "they will answer her: \"We are the silver platter",
+      "upon which the Jewish state was given to you.\""
+    ],
+    "poem_hebrew_lines": [
+      "וְהָאָרֶץ תִּשְׁקֹט, עֵין שָׁמַיִם אֹדֶמֶת",
+      "תְּעַמְעֵם לְאִטָּהּ עַל גְּבוּלוֹת עֲשֵׁנִים.",
+      "וְאֻמָּה תַּעֲמֹד – קְרוּעַת לֵב אַךְ נוֹשֶׁמֶת",
+      "לְקַבֵּל אֶת הַנֵּס, הָאֶחָד, אֵין שֵׁנִי.",
+      "אָז מִנֶּגֶד יֵצְאוּ נַעֲרָה וָנַעַר",
+      "וְאַט אַט יִצְעֲדוּ הֵם אֶל מוּל הָאֻמָּה.",
+      "\"מִי אַתֶּם?\" – וְהַשְּׁנַיִם שׁוֹקְטִים,",
+      "יַעֲנוּ לָהּ: \"אֲנַחְנוּ מַגַּשׁ הַכֶּסֶף",
+      "שֶׁעָלָיו נִתְּנָה לָךְ מְדִינַת הַיְּהוּדִים.\""
+    ]
+  },
+  {
+    "category": "poem",
+    "title_hebrew": "יְרוּשָׁלַיִם שֶׁל זָהָב",
+    "title_english": "Jerusalem of Gold",
+    "artist": "Naomi Shemer",
+    "published_date": "1967",
+    "overview": "A modern Hebrew classic that bridges ancient longing and modern return to Jerusalem.",
+    "poem_lines": [
+      "Mountain air as clear as wine, and the scent of pines",
+      "is borne on the evening wind with the sound of bells.",
+      "The city that sits solitary, with a wall in its heart—",
+      "Jerusalem of gold, and of bronze, and of light.",
+      "How the cisterns have dried, the marketplace is empty,",
+      "and no one frequents the Temple Mount in the Old City.",
+      "We have returned to the cisterns, to the market and the square,",
+      "A shofar calls on the Temple Mount in the Old City."
+    ],
+    "poem_hebrew_lines": [
+      "אֲוִיר הָרִים צָלוּל כַּיַּיִן וְרֵיחַ אֳרָנִים",
+      "נִשָּׂא בְּרוּחַ הָעַרְבַּיִם עִם קוֹל פַּעֲמוֹנִים.",
+      "הָעִיר אֲשֶׁר בָּדָד יוֹשֶׁבֶת וּבְלִבָּהּ חוֹמָה –",
+      "יְרוּשָׁלַיִם שֶׁל זָהָב וְשֶׁל נְחֹשֶׁת וְשֶׁל אוֹר.",
+      "אֵיכָה יָבְשׁוּ בּוֹרוֹת הַמַּיִם, כִּכַּר הַשּׁוּק רֵיקָה",
+      "וְאֵין פּוֹקֵד אֶת הַר הַבַּיִת בָּעִיר הָעַתִּיקָה.",
+      "חָזַרְנוּ אֶל בּוֹרוֹת הַמַּיִם, לַשּׁוּק וְלַכִּכָּר",
+      "שׁוֹפָר קוֹרֵא בְּהַר הַבַּיִת בָּעִיר הָעַתִּיקָה."
+    ]
   }
 ]

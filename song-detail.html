@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Song Details - A Letter in the Scroll</title>
+    <title>Song and Poem Details - A Letter in the Scroll</title>
     <link rel="icon" type="image/png" href="Icon.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="mobile-overrides.css">
@@ -39,13 +39,13 @@
                         </svg>
                         <span class="header-btn-text">Prayers</span>
                     </a>
-                    <a href="songs.html" class="header-btn header-btn-secondary" title="Songs of Faith">
+                    <a href="songs.html" class="header-btn header-btn-secondary" title="Songs and Poems">
                         <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-2v13"></path>
                             <circle cx="6" cy="18" r="3" stroke-width="2"></circle>
                             <circle cx="18" cy="16" r="3" stroke-width="2"></circle>
                         </svg>
-                        <span class="header-btn-text">Songs</span>
+                        <span class="header-btn-text">Songs and Poems</span>
                     </a>
                     <a href="about.html" class="header-btn header-btn-secondary" title="About this project">
                         <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,13 +115,13 @@
         </div>
     </section>
 
-    <!-- Back to Songs Button -->
+    <!-- Back to Songs and Poems Button -->
     <div class="container mx-auto px-4 py-4">
         <a href="songs.html" class="back-to-songs-link">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
-            Back to Songs
+            Back to Songs and Poems
         </a>
     </div>
 
@@ -130,7 +130,7 @@
         <!-- Loading State -->
         <div id="loading-state" class="song-detail-loading">
             <div class="loading-spinner"></div>
-            <p>Loading song details...</p>
+            <p>Loading details...</p>
         </div>
 
         <!-- Error State -->
@@ -138,9 +138,9 @@
             <svg class="error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <h2>Song Not Found</h2>
-            <p>We couldn't find the song you're looking for.</p>
-            <a href="songs.html" class="error-back-btn">Return to Songs</a>
+            <h2>Entry Not Found</h2>
+            <p>We couldn't find the song or poem you're looking for.</p>
+            <a href="songs.html" class="error-back-btn">Return to Songs and Poems</a>
         </div>
 
         <!-- Song Content -->
@@ -149,13 +149,16 @@
             <header class="song-detail-header">
                 <div class="song-detail-title-section">
                     <h1 id="song-title" class="song-detail-title"></h1>
-                    <p id="song-artist" class="song-detail-artist"></p>
+                    <div class="song-detail-meta">
+                        <p id="song-artist" class="song-detail-artist"></p>
+                        <p id="song-date" class="song-detail-date"></p>
+                    </div>
                 </div>
                 <div id="song-overview" class="song-detail-overview"></div>
             </header>
 
             <!-- Video Section -->
-            <section class="song-detail-video-section">
+            <section id="video-section" class="song-detail-video-section">
                 <h2 class="section-title">
                     <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
@@ -176,13 +179,13 @@
                 </div>
             </section>
 
-            <!-- Lyrics Section -->
-            <section class="song-detail-lyrics-section">
-                <h2 class="section-title">
+            <!-- Lyrics / Poem Section -->
+            <section id="lyrics-section" class="song-detail-lyrics-section">
+                <h2 id="lyrics-section-title" class="section-title">
                     <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    Lyrics
+                    <span id="lyrics-section-label">Lyrics</span>
                 </h2>
                 <div id="lyrics-container" class="lyrics-detail-container">
                     <!-- Lyrics will be inserted here -->
@@ -194,7 +197,7 @@
     <!-- Footer -->
     <footer class="bg-blue-900 text-white py-6 mt-12 border-t-4 border-blue-700">
         <div class="container mx-auto px-4 text-center">
-            <p class="text-sm">May these songs deepen your faith</p>
+            <p class="text-sm">May these songs and poems deepen your faith</p>
             <p class="text-xs text-blue-300 mt-2">A Letter in the Scroll</p>
         </div>
     </footer>

@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Songs of Faith - A Letter in the Scroll</title>
+    <title>Songs and Poems - A Letter in the Scroll</title>
     <link rel="icon" type="image/png" href="Icon.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="mobile-overrides.css">
     <link rel="stylesheet" href="songs-style.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="tailwind-utilities.css">
 </head>
 <body class="bg-gray-50 min-h-screen" data-enable-text-size="true" data-header-fallback="true">
     <!-- Professional Responsive Header -->
@@ -39,13 +39,13 @@
                         </svg>
                         <span class="header-btn-text">Prayers</span>
                     </a>
-                    <a href="songs.html" aria-current="page" class="header-btn header-btn-secondary" title="Songs of Faith">
+                    <a href="songs.html" aria-current="page" class="header-btn header-btn-secondary" title="Songs and Poems">
                         <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-2v13"></path>
                             <circle cx="6" cy="18" r="3" stroke-width="2"></circle>
                             <circle cx="18" cy="16" r="3" stroke-width="2"></circle>
                         </svg>
-                        <span class="header-btn-text">Songs</span>
+                        <span class="header-btn-text">Songs and Poems</span>
                     </a>
                     <a href="about.html" class="header-btn header-btn-secondary" title="About this project">
                         <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -210,16 +210,16 @@
     <main class="container mx-auto px-4 py-8">
         <section class="songs-hero">
             <div>
-                <p class="songs-eyebrow">Songs of Faith</p>
-                <h2 class="songs-title">Listen, reflect, and sing along</h2>
+                <p class="songs-eyebrow">Songs and Poems</p>
+                <h2 class="songs-title">Listen, reflect, read, and sing</h2>
                 <p class="songs-subtitle">
-                    Explore songs that celebrate faith, hope, and the journey of the soul. Each entry includes a
-                    quick overview, a YouTube player, and full lyrics in Hebrew, transliteration, and English.
+                    Explore songs and poems that celebrate faith, hope, and the journey of the soul. Songs include
+                    YouTube players with full lyrics, and poems are presented in a crafted reading experience.
                 </p>
             </div>
             <div class="songs-hero-card">
-                <p class="songs-hero-label">Song Library</p>
-                <p class="songs-hero-count" id="songs-count" aria-live="polite">Loading songs...</p>
+                <p class="songs-hero-label">Songs &amp; Poems Library</p>
+                <p class="songs-hero-count" id="songs-count" aria-live="polite">Loading entries...</p>
             </div>
         </section>
 
@@ -239,31 +239,38 @@
                     Listen on Apple Music →
                 </a>
             </div>
-            <div class="apple-music-embed">
-                <iframe allow="autoplay *; encrypted-media *;" frameborder="0" height="450" style="width:100%;max-width:100%;overflow:hidden;border-radius:12px;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="https://embed.music.apple.com/us/playlist/%D7%9E%D7%95%D7%93%D7%94-%D7%90%D7%A0%D7%99/pl.u-WabZzV3sWGPPN4"></iframe>
+            <div class="apple-music-embed" id="apple-music-embed">
+                <div class="apple-music-placeholder" id="apple-music-placeholder" style="height:450px;display:flex;align-items:center;justify-content:center;background:#f8fafc;border-radius:12px;cursor:pointer;" role="button" tabindex="0" aria-label="Load Apple Music playlist">
+                    <span style="color:#1d4ed8;font-weight:600;font-size:1rem;">Click to load playlist</span>
+                </div>
             </div>
         </section>
 
-        <section class="songs-toolbar" aria-label="Song search">
+        <section class="songs-toolbar" aria-label="Songs and poems search">
+            <div class="songs-type-tabs" role="tablist" aria-label="Entry type filter">
+                <button type="button" role="tab" class="songs-type-tab active" data-type-filter="all" aria-selected="true">All <span id="songs-tab-count-all" class="songs-type-tab-count">0</span></button>
+                <button type="button" role="tab" class="songs-type-tab" data-type-filter="song" aria-selected="false">Songs <span id="songs-tab-count-song" class="songs-type-tab-count">0</span></button>
+                <button type="button" role="tab" class="songs-type-tab" data-type-filter="poem" aria-selected="false">Poems <span id="songs-tab-count-poem" class="songs-type-tab-count">0</span></button>
+            </div>
             <div class="songs-search">
-                <label for="song-search" class="songs-search-label">Search songs</label>
+                <label for="song-search" class="songs-search-label">Search songs and poems</label>
                 <div class="songs-search-field">
-                    <input id="song-search" type="search" placeholder="Search by title, artist, or lyric..." autocomplete="off" class="songs-search-input">
+                    <input id="song-search" type="search" placeholder="Search by title, artist, poet, lyric, or poem line..." autocomplete="off" class="songs-search-input">
                     <button type="button" id="clear-song-search" class="songs-search-clear">Clear</button>
                 </div>
-                <p class="songs-search-hint">Tip: try a Hebrew word, an artist name, or a phrase from the lyrics.</p>
+                <p class="songs-search-hint">Tip: try a Hebrew word, an artist name, a poet, or a phrase from a poem.</p>
             </div>
-            <div class="songs-pill" id="songs-filter-pill">All songs</div>
+            <div class="songs-pill" id="songs-filter-pill">All entries</div>
         </section>
 
         <section id="songs-container" class="songs-grid" aria-live="polite">
-            <div class="songs-loading">Loading songs...</div>
+            <div class="songs-loading">Loading entries...</div>
         </section>
     </main>
 
     <footer class="bg-blue-900 text-white py-6 mt-12 border-t-4 border-blue-700">
         <div class="container mx-auto px-4 text-center">
-            <p class="text-sm">May these songs deepen your faith</p>
+            <p class="text-sm">May these songs and poems deepen your faith</p>
             <p class="text-xs text-blue-300 mt-2">A Letter in the Scroll</p>
         </div>
     </footer>
