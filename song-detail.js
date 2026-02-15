@@ -117,6 +117,16 @@ function splitPoemIntoStanzas(lines = []) {
   return stanzas;
 }
 
+function formatPoemLineMarkup(line = "") {
+  // Escape first, then apply a constrained formatting subset for poem emphasis.
+  let formatted = escapeHtml(String(line || ""));
+  formatted = formatted.replace(/\*\*__([\s\S]+?)__\*\*/g, "<strong><u>$1</u></strong>");
+  formatted = formatted.replace(/__\*\*([\s\S]+?)\*\*__/g, "<u><strong>$1</strong></u>");
+  formatted = formatted.replace(/\*\*([\s\S]+?)\*\*/g, "<strong>$1</strong>");
+  formatted = formatted.replace(/__([\s\S]+?)__/g, "<u>$1</u>");
+  return formatted;
+}
+
 function buildPoemStanzaHTML(stanzas = [], options = {}) {
   const { isHebrew = false, languageClass = "" } = options;
   return stanzas
@@ -126,7 +136,7 @@ function buildPoemStanzaHTML(stanzas = [], options = {}) {
           const openingClass = !isHebrew && stanzaIndex === 0 && lineIndex === 0 ? " poem-line-opening" : "";
           const languageLineClass = languageClass ? ` ${languageClass}` : "";
           const languageAttrs = isHebrew ? ' lang="he" dir="rtl"' : "";
-          return `<p class="poem-line${openingClass}${languageLineClass}"${languageAttrs}>${escapeHtml(line)}</p>`;
+          return `<p class="poem-line${openingClass}${languageLineClass}"${languageAttrs}>${formatPoemLineMarkup(line)}</p>`;
         })
         .join("");
 

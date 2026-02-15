@@ -230,6 +230,27 @@
             </div>
         </section>
 
+        <section class="songs-toolbar" aria-label="Songs and poems search">
+            <div class="songs-type-tabs" role="tablist" aria-label="Entry type filter">
+                <button type="button" role="tab" class="songs-type-tab active" data-type-filter="all" aria-selected="true">All <span id="songs-tab-count-all" class="songs-type-tab-count">0</span></button>
+                <button type="button" role="tab" class="songs-type-tab" data-type-filter="song" aria-selected="false">Songs <span id="songs-tab-count-song" class="songs-type-tab-count">0</span></button>
+                <button type="button" role="tab" class="songs-type-tab" data-type-filter="poem" aria-selected="false">Poems <span id="songs-tab-count-poem" class="songs-type-tab-count">0</span></button>
+            </div>
+            <div class="songs-search">
+                <label for="song-search" class="songs-search-label">Search songs and poems</label>
+                <div class="songs-search-field">
+                    <input id="song-search" type="search" placeholder="Search by title, artist, poet, lyric, or poem line..." autocomplete="off" class="songs-search-input">
+                    <button type="button" id="clear-song-search" class="songs-search-clear">Clear</button>
+                </div>
+                <p class="songs-search-hint">Tip: try a Hebrew word, an artist name, a poet, or a phrase from a poem.</p>
+            </div>
+            <div class="songs-pill" id="songs-filter-pill">All entries</div>
+        </section>
+
+        <section id="songs-container" class="songs-grid" aria-live="polite">
+            <div class="songs-loading">Loading entries...</div>
+        </section>
+
         <!-- Apple Music Playlist Section -->
         <section class="apple-music-section">
             <div class="apple-music-header">
@@ -251,27 +272,6 @@
                     <span style="color:#1d4ed8;font-weight:600;font-size:1rem;">Click to load playlist</span>
                 </div>
             </div>
-        </section>
-
-        <section class="songs-toolbar" aria-label="Songs and poems search">
-            <div class="songs-type-tabs" role="tablist" aria-label="Entry type filter">
-                <button type="button" role="tab" class="songs-type-tab active" data-type-filter="all" aria-selected="true">All <span id="songs-tab-count-all" class="songs-type-tab-count">0</span></button>
-                <button type="button" role="tab" class="songs-type-tab" data-type-filter="song" aria-selected="false">Songs <span id="songs-tab-count-song" class="songs-type-tab-count">0</span></button>
-                <button type="button" role="tab" class="songs-type-tab" data-type-filter="poem" aria-selected="false">Poems <span id="songs-tab-count-poem" class="songs-type-tab-count">0</span></button>
-            </div>
-            <div class="songs-search">
-                <label for="song-search" class="songs-search-label">Search songs and poems</label>
-                <div class="songs-search-field">
-                    <input id="song-search" type="search" placeholder="Search by title, artist, poet, lyric, or poem line..." autocomplete="off" class="songs-search-input">
-                    <button type="button" id="clear-song-search" class="songs-search-clear">Clear</button>
-                </div>
-                <p class="songs-search-hint">Tip: try a Hebrew word, an artist name, a poet, or a phrase from a poem.</p>
-            </div>
-            <div class="songs-pill" id="songs-filter-pill">All entries</div>
-        </section>
-
-        <section id="songs-container" class="songs-grid" aria-live="polite">
-            <div class="songs-loading">Loading entries...</div>
         </section>
     </main>
 

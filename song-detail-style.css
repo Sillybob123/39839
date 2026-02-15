@@ -508,6 +508,16 @@ body.bg-gray-50 {
     margin-bottom: 0;
 }
 
+.poem-line strong {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.poem-line u {
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+}
+
 .poem-line-opening {
     color: #134e4a;
     font-size: 1.22rem;
@@ -697,6 +707,10 @@ body.poem-mode .poem-line {
     font-size: 1.26rem;
     line-height: 1.72;
     letter-spacing: 0.012em;
+}
+
+body.poem-mode .poem-line strong {
+    color: #7c2d12;
 }
 
 body.poem-mode .poem-line-opening {
