@@ -273,190 +273,214 @@
         hebrew: "אֵין אָדָם עוֹבֵר עֲבֵרָה אֶלָּא אִם כֵּן נִכְנַס בּוֹ רוּחַ שְׁטוּת.",
         translation: "A person does not miss the mark unless a spirit of 'folly' enters them.",
         source: "Talmud, Sotah 3a",
-        reflection: "The Hebrew `ruach shtut` means a 'spirit of folly.' This is a profoundly compassionate insight into human failure. It teaches that your core self doesn't sin; rather, a moment of 'folly' or temporary insanity enters and takes over. This reframes failure not as your identity ('I am bad'), but as a temporary state ('I acted foolishly'). It empowers you to evict this spirit of folly and return to your true, essential self."
+        reflection: "The Talmud offers a profoundly compassionate view of human failing through the concept of 'ruach shtut' (a spirit of folly). It teaches that your core, essential self is fundamentally good and desires to do what is right. When we miss the mark, it is not because we are inherently bad, but because a temporary state of confusion or spiritual disconnect has clouded our judgment. This insight allows us to separate our true identity from our mistakes, making it easier to repent, correct course, and return to who we really are."
       },
       {
         id: 42,
         hebrew: "טוֹב פַּת חֲרֵבָה וְשַׁלְוָה־בָהּ, מִבַּיִת מָלֵא זִבְחֵי־רִיב.",
         translation: "Better a dry crust with peace than a house full of feasting with strife.",
         source: "Proverbs 17:1",
-        reflection: "This verse contrasts `pat chareva` (a dry crust) with a `bayit malei zivchei-riv` (a house full of offerings of strife). We often chase material abundance at the cost of relational peace. King Solomon teaches that the emotional quality of your environment is the true measure of wealth. A crust of bread with `shalvah` (tranquility) is a five-star meal, while a banquet with `riv` (strife) tastes like ash. This commands us to prioritize atmosphere over abundance."
+        reflection: "King Solomon challenges our definition of wealth by contrasting a meager meal eaten in peace with a luxurious feast consumed in bitterness. We often sacrifice the tranquility of our homes to pursue material abundance, only to find that tension ruins the enjoyment of our success. True prosperity is measured by the emotional climate of our environment, not the contents of our table. This proverb urges us to prioritize harmony over accumulation."
       },
       {
         id: 43,
         hebrew: "בְּכָל־עֶצֶב יִהְיֶה מוֹתָר, וּדְבַר־שְׂפָתַיִם אַךְ־לְמַחְסוֹר.",
         translation: "In all toil there is profit, but mere talk leads only to lack.",
         source: "Proverbs 14:23",
-        reflection: "The Hebrew contrasts `etzev` (toil) which creates `motar` (surplus), with `d'var-sfatayim` (lip-service) which leads `ach-l'machsor` (only to lack). We live in an age of endless talk—meetings, branding, social media—that feels productive but often isn't. This proverb is a powerful call to action. It reframes 'talk' as an energy drain and 'toil' as the only true path to creating a surplus in your life and in the world."
+        reflection: "We often mistake talking about a goal for actual progress. This proverb warns that while deliberate effort ('toil') builds real value, endless discussion ('mere talk') only depletes our time and resources. In an age dominated by meetings and social media, this is a timeless reminder that authentic creation requires rolling up our sleeves. Success is found in quiet execution, not loud declarations."
       },
       {
         id: 44,
         hebrew: "הֱוֵי זָנָב לָאֲרָיוֹת, וְאַל תְּהִי רֹאשׁ לַשּׁוּעָלִים.",
         translation: "Be a tail to lions rather than a head to foxes.",
         source: "Pirkei Avot 4:15",
-        reflection: "The metaphor contrasts being a `zanav l'arayot` (a tail to lions) with a `rosh l'shu'alim` (a head to foxes). We are often tempted to be the 'big fish in a small pond.' This teaching reframes growth as a function of environment. Being the least accomplished person in a room of 'lions' (giants of wisdom) pulls you up, while leading 'foxes' (mediocre people) will cause you to shrink. This is an empowering command to always choose the room that challenges you most."
+        reflection: "Human ego naturally desires status, tempting us to be a 'big fish in a small pond'—the leader among those who demand little of us. However, true spiritual and intellectual growth requires humility. By choosing to be the least accomplished person in a room of 'lions' (people of great wisdom and integrity), their greatness will inevitably pull you upward. This teaching reminds us to value the quality of our company over the stroke of our ego."
       },
       {
         id: 45,
         hebrew: "חָכְמַת סוֹפְרִים תִּסְרַח... וִירֵאֵי חֵטְא יִמָּאֲסוּ.",
         translation: "The wisdom of the scholars will decay... and those who fear missing the mark will be loathed.",
         source: "Mishnah, Sotah 9:15",
-        reflection: "The prophecy that 'wisdom of scholars will decay' (`tisrach` - תסרח, literally 'will stink') is a terrifying warning for an age where intellect is unmoored from morality. This Mishna reframes integrity as a radical act. In a time when those who 'fear sin are loathed,' maintaining your moral compass is not about being popular; it is about preserving a pocket of sanity in a world that has chosen to go mad."
+        reflection: "This Mishnah describes the spiritual climate preceding the Messianic era, a time when intellect becomes divorced from morality. When society values cleverness over character, the 'wisdom of scholars' loses its moral fragrance and decays. In such a generation, choosing integrity and holding fast to ethical standards will make one unpopular, even despised. It teaches that true faithfulness requires the courage to maintain your moral compass, even when the rest of the world has lost its way."
       },
       {
         id: 46,
         hebrew: "כָּל כְּנֵסִיָּה שֶׁהִיא לְשֵׁם שָׁמַיִם, סוֹפָהּ לְהִתְקַיֵּם.",
         translation: "Every assembly that is for the sake of Heaven is destined to endure.",
         source: "Pirkei Avot 4:11",
-        reflection: "The 'clever' secret of longevity is 'L'shem Shamayim' (altruistic intent). If a project or relationship is built on ego, it will crumble when the ego is frustrated. But if it is built on a higher purpose, it becomes part of the eternal structure of the world. Check your 'why' to predict your 'how long.'"
+        reflection: "The ultimate test of any community, project, or relationship is its underlying motive. When people unite driven by ego, wealth, or power, their alliance will collapse the moment those self-serving needs clash. However, when an assembly is gathered 'for the sake of Heaven'—dedicated to a higher, selfless purpose—it taps into the eternal. To build something that lasts, build it on the foundation of shared, transcendent values."
       },
 
       // --- Part VI: World & Society ---
       {
-        id: 47,        hebrew: "כָּל הַמְקַיֵּם נֶפֶשׁ אַחַת, כְּאִלּוּ קִיֵּם עוֹלָם מָלֵא",
+        id: 47,
+        hebrew: "כָּל הַמְקַיֵּם נֶפֶשׁ אַחַת, כְּאִלּוּ קִיֵּם עוֹלָם מָלֵא",
         translation: "Whoever saves one life, it is as if he saved an entire world.",
         source: "Mishnah Sanhedrin 4:5",
-        reflection: "The Mishnah teaches the infinite value of every individual. Never underestimate the impact of helping a single person; to that person, and to their future generations, your act is everything."
+        reflection: "Judaism does not view humanity merely as a collective mass, but sees an entire, infinitely complex universe within each individual. When you save, uplift, or transform a single person, you are also saving all the future generations that will stem from them, along with their unique contributions to history. This principle radically elevates the importance of every single interaction we have."
       },
       {
-        id: 48,        hebrew: "וְכִתְּת֨וּ חַרְבוֹתָ֜ם לְאִתִּ֗ים",
+        id: 48,
+        hebrew: "וְכִתְּת֨וּ חַרְבוֹתָ֜ם לְאִתִּ֗ים",
         translation: "They shall beat their swords into plowshares.",
         source: "Isaiah 2:4",
-        reflection: "The Prophet Isaiah's messianic vision envisions a time when nations will no longer study war. The ultimate Jewish vision is a world where energy spent on conflict is transformed into energy for creation and growth."
+        reflection: "Isaiah’s messianic vision is not just about the cessation of violence, but the radical transformation of destructive energy into productive power. The same iron used to forge a sword of death can be hammered into a plowshare of life. This teaches us that true peace requires redirecting the immense resources, intellect, and passion currently wasted on conflict toward the cultivation of human flourishing and growth."
       },
       {
-        id: 49,        hebrew: "עַל שְׁלֹשָׁה דְבָרִים הָעוֹלָם עוֹמֵד: עַל הַתּוֹרָה וְעַל הַעֲבוֹדָה וְעַל גְּמִילוּת חֲסָדִים",
+        id: 49,
+        hebrew: "עַל שְׁלֹשָׁה דְבָרִים הָעוֹלָם עוֹמֵד: עַל הַתּוֹרָה וְעַל הַעֲבוֹדָה וְעַל גְּמִילוּת חֲסָדִים",
         translation: "The world stands on three things: On Torah, on Service, and on Acts of Lovingkindness.",
         source: "Pirkei Avot 1:2",
-        reflection: "Shimon HaTzaddik defined the spiritual ecosystem of the universe. A stable world requires a balance of wisdom (Torah), spirituality (Avodah/Prayer), and action (Gemilut Chasadim)."
+        reflection: "Shimon HaTzaddik outlines the three fundamental pillars required to sustain human civilization and spiritual life. 'Torah' represents the pursuit of divine truth and wisdom; 'Avodah' (service/prayer) represents the inner work of cultivating a relationship with the Creator; and 'Gemilut Chasadim' (lovingkindness) represents our outward responsibility to our fellow human beings. A meaningful life requires a healthy balance of all three: intellectual growth, spiritual depth, and compassionate action."
       },
       {
-        id: 50,        hebrew: "וְיִגַּ֥ל כַּמַּ֖יִם מִשְׁפָּ֑ט",
+        id: 50,
+        hebrew: "וְיִגַּ֥ל כַּמַּ֖יִם מִשְׁפָּ֑ט",
         translation: "Let justice roll down like waters.",
         source: "Amos 5:24",
-        reflection: "The Prophet Amos railed against the corruption of the wealthy elite. Justice shouldn't be a trickle; it should be a powerful, unstoppable force that cleanses and refreshes society."
+        reflection: "The Prophet Amos forcefully rejects a society that performs religious rituals while ignoring the oppression of the vulnerable. He demands that justice must not be a stagnant puddle or a mere trickle of charity. It must flow like a mighty, unyielding river—cleansing society of corruption and nourishing the lives of those who have been marginalized. True righteousness requires active, systemic fairness, not just individual piety."
       },
       {
-        id: 51,        hebrew: "וְאָהַבְתֶּ֖ם אֶת־הַגֵּ֑ר כִּי־גֵרִ֥ים הֱיִיתֶ֖ם",
+        id: 51,
+        hebrew: "וְאָהַבְתֶּ֖ם אֶת־הַגֵּ֑ר כִּי־גֵרִ֥ים הֱיִיתֶ֖ם",
         translation: "You shall love the stranger, for you were strangers.",
         source: "Deuteronomy 10:19",
-        reflection: "The command to love the stranger appears 36 times in the Torah. Use your own history of suffering to build empathy for others; because we know what it feels like to be outsiders in Egypt, we must ensure no one else feels that way."
+        reflection: "The Torah repeats the command to protect and love the stranger more than almost any other law. It demands that we leverage our collective historical trauma—the memory of being oppressed outsiders in Egypt—not as an excuse for bitterness, but as a catalyst for radical empathy. Having experienced the pain of marginalization, we are spiritually obligated to create a society where no one else is made to feel alienated or vulnerable."
       },
       {
-        id: 52,        hebrew: "לֹא בְחַיִל וְלֹא בְכֹחַ כִּי אִם בְּרוּחִי",
+        id: 52,
+        hebrew: "לֹא בְחַיִל וְלֹא בְכֹחַ כִּי אִם בְּרוּחִי",
         translation: "Not by might, nor by power, but by My Spirit.",
         source: "Zechariah 4:6",
-        reflection: "Prophet Zechariah spoke these words regarding the Menorah, indicating that the Temple would be built not by armies, but by divine spirit. True victories are won not by physical domination, but by spiritual integrity."
+        reflection: "In a world that constantly measures success by military strength, political power, or sheer force, the Prophet Zechariah offers a profound counter-narrative. The ultimate, enduring victories in history are not won through physical domination, but through the quiet, unyielding power of the Divine Spirit. True strength is found in moral clarity, faith, and the patient building of institutions grounded in truth rather than brute force."
       },
       {
-        id: 53,        hebrew: "עֹז־וְהָדָ֥ר לְבוּשָׁ֑הּ וַ֝תִּשְׂחַ֗ק לְי֣וֹם אַחֲרֽוֹן",
+        id: 53,
+        hebrew: "עֹז־וְהָדָ֥ר לְבוּשָׁ֑הּ וַ֝תִּשְׂחַ֗ק לְי֣וֹם אַחֲרֽוֹן",
         translation: "Strength and dignity are her clothing, and she laughs at the future.",
         source: "Proverbs 31:25",
-        reflection: "Describing the Woman of Valor (Eshet Chayil), this is also a lesson for the soul. When you clothe yourself in integrity and strength, you can face the unknown future with joy (Simcha) rather than fear."
+        reflection: "While this verse praises the Eshet Chayil (Woman of Valor), it offers a universal psychological insight. Anxiety about the future often stems from a feeling of internal unpreparedness. However, when a person 'clothes' their soul in the sturdy garments of moral integrity, resilience, and self-respect, the dread of the unknown vanishes. Confidence in your inner character allows you to face whatever tomorrow brings with a sense of joy and optimism."
       },
       {
-        id: 54,        hebrew: "לַכֹּ֖ל זְמָ֑ן וְעֵ֥ת לְכׇל־חֵ֖פֶץ",
+        id: 54,
+        hebrew: "לַכֹּ֖ל זְמָ֑ן וְעֵ֥ת לְכׇל־חֵ֖פֶץ",
         translation: "To everything there is a season, and a time to every purpose.",
         source: "Ecclesiastes 3:1",
-        reflection: "King Solomon meditates on the temporary nature of all situations. Patience is key; trust the timing of your life, knowing that what is happening now is just one season in a larger journey."
+        reflection: "King Solomon's meditation on time teaches us the profound wisdom of spiritual surrender. Every phase of life—both the joyous and the agonizing—has a divinely ordained purpose and a natural expiration date. By recognizing that we are moving through temporary 'seasons,' we can avoid despair during times of hardship and avoid arrogance during times of success. Wisdom lies in accepting the present moment rather than fighting the current of time."
       },
       {
-        id: 55,        hebrew: "עַל הַדִּין וְעַל הָאֱמֶת וְעַל הַשָּׁלוֹם",
+        id: 55,
+        hebrew: "עַל הַדִּין וְעַל הָאֱמֶת וְעַל הַשָּׁלוֹם",
         translation: "...on Justice, on Truth, and on Peace.",
         source: "Pirkei Avot 1:18",
-        reflection: "Rabban Shimon ben Gamliel taught that society survives through Justice (Din), Truth (Emet), and Peace (Shalom). These are the three ingredients necessary for civilization; without truth, there is no justice, and without justice, there is no peace."
+        reflection: "Rabban Shimon ben Gamliel outlines the practical blueprint for a functional society. Truth, Justice, and Peace are deeply intertwined. Without Truth, Justice is impossible to administer. Without Justice, any Peace is merely an illusion that masks underlying oppression. To sustain a healthy community or nation, we cannot compromise on honesty or fairness simply to avoid conflict; authentic peace is the natural byproduct of a just and truthful society."
       },
       {
-        id: 56,        hebrew: "שְׁמַ֖ע יִשְׂרָאֵ֑ל יְהוָ֥ה אֱלֹהֵ֖ינוּ יְהוָ֥ה ׀ אֶחָֽד",
+        id: 56,
+        hebrew: "שְׁמַ֖ע יִשְׂרָאֵ֑ל יְהוָ֥ה אֱלֹהֵ֖ינוּ יְהוָ֥ה ׀ אֶחָֽד",
         translation: "Hear O Israel, Hashem is our God, Hashem is One.",
         source: "Deuteronomy 6:4",
-        reflection: "The central declaration of Jewish faith. It is the ultimate affirmation: beneath the surface fragmentation of the world, there is a fundamental Unity connecting us all to the One Creator."
+        reflection: "The Shema is the defining declaration of the Jewish faith, but it is far more than a statement of monotheism. It is a radical assertion that despite the chaotic, fragmented, and often contradictory appearance of the physical world, there is a singular, unified Divine reality beneath it all. Declaring 'God is One' means recognizing that every experience, every law of nature, and every human soul emanates from the exact same Infinite Source."
       },
 
       // --- Part VII: Expanded Jewish Inspiration ---
       {
-        id: 57,        hebrew: "אָכֵן יֵשׁ יְהוָה בַּמָּקוֹם הַזֶּה וְאָנֹכִי לֹא יָדָעְתִּי",
+        id: 57,
+        hebrew: "אָכֵן יֵשׁ יְהוָה בַּמָּקוֹם הַזֶּה וְאָנֹכִי לֹא יָדָעְתִּי",
         translation: "Surely Hashem is in this place, and I did not know it.",
         source: "Genesis 28:16",
-        reflection: "Jacob wakes from his dream and realizes God's presence is not limited to holy sites. Often, the Divine is right in front of us in our daily lives, but we are too distracted to notice the Kedusha (holiness) in the mundane."
+        reflection: "Awakening from his vision of the ladder, Jacob makes a startling realization: holiness is not restricted to temples or mountaintops. The tragedy of the human condition is not that God is absent, but that 'I did not know it'—we lack the awareness to perceive Him. This verse challenges us to stop searching for the Divine only in spectacular miracles, and to start recognizing the sacred presence hidden within the seemingly ordinary moments of our daily lives."
       },
       {
-        id: 58,        hebrew: "יְהוָה יִלָּחֵם לָכֶם וְאַתֶּם תַּחֲרִשׁוּן",
+        id: 58,
+        hebrew: "יְהוָה יִלָּחֵם לָכֶם וְאַתֶּם תַּחֲרִשׁוּן",
         translation: "Hashem will fight for you, and you shall remain silent.",
         source: "Exodus 14:14",
-        reflection: "Spoken by Moses at the Yam Suf (Red Sea) when the people were panicking. Sometimes the right action is not to panic or strategize, but to stand still and let faith carry you through the crisis."
+        reflection: "Trapped between the Egyptian army and the Red Sea, the Israelites panicked. Moses’ response is a masterclass in spiritual fortitude. There are moments in life when our frantic efforts to save ourselves only create more chaos. When we have reached the absolute limit of human capability, the highest form of faith is to cease striving, remain silent, and create the internal space for God to intervene and perform the impossible."
       },
       {
-        id: 59,        hebrew: "מִצְוָה גְּדוֹלָה לִהְיוֹת בְּשִׂמְחָה תָּמִיד",
+        id: 59,
+        hebrew: "מִצְוָה גְּדוֹלָה לִהְיוֹת בְּשִׂמְחָה תָּמִיד",
         translation: "It is a great Mitzvah to be happy always.",
         source: "Rebbe Nachman of Breslov",
-        reflection: "Rebbe Nachman taught that joy is not just a feeling, but a religious obligation and a spiritual tool. Happiness opens the mind and heart, allowing us to connect to God and overcome challenges."
+        reflection: "Rebbe Nachman of Breslov radically reframes happiness. We usually view joy as a passive byproduct of good circumstances. Rebbe Nachman teaches that joy is an active, vital discipline—a 'great Mitzvah.' Despair and sadness create emotional blockages that disconnect us from the Divine. Therefore, fighting for our joy, even when life is immensely difficult, is an act of spiritual defiance that keeps the soul open to heaven."
       },
       {
-        id: 60,        hebrew: "לֹא עַל־הַלֶּחֶם לְבַדּוֹ יִחְיֶה הָאָדָם",
+        id: 60,
+        hebrew: "לֹא עַל־הַלֶּחֶם לְבַדּוֹ יִחְיֶה הָאָדָם",
         translation: "Man does not live by bread alone.",
         source: "Deuteronomy 8:3",
-        reflection: "Physical sustenance is necessary for survival, but it is not enough for a life of meaning. The Jewish soul requires purpose, Torah wisdom, and spiritual connection to truly be 'alive'."
+        reflection: "While physical sustenance keeps the body functioning, it cannot satisfy the hunger of the human soul. This verse reminds us that an existence focused solely on material consumption is fundamentally hollow. True vitality—the essence of what it means to be truly 'alive'—comes from nourishing ourselves with the 'word of God,' meaning purpose, moral wisdom, and a profound connection to the spiritual dimension of reality."
       },
       {
-        id: 61,        hebrew: "כִּי הָאָדָם יִרְאֶה לַעֵינַיִם וַיהוָה יִרְאֶה לַלֵּב",
+        id: 61,
+        hebrew: "כִּי הָאָדָם יִרְאֶה לַעֵינַיִם וַיהוָה יִרְאֶה לַלֵּב",
         translation: "For man looks at the outward appearance, but Hashem looks at the heart.",
         source: "1 Samuel 16:7",
-        reflection: "When Prophet Samuel went to anoint a new king, he was impressed by physical stature. God corrected him, teaching that external looks are deceiving; true leadership and worth come from internal character and Yirat Shamayim (Fear of Heaven)."
+        reflection: "Human beings are naturally captivated by superficial metrics: wealth, charisma, status, and physical appearance. Yet, when selecting King David, God explicitly rejects these external markers. This verse is a powerful reminder that our societal systems of evaluating a person's worth are deeply flawed. In the eyes of Heaven, a person's true majesty is measured exclusively by the hidden qualities of their character, their integrity, and the purity of their heart."
       },
       {
-        id: 62,        hebrew: "קוֹל דְּמָמָה דַקָּה",
+        id: 62,
+        hebrew: "קוֹל דְּמָמָה דַקָּה",
         translation: "A still small voice.",
         source: "1 Kings 19:12",
-        reflection: "Elijah the Prophet sought God in the wind, earthquake, and fire, but God was in none of them. The Divine presence is often found not in the loud and spectacular, but in silence and subtlety."
+        reflection: "Fleeing into the wilderness, Elijah expected to encounter God in dramatic displays of natural power—wind, earthquakes, and fire. Instead, he found the Divine in a 'kol demamah dakah,' a thin, silent voice. This teaches us that the deepest spiritual truths do not scream for our attention. To hear the quiet guidance of the soul and the subtle presence of the Creator, we must first learn to silence the deafening noise of the outside world."
       },
       {
-        id: 63,        hebrew: "כִּי־תַעֲבֹר בַּמַּיִם אִתְּךָ־אָנִי",
+        id: 63,
+        hebrew: "כִּי־תַעֲבֹר בַּמַּיִם אִתְּךָ־אָנִי",
         translation: "When you pass through the waters, I will be with you.",
         source: "Isaiah 43:2",
-        reflection: "Life will inevitably involve passing through 'waters'—overwhelming emotions or situations. The promise isn't that you won't get wet, but that you won't drown because you are supported by the Rock of Israel."
+        reflection: "The prophet does not promise a life free of tragedy; he explicitly acknowledges that we will have to pass through turbulent, overwhelming 'waters.' The divine guarantee is not an exemption from suffering, but the promise of unwavering companionship within it. Knowing that we are accompanied by the Infinite presence gives us the extraordinary resilience needed to walk through life's darkest and most suffocating trials without drowning in despair."
       },
       {
-        id: 64,        hebrew: "כִּי־הֶהָרִים יָמוּשׁוּ... וְחַסְדִּי מֵאִתֵּךְ לֹא־יָמוּשׁ",
+        id: 64,
+        hebrew: "כִּי־הֶהָרִים יָמוּשׁוּ... וְחַסְדִּי מֵאִתֵּךְ לֹא־יָמוּשׁ",
         translation: "For the mountains may move... but My kindness shall not move from you.",
         source: "Isaiah 54:10",
-        reflection: "Nature itself may change, but God's covenant of love is more permanent than the physical world. This offers profound stability in an ever-changing world."
+        reflection: "Mountains are the ultimate symbols of unyielding permanence. Yet, the prophet declares that even if the bedrock of the physical earth were to shatter and shift, God's lovingkindness (Chesed) toward us remains absolute. In an unpredictable world where human loyalties fade and circumstances change without warning, this verse offers an unshakable psychological anchor: we are held by a Divine love that outlasts the physical universe itself."
       },
       {
-        id: 65,        hebrew: "גַּם זוּ לְטוֹבָה",
+        id: 65,
+        hebrew: "גַּם זוּ לְטוֹבָה",
         translation: "This too is for the good.",
         source: "Nachum Ish Gamzu (Talmud Taanit 21a)",
-        reflection: "The sage Nachum would react to every misfortune with this phrase. It is the ultimate expression of faith that everything Hashem does—even if it appears painful in the moment—is ultimately for our benefit."
+        reflection: "The Talmudic sage Nachum earned his name by responding to every seemingly disastrous event with the phrase 'Gam zu l'tovah' (This, too, is for the good). This is the pinnacle of Jewish faith. It is the radical refusal to label any event as a pure tragedy, holding fast to the belief that the Creator is weaving a master tapestry. Even the dark threads of pain and setback are necessary components of an ultimately beautiful and beneficial outcome."
       },
       {
-        id: 66,        hebrew: "כִּי חֶסֶד חָפַצְתִּי וְלֹא־זָבַח",
+        id: 66,
+        hebrew: "כִּי חֶסֶד חָפַצְתִּי וְלֹא־זָבַח",
         translation: "For I desire kindness, and not sacrifice.",
         source: "Hosea 6:6",
-        reflection: "Religious ritual without ethical behavior is empty. The Prophet Hosea teaches that Hashem prefers a heart full of Chessed (kindness) towards others over technical observance of rituals performed without love."
+        reflection: "The prophets constantly battled against the illusion that religious mechanics could substitute for basic human decency. Hosea delivers a devastating critique of hypocrisy: God is entirely unimpressed by flawless ritual sacrifices if they are offered by people who are cruel to their neighbors. The highest form of worship is not the burning of incense, but the daily, tangible practice of 'Chesed' (lovingkindness) toward our fellow human beings."
       },
       {
-        id: 67,        hebrew: "אַל־תִּשְׂמְחִי אֹיַבְתִּי לִי כִּי נָפַלְתִּי קָמְתִּי",
+        id: 67,
+        hebrew: "אַל־תִּשְׂמְחִי אֹיַבְתִּי לִי כִּי נָפַלְתִּי קָמְתִּי",
         translation: "Do not rejoice over me, my enemy; though I have fallen, I will rise.",
         source: "Micah 7:8",
-        reflection: "Resilience is the Jewish answer to adversity. By framing a fall as merely a prelude to rising (Yeridah l'tzorech Aliyah), you take away the power of any enemy or obstacle to defeat you."
+        reflection: "This verse is the anthem of Jewish historical resilience. It addresses the enemy—or one's own inner demons—who celebrates our moments of failure. It teaches the profound concept of 'Yeridah l'tzorech Aliyah': a descent for the sake of an ascent. Falling is not the opposite of success; it is a prerequisite for it. Every collapse contains the seed of a greater rising, transforming our moments of defeat into the very fuel for our ultimate redemption."
       },
       {
-        id: 68,        hebrew: "אֱמֶת וּמִשְׁפַּט שָׁלוֹם שִׁפְטוּ בְּשַׁעֲרֵיכֶם",
+        id: 68,
+        hebrew: "אֱמֶת וּמִשְׁפַּט שָׁלוֹם שִׁפְטוּ בְּשַׁעֲרֵיכֶם",
         translation: "Execute the judgment of truth and peace in your gates.",
         source: "Zechariah 8:16",
-        reflection: "Truth and peace are often seen as opposites, but the prophet urges us to find the 'judgment' that fuses them. We must strive for a society where integrity leads to harmony."
+        reflection: "Truth and peace are often in direct conflict. Unfiltered truth can cause brutal hurt, destroying peace; while the pursuit of peace often requires sweeping difficult truths under the rug. The prophet challenges us to reject this false dichotomy. True justice requires the painstaking, courageous work of holding both simultaneously—speaking the truth with enough compassion that it creates genuine, lasting harmony rather than superficial appeasement."
       },
       {
-        id: 69,        hebrew: "הַשָּׁמַיִם מְסַפְּרִים כְּבוֹד־אֵל",
+        id: 69,
+        hebrew: "הַשָּׁמַיִם מְסַפְּרִים כְּבוֹד־אֵל",
         translation: "The heavens declare the glory of God.",
         source: "Psalm 19:1",
-        reflection: "Nature is a window into the Divine. Looking at the vastness of the sky or the complexity of the universe can instill a sense of awe and spiritual perspective on the Creator's mastery."
+        reflection: "King David recognized that the physical universe is not just matter; it is an ongoing, silent symphony praising its Creator. Looking up at the staggering vastness of the cosmos is meant to induce a profound sense of awe (Yirah). When we truly observe the elegance and majesty of the heavens, it shatters our human arrogance, placing our personal anxieties into perspective and reconnecting us to the infinite mind of God."
       },
       {
-        id: 70,        hebrew: "יְהוָה אוֹרִי וְיִשְׁעִי מִמִּי אִירָא",
+        id: 70,
+        hebrew: "יְהוָה אוֹרִי וְיִשְׁעִי מִמִּי אִירָא",
         translation: "Hashem is my light and my salvation; whom shall I fear?",
         source: "Psalm 27:1",
-        reflection: "Recited during the High Holiday season (Elul), this Psalm reminds us that fear is often a result of feeling alone in the dark. When you perceive the Almighty as your personal 'light,' fear dissipates because you can see your path clearly."
+        reflection: "Fear thrives in the dark—both physical and spiritual. When we cannot see the path forward, our minds invent terrors. By declaring God as our 'light,' King David teaches that spiritual clarity is the antidote to anxiety. When you navigate life illuminated by faith, trusting that you are guarded by the ultimate salvation, the paralyzing dread of the unknown evaporates. With God as your light, there is simply nothing left in the shadows to fear."
       },
       {
         id: 71,        hebrew: "לֵב טָהוֹר בְּרָא־לִי אֱלֹהִים",

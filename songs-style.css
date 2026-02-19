@@ -1,5 +1,17 @@
 /* Styles for songs page — performance-optimized, no animations */
 
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
 /* Override smooth scroll from global style.css — causes scroll jank */
 html {
     scroll-behavior: auto !important;
@@ -416,11 +428,216 @@ nav {
 }
 
 /* Apple Music */
+.past-dvar-section {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 18px;
+    border: 1px solid #dbeafe;
+    background: #f8fbff;
+}
+
+.past-dvar-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.past-dvar-title {
+    margin: 0;
+    color: #1e3a8a;
+    font-size: 1.12rem;
+    font-weight: 800;
+}
+
+.past-dvar-description {
+    margin: 0.35rem 0 0;
+    color: #475569;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.past-dvar-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    border: 1px solid #93c5fd;
+    font-size: 0.78rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.past-dvar-list {
+    display: grid;
+    gap: 0.75rem;
+    max-height: 34rem;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+.past-dvar-parsha-group {
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    background: #eff6ff;
+    overflow: hidden;
+}
+
+.past-dvar-parsha-group[open] {
+    border-color: #93c5fd;
+    background: #eef4ff;
+}
+
+.past-dvar-parsha-summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+}
+
+.past-dvar-parsha-summary::-webkit-details-marker {
+    display: none;
+}
+
+.past-dvar-parsha-title {
+    font-size: 0.93rem;
+    font-weight: 900;
+    color: #1e3a8a;
+}
+
+.past-dvar-parsha-meta {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.past-dvar-parsha-content {
+    display: grid;
+    gap: 0.65rem;
+    padding: 0 0.75rem 0.75rem;
+}
+
+.past-dvar-loading,
+.past-dvar-empty {
+    border: 1px dashed #bfdbfe;
+    border-radius: 12px;
+    background: #fff;
+    color: #1d4ed8;
+    font-weight: 600;
+    text-align: center;
+    padding: 1rem;
+}
+
+.past-dvar-item {
+    border: 1px solid #dbeafe;
+    border-radius: 12px;
+    background: #fff;
+    padding: 0.9rem 1rem;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.past-dvar-item-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.55rem;
+}
+
+.past-dvar-tag {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.22rem 0.58rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    color: #1d4ed8;
+    background: #dbeafe;
+    border: 1px solid #93c5fd;
+}
+
+.past-dvar-tag-date {
+    color: #475569;
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.past-dvar-item-title {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: #1e3a8a;
+}
+
+.past-dvar-item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 0.6rem;
+}
+
+.past-dvar-meta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    border-radius: 999px;
+    padding: 0.25rem 0.6rem;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    font-size: 0.76rem;
+    font-weight: 600;
+}
+
+.past-dvar-meta-pill strong {
+    color: #1e3a8a;
+    font-weight: 800;
+}
+
+.past-dvar-item-copy {
+    margin: 0.7rem 0 0;
+    color: #334155;
+    line-height: 1.62;
+    font-size: 0.9rem;
+    white-space: normal;
+}
+
+.past-dvar-entry-details {
+    margin-top: 0.65rem;
+    padding-top: 0.65rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.past-dvar-entry-summary {
+    cursor: pointer;
+    color: #1d4ed8;
+    font-size: 0.84rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.past-dvar-entry-summary:hover {
+    color: #1e40af;
+}
+
+.past-dvar-entry-details[open] .past-dvar-item-copy {
+    white-space: pre-wrap;
+}
+
 .apple-music-section {
     background: #fff;
     border: 1px solid #e2e8f0;
     border-radius: 18px;
     padding: 1.5rem;
+    margin-top: 1.5rem;
     margin-bottom: 2rem;
     content-visibility: auto;
     contain-intrinsic-size: 580px;
@@ -526,6 +743,18 @@ nav {
 
     .apple-music-section {
         padding: 1.25rem;
+    }
+
+    .past-dvar-section {
+        padding: 1.2rem;
+    }
+
+    .past-dvar-header {
+        flex-wrap: wrap;
+    }
+
+    .past-dvar-list {
+        max-height: 30rem;
     }
 
     .apple-music-header {

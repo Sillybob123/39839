@@ -812,6 +812,70 @@ async function getUserDailyQuoteBookmarks(userId) {
   }
 }
 
+// Get all daily quote bookmarks across all users, grouped by quoteId
+async function getCommunityQuoteBookmarks() {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'dailyQuoteBookmarks'));
+
+    const quoteMap = new Map();
+    const allUserIds = new Set();
+
+    querySnapshot.forEach((docSnapshot) => {
+      const data = docSnapshot.data();
+      const quoteId = data.quoteId;
+      if (!quoteId) return;
+
+      if (data.userId) allUserIds.add(data.userId);
+
+      if (!quoteMap.has(quoteId)) {
+        quoteMap.set(quoteId, {
+          quoteId,
+          translation: data.translation || '',
+          hebrew: data.hebrew || '',
+          source: data.source || '',
+          reflection: data.reflection || '',
+          saverIds: [],
+          count: 0
+        });
+      }
+
+      const entry = quoteMap.get(quoteId);
+      entry.count++;
+      if (entry.saverIds.length < 5) {
+        entry.saverIds.push(data.userId);
+      }
+    });
+
+    // Look up display names for all unique savers
+    const userNameMap = new Map();
+    await Promise.all(
+      Array.from(allUserIds).map(async (userId) => {
+        try {
+          const info = await getUserInfo(userId);
+          const name = info
+            ? (info.username || info.displayName || getDisplayNameFromEmail(info.email) || 'A Friend')
+            : 'A Friend';
+          userNameMap.set(userId, name);
+        } catch (_) {
+          userNameMap.set(userId, 'A Friend');
+        }
+      })
+    );
+
+    const results = Array.from(quoteMap.values())
+      .map((entry) => ({
+        ...entry,
+        savers: entry.saverIds.map((uid) => userNameMap.get(uid) || 'A Friend')
+      }))
+      .sort((a, b) => b.count - a.count);
+
+    return results;
+  } catch (error) {
+    console.error('Error getting community quote bookmarks:', error);
+    return [];
+  }
+}
+
 // Send password reset email
 async function sendPasswordReset(email) {
   try {
@@ -1876,6 +1940,7 @@ export {
   removeDailyQuoteBookmark,
   isDailyQuoteBookmarked,
   getUserDailyQuoteBookmarks,
+  getCommunityQuoteBookmarks,
   recordUserLogin,
   updateUserPresence,
   markUserOffline,

@@ -61,6 +61,7 @@ import {
     removeDailyQuoteBookmark,
     isDailyQuoteBookmarked,
     getUserDailyQuoteBookmarks,
+    getCommunityQuoteBookmarks,
     recordUserLogin,
     updateUserPresence,
     markUserOffline,
@@ -1627,6 +1628,7 @@ function handleMitzvahWindowClosed() {
 }
 
 function maybeShowMitzvahModal(force = false) {
+    return; // auto-popup disabled
     const modal = document.getElementById('mitzvah-modal');
     const challenge = state.currentMitzvahChallenge;
     const challengeId = currentMitzvahChallengeId;
@@ -3798,13 +3800,7 @@ async function openBookmarksPanel(defaultTab = 'verses') {
                 : (bookmark.timestamp && typeof bookmark.timestamp.toDate === 'function'
                     ? bookmark.timestamp.toDate().toLocaleDateString()
                     : 'Saved');
-            const reflectionSnippet = bookmark.reflection
-                ? escapeHtml(
-                    bookmark.reflection.length > 220
-                        ? `${bookmark.reflection.slice(0, 220)}…`
-                        : bookmark.reflection
-                )
-                : '';
+            const fullReflection = bookmark.reflection ? escapeHtml(bookmark.reflection) : '';
 
             html += `
                 <article class="quote-bookmark-item" data-quote-id="${quoteId}">
@@ -3820,12 +3816,93 @@ async function openBookmarksPanel(defaultTab = 'verses') {
                     </div>
                     <div class="quote-bookmark-translation">"${escapeHtml(bookmark.translation || 'Teaching')}"</div>
                     ${bookmark.hebrew ? `<div class="quote-bookmark-hebrew">${escapeHtml(bookmark.hebrew)}</div>` : ''}
-                    ${reflectionSnippet ? `<div class="quote-bookmark-reflection">${reflectionSnippet}</div>` : ''}
+                    ${fullReflection ? `<div class="quote-bookmark-reflection is-clamped">${fullReflection}</div><button type="button" class="read-more-btn" data-read-more>Read more</button>` : ''}
                 </article>
             `;
         });
         html += '</div>';
         return html;
+    };
+
+    const renderCommunityQuotes = (quotes = []) => {
+        if (!quotes || quotes.length === 0) {
+            return `
+                <div class="community-quotes-empty">
+                    <div class="community-quotes-empty-icon">✨</div>
+                    <p class="community-quotes-empty-title">No community quotes yet.</p>
+                    <p class="community-quotes-empty-hint">Be the first to bookmark today's quote!</p>
+                </div>
+            `;
+        }
+
+        const GRADIENTS = [
+            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            'linear-gradient(135deg, #1FA2FF 0%, #12D8FA 100%)',
+            'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+            'linear-gradient(135deg, #F7971E 0%, #FFD200 100%)',
+            'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
+            'linear-gradient(135deg, #2D3561 0%, #C05C7E 100%)',
+        ];
+        const AVATAR_COLORS = ['#667eea', '#f5576c', '#F7971E', '#11998e', '#C05C7E', '#1FA2FF'];
+
+        let html = '<div class="community-quotes-list">';
+        quotes.forEach((quote, idx) => {
+            const gradient = GRADIENTS[idx % GRADIENTS.length];
+            const countLabel = quote.count === 1 ? '1 person saved this' : `${quote.count} people saved this`;
+            const fullReflection = quote.reflection ? escapeHtml(quote.reflection) : '';
+
+            const saverAvatars = (quote.savers || []).slice(0, 4).map((name, i) => {
+                const initial = name && name !== 'A Friend' ? name[0].toUpperCase() : '?';
+                const color = AVATAR_COLORS[i % AVATAR_COLORS.length];
+                return `<span class="community-avatar" style="background:${color}" title="${escapeHtml(name)}">${initial}</span>`;
+            }).join('');
+
+            html += `
+                <article class="community-quote-card">
+                    <div class="community-quote-header" style="background:${gradient}">
+                        <span class="community-quote-source">${quote.source ? escapeHtml(quote.source) : 'Daily Teaching'}</span>
+                        <span class="community-quote-count-badge">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                            ${escapeHtml(countLabel)}
+                        </span>
+                    </div>
+                    <div class="community-quote-body">
+                        <div class="community-quote-translation">"${escapeHtml(quote.translation || 'Torah Teaching')}"</div>
+                        ${quote.hebrew ? `<div class="community-quote-hebrew">${escapeHtml(quote.hebrew)}</div>` : ''}
+                        ${fullReflection ? `<div class="community-quote-reflection is-clamped">${fullReflection}</div><button type="button" class="read-more-btn" data-read-more>Read more</button>` : ''}
+                        ${saverAvatars ? `<div class="community-quote-savers"><div class="community-avatars-row">${saverAvatars}</div></div>` : ''}
+                    </div>
+                </article>
+            `;
+        });
+        html += '</div>';
+        return html;
+    };
+
+    const wireInteractiveHandlers = (container) => {
+        container.querySelectorAll('[data-quote-remove]').forEach((btn) => {
+            btn.addEventListener('click', async (event) => {
+                event.stopPropagation();
+                const quoteId = btn.getAttribute('data-quote-id');
+                await removeQuoteBookmarkFromPanel(quoteId);
+            });
+        });
+        container.querySelectorAll('[data-read-more]').forEach((btn) => {
+            const reflection = btn.previousElementSibling;
+            if (!reflection) return;
+
+            // Hide button if text isn't actually overflowing the clamp
+            if (reflection.scrollHeight <= reflection.clientHeight) {
+                reflection.classList.remove('is-clamped');
+                btn.remove();
+                return;
+            }
+
+            btn.addEventListener('click', () => {
+                const clamped = reflection.classList.toggle('is-clamped');
+                btn.textContent = clamped ? 'Read more' : 'Show less';
+            });
+        });
     };
 
     try {
@@ -3840,6 +3917,9 @@ async function openBookmarksPanel(defaultTab = 'verses') {
                 <button type="button" class="bookmark-tab ${safeDefault === 'quotes' ? 'active' : ''}" data-tab="quotes" role="tab" aria-selected="${safeDefault === 'quotes'}">
                     Quotes ${quoteBookmarks && quoteBookmarks.length ? `<span class="bookmark-tab-pill">${quoteBookmarks.length}</span>` : ''}
                 </button>
+                <button type="button" class="bookmark-tab" data-tab="community" role="tab" aria-selected="false">
+                    Community
+                </button>
             </div>
             <div class="bookmark-panels">
                 <div class="bookmark-panel ${safeDefault === 'verses' ? 'active' : ''}" data-panel="verses" role="tabpanel">
@@ -3848,6 +3928,13 @@ async function openBookmarksPanel(defaultTab = 'verses') {
                 <div class="bookmark-panel ${safeDefault === 'quotes' ? 'active' : ''}" data-panel="quotes" role="tabpanel">
                     ${renderQuoteBookmarks(quoteBookmarks || [])}
                 </div>
+                <div class="bookmark-panel" data-panel="community" data-community-loaded="false" role="tabpanel">
+                    <div class="community-quotes-empty">
+                        <div class="community-quotes-empty-icon">✨</div>
+                        <p class="community-quotes-empty-title">Community quotes</p>
+                        <p class="community-quotes-empty-hint">Click this tab to load quotes everyone has saved.</p>
+                    </div>
+                </div>
             </div>
         `;
 
@@ -3855,14 +3942,33 @@ async function openBookmarksPanel(defaultTab = 'verses') {
         infoContent.classList.add('info-content-bookmarks');
         infoContent.innerHTML = html;
 
-        setupBookmarkTabs(safeDefault);
+        wireInteractiveHandlers(infoContent);
 
-        infoContent.querySelectorAll('[data-quote-remove]').forEach((btn) => {
-            btn.addEventListener('click', async (event) => {
-                event.stopPropagation();
-                const quoteId = btn.getAttribute('data-quote-id');
-                await removeQuoteBookmarkFromPanel(quoteId);
-            });
+        setupBookmarkTabs(safeDefault, async (tabName) => {
+            if (tabName !== 'community') return;
+            const communityPanel = infoContent.querySelector('[data-panel="community"]');
+            if (!communityPanel || communityPanel.dataset.communityLoaded === 'true') return;
+
+            communityPanel.dataset.communityLoaded = 'true';
+            communityPanel.innerHTML = `
+                <div class="community-quotes-empty">
+                    <div class="community-loading-spinner"></div>
+                    <p class="community-quotes-empty-hint" style="margin-top:0.6rem">Loading community quotes…</p>
+                </div>
+            `;
+
+            try {
+                const communityQuotes = await getCommunityQuoteBookmarks();
+                communityPanel.innerHTML = renderCommunityQuotes(communityQuotes || []);
+                wireInteractiveHandlers(communityPanel);
+
+                const communityTab = infoContent.querySelector('[data-tab="community"]');
+                if (communityTab && communityQuotes && communityQuotes.length) {
+                    communityTab.innerHTML = `Community <span class="bookmark-tab-pill community-tab-pill">${communityQuotes.length}</span>`;
+                }
+            } catch (err) {
+                communityPanel.innerHTML = `<div class="community-quotes-empty"><p class="community-quotes-empty-hint">Could not load community quotes.</p></div>`;
+            }
         });
 
         showInfoPanel();
@@ -3872,7 +3978,7 @@ async function openBookmarksPanel(defaultTab = 'verses') {
     }
 }
 
-function setupBookmarkTabs(defaultTab = 'verses') {
+function setupBookmarkTabs(defaultTab = 'verses', onActivate = null) {
     const infoContent = document.getElementById('info-content');
     if (!infoContent) {
         return;
@@ -3890,6 +3996,7 @@ function setupBookmarkTabs(defaultTab = 'verses') {
         panels.forEach((panel) => {
             panel.classList.toggle('active', panel.dataset.panel === tabName);
         });
+        if (onActivate) onActivate(tabName);
     };
 
     tabs.forEach((tab) => {

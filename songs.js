@@ -1,6 +1,7 @@
 // songs.js - render the Songs and Poems page from songs.json
 
 const SONGS_URL = "songs.json";
+const DVAR_ARCHIVE_URL = "past-dvar-torahs.json";
 let allEntries = [];
 let activeTypeFilter = "all";
 
@@ -263,6 +264,143 @@ async function loadEntries() {
   }
 }
 
+function formatArchiveDate(dateValue = "") {
+  if (!dateValue) return "";
+  const parsedDate = new Date(`${dateValue}T12:00:00`);
+  if (Number.isNaN(parsedDate.getTime())) return dateValue;
+  return parsedDate.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+
+function getParshaGroupLabel(parshaValue = "") {
+  if (!parshaValue) return "General Archive";
+  if (normalizeText(parshaValue).includes("parsha")) return parshaValue;
+  return `Parshat ${parshaValue}`;
+}
+
+function sortArchiveEntries(entries = []) {
+  return entries.slice().sort((a, b) => {
+    const dateA = String(a?.sharedOn || "");
+    const dateB = String(b?.sharedOn || "");
+    if (dateA !== dateB) return dateA.localeCompare(dateB);
+    return String(a?.id || "").localeCompare(String(b?.id || ""));
+  });
+}
+
+function groupArchiveEntriesByParsha(entries = []) {
+  const groupsMap = new Map();
+
+  sortArchiveEntries(entries).forEach(entry => {
+    const groupKey = String(entry?.parsha || "General Archive");
+    if (!groupsMap.has(groupKey)) {
+      groupsMap.set(groupKey, []);
+    }
+    groupsMap.get(groupKey).push(entry);
+  });
+
+  return Array.from(groupsMap.entries())
+    .map(([parsha, groupEntries]) => {
+      const firstDate = groupEntries[0]?.sharedOn || "";
+      const lastDate = groupEntries[groupEntries.length - 1]?.sharedOn || "";
+      return { parsha, entries: groupEntries, firstDate, lastDate };
+    })
+    .sort((a, b) => String(b?.lastDate || "").localeCompare(String(a?.lastDate || "")));
+}
+
+function renderPastDvarEntry(entry = {}) {
+  const title = escapeHtml(entry?.title || "Untitled Dvar Torah");
+  const sharedDate = formatArchiveDate(entry?.sharedOn || "");
+  const writtenBy = escapeHtml(entry?.writtenBy || "Unknown");
+  const sharedBy = escapeHtml(entry?.sharedBy || entry?.writtenBy || "Unknown");
+  const fullText = typeof entry?.fullText === "string" ? entry.fullText.trim() : "";
+  const excerpt = typeof entry?.excerpt === "string" ? entry.excerpt.trim() : "";
+  const bodyText = fullText || excerpt || "Dvar Torah text coming soon.";
+  const bodyHtml = escapeHtml(bodyText).replace(/\n/g, "<br>");
+  const detailsLabel = fullText ? "Read full text" : "Read summary";
+
+  return `
+    <article class="past-dvar-item">
+      ${sharedDate ? `<div class="past-dvar-item-tags"><span class="past-dvar-tag past-dvar-tag-date">${escapeHtml(sharedDate)}</span></div>` : ""}
+      <h4 class="past-dvar-item-title">${title}</h4>
+      <div class="past-dvar-item-meta">
+        <span class="past-dvar-meta-pill"><strong>Written by:</strong> ${writtenBy}</span>
+        <span class="past-dvar-meta-pill"><strong>Shared by:</strong> ${sharedBy}</span>
+      </div>
+      <details class="past-dvar-entry-details">
+        <summary class="past-dvar-entry-summary">${detailsLabel}</summary>
+        <div class="past-dvar-item-copy">${bodyHtml}</div>
+      </details>
+    </article>
+  `;
+}
+
+function renderPastWeeklyDvarTorahs(entries = []) {
+  const listContainer = document.getElementById("past-dvar-list");
+  const countBadge = document.getElementById("past-dvar-count");
+  if (!listContainer) return;
+
+  if (!Array.isArray(entries) || !entries.length) {
+    listContainer.innerHTML = '<div class="past-dvar-empty">No past weekly dvar Torahs are available yet.</div>';
+    if (countBadge) countBadge.textContent = "0 entries";
+    return;
+  }
+
+  const groupedEntries = groupArchiveEntriesByParsha(entries);
+  const html = groupedEntries.map((group, index) => {
+    const groupTitle = escapeHtml(getParshaGroupLabel(group.parsha));
+    const responseCount = group.entries.length;
+    const responseLabel = responseCount === 1 ? "response" : "responses";
+    const firstDateLabel = formatArchiveDate(group.firstDate);
+    const lastDateLabel = formatArchiveDate(group.lastDate);
+    const dateLabel = firstDateLabel && lastDateLabel
+      ? (firstDateLabel === lastDateLabel ? firstDateLabel : `${firstDateLabel} - ${lastDateLabel}`)
+      : "";
+    const entriesHtml = group.entries.map(renderPastDvarEntry).join("");
+
+    return `
+      <details class="past-dvar-parsha-group" ${index === 0 ? "open" : ""}>
+        <summary class="past-dvar-parsha-summary">
+          <span class="past-dvar-parsha-title">${groupTitle}</span>
+          <span class="past-dvar-parsha-meta">
+            ${responseCount} ${responseLabel}${dateLabel ? ` • ${escapeHtml(dateLabel)}` : ""}
+          </span>
+        </summary>
+        <div class="past-dvar-parsha-content">
+          ${entriesHtml}
+        </div>
+      </details>
+    `;
+  });
+
+  listContainer.innerHTML = html.join("");
+  if (countBadge) {
+    countBadge.textContent = `${groupedEntries.length} parshiyot`;
+  }
+}
+
+async function loadPastWeeklyDvarTorahs() {
+  const listContainer = document.getElementById("past-dvar-list");
+  const countBadge = document.getElementById("past-dvar-count");
+  if (!listContainer) return;
+
+  try {
+    const archiveResponse = await fetch(DVAR_ARCHIVE_URL);
+    if (!archiveResponse.ok) {
+      throw new Error("Failed to load dvar Torah archive");
+    }
+
+    const archiveData = await archiveResponse.json();
+    const entries = Array.isArray(archiveData?.entries) ? archiveData.entries.slice() : [];
+    renderPastWeeklyDvarTorahs(entries);
+  } catch (error) {
+    if (countBadge) countBadge.textContent = "Unavailable";
+    listContainer.innerHTML = '<div class="past-dvar-empty">Past weekly dvar Torahs are unavailable right now.</div>';
+  }
+}
+
 function loadAppleMusicEmbed() {
   const placeholder = document.getElementById("apple-music-placeholder");
   const container = document.getElementById("apple-music-embed");
@@ -288,5 +426,6 @@ function loadAppleMusicEmbed() {
 
 document.addEventListener("DOMContentLoaded", () => {
   loadEntries();
+  loadPastWeeklyDvarTorahs();
   loadAppleMusicEmbed();
 });

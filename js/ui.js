@@ -91,7 +91,9 @@ export function populateParshaSelector() {
  * Show info panel (modal)
  */
 export function showInfoPanel() {
-    document.getElementById('info-panel').classList.remove('hidden');
+    const panel = document.getElementById('info-panel');
+    panel.classList.remove('hidden');
+    requestAnimationFrame(() => panel.classList.add('is-visible'));
     document.body.style.overflow = 'hidden';
 }
 
@@ -99,7 +101,9 @@ export function showInfoPanel() {
  * Hide info panel (modal)
  */
 export function hideInfoPanel() {
-    document.getElementById('info-panel').classList.add('hidden');
+    const panel = document.getElementById('info-panel');
+    panel.classList.remove('is-visible');
+    setTimeout(() => panel.classList.add('hidden'), 250);
     const infoContent = document.getElementById('info-content');
     if (infoContent) {
         infoContent.classList.remove('info-content-bookmarks');
