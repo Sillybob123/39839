@@ -1,6 +1,6 @@
 // Main Application Entry Point - QUERY FIX FOR COMMENT BADGES + GENERAL PARSHA CHAT
 import { TORAH_PARSHAS } from './config.js';
-import { fetchCurrentParsha, fetchParshaText, loadCommentaryData, loadMitzvahChallenges } from './api.js';
+import { fetchCurrentParsha, fetchParshaText, loadCommentaryData, loadMitzvahChallenges, getCachedCurrentParsha, cacheCurrentParsha } from './api.js';
 import { state, setState } from './state.js';
 import { isImportantVerse, getImportantVerseData } from './important-verses.js';
 import { getDisplayNameFromEmail } from './name-utils.js';
@@ -62,6 +62,8 @@ import {
     isDailyQuoteBookmarked,
     getUserDailyQuoteBookmarks,
     getCommunityQuoteBookmarks,
+    getDailyQuoteBookmarkCount,
+    getDailyQuoteInteractors,
     recordUserLogin,
     updateUserPresence,
     markUserOffline,
@@ -91,6 +93,7 @@ let bookmarkedVerses = new Set();
 let verseBookmarkCounts = {};
 let bookmarkedQuoteIds = new Set();
 let cachedQuoteBookmarks = [];
+let currentQuoteBookmarkCount = 0;
 const verseDisplayTexts = {};
 
 // Cache for verse interactor data (to avoid redundant fetches)
@@ -195,6 +198,126 @@ function getCurrentDailyQuotePayload() {
     return null;
 }
 
+function interpolateHexColor(hex1, hex2, t) {
+    const r1 = parseInt(hex1.slice(1, 3), 16), g1 = parseInt(hex1.slice(3, 5), 16), b1 = parseInt(hex1.slice(5, 7), 16);
+    const r2 = parseInt(hex2.slice(1, 3), 16), g2 = parseInt(hex2.slice(3, 5), 16), b2 = parseInt(hex2.slice(5, 7), 16);
+    const r = Math.round(r1 + (r2 - r1) * t);
+    const g = Math.round(g1 + (g2 - g1) * t);
+    const b = Math.round(b1 + (b2 - b1) * t);
+    return `rgb(${r},${g},${b})`;
+}
+
+function applyDailyQuoteCommunityTint(count) {
+    const content = document.querySelector('.daily-inspiration-content');
+    if (!content) return;
+    // Linear scale: 1 bookmark = 20%, 5 bookmarks = 100%
+    const intensity = count > 0 ? Math.min(count / 5, 1) : 0;
+    if (intensity === 0) {
+        content.style.background = '';
+        content.style.borderColor = '';
+        content.style.boxShadow = '';
+        return;
+    }
+    // Warm cream → rich blue (dbeafe / bfdbfe family — clearly visible even at 1 bookmark)
+    const bg1 = interpolateHexColor('#fefcf7', '#dbeafe', intensity);
+    const bg2 = interpolateHexColor('#faf8f3', '#c7d9f7', intensity);
+    const border = interpolateHexColor('#ebe7df', '#93b4e4', intensity);
+    content.style.background = `linear-gradient(135deg, ${bg1} 0%, ${bg2} 100%)`;
+    content.style.borderColor = border;
+    // Blue glow that scales with intensity
+    const glowOpacity = (0.2 * intensity).toFixed(3);
+    content.style.boxShadow = `0 1px 3px rgba(0,0,0,0.06), 0 3px 16px rgba(59,130,246,${glowOpacity})`;
+}
+
+async function fetchAndApplyDailyQuoteTint() {
+    const payload = getCurrentDailyQuotePayload();
+    const quoteId = payload ? String(payload.quoteId || payload.id) : null;
+    if (!quoteId) return;
+    try {
+        currentQuoteBookmarkCount = await getDailyQuoteBookmarkCount(quoteId);
+        applyDailyQuoteCommunityTint(currentQuoteBookmarkCount);
+        updateDailyQuoteBookmarkCountBadge(currentQuoteBookmarkCount);
+        setupDailyQuoteBookmarkTooltip(quoteId);
+    } catch (_) {
+        // Tint is cosmetic — fail silently
+    }
+}
+
+let dailyQuoteTooltipAttached = false;
+
+function setupDailyQuoteBookmarkTooltip(quoteId) {
+    if (dailyQuoteTooltipAttached) return;
+    const button = document.querySelector('[data-quote-bookmark]');
+    if (!button || !isDesktopHoverTooltipEnabled()) return;
+
+    dailyQuoteTooltipAttached = true;
+    let hoverTimeout = null;
+    let cachedTooltip = null;
+
+    button.addEventListener('mouseenter', () => {
+        if (!isDesktopHoverTooltipEnabled()) return;
+        // Show cached tooltip instantly if available
+        if (cachedTooltip) {
+            button.classList.add('status-tooltip');
+            button.setAttribute('data-tooltip', cachedTooltip);
+            return;
+        }
+        hoverTimeout = setTimeout(async () => {
+            const currentPayload = getCurrentDailyQuotePayload();
+            const currentId = currentPayload ? String(currentPayload.quoteId || currentPayload.id) : null;
+            if (!currentId) return;
+            try {
+                // Show loading state
+                button.classList.add('status-tooltip');
+                button.setAttribute('data-tooltip', 'Loading...');
+                const interactors = await getDailyQuoteInteractors(currentId);
+                if (!interactors || interactors.length === 0) {
+                    button.removeAttribute('data-tooltip');
+                    button.classList.remove('status-tooltip');
+                    cachedTooltip = null;
+                    return;
+                }
+                const tooltip = buildInteractorsTooltipContent(interactors, 'bookmark');
+                cachedTooltip = tooltip;
+                if (button.matches(':hover')) {
+                    button.setAttribute('data-tooltip', tooltip);
+                }
+            } catch (_) {
+                button.removeAttribute('data-tooltip');
+                button.classList.remove('status-tooltip');
+            }
+        }, 200);
+    });
+
+    button.addEventListener('mouseleave', () => {
+        if (hoverTimeout) {
+            clearTimeout(hoverTimeout);
+            hoverTimeout = null;
+        }
+    });
+}
+
+function invalidateDailyQuoteTooltipCache() {
+    dailyQuoteTooltipAttached = false;
+    const button = document.querySelector('[data-quote-bookmark]');
+    if (button) {
+        button.removeAttribute('data-tooltip');
+        button.classList.remove('status-tooltip');
+    }
+}
+
+function updateDailyQuoteBookmarkCountBadge(count) {
+    const badge = document.querySelector('.daily-quote-bookmark-count');
+    if (!badge) return;
+    if (count > 0) {
+        badge.textContent = count;
+        badge.classList.add('has-count');
+    } else {
+        badge.textContent = '';
+        badge.classList.remove('has-count');
+    }
+}
+
 function updateDailyQuoteBookmarkButtonState() {
     const button = document.querySelector('[data-quote-bookmark]');
     if (!button) {
@@ -209,7 +332,9 @@ function updateDailyQuoteBookmarkButtonState() {
     button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     const label = isActive ? 'Remove this quote from your bookmarks' : 'Bookmark this quote';
     button.setAttribute('aria-label', label);
-    button.setAttribute('title', isActive ? 'Saved to your quotes' : 'Save this quote');
+
+    // Update count badge
+    updateDailyQuoteBookmarkCountBadge(currentQuoteBookmarkCount);
 }
 
 function addDays(date, days) {
@@ -373,27 +498,24 @@ async function init() {
         });
         setState({ allParshas: TORAH_PARSHAS });
 
-        const currentParshaName = await fetchCurrentParsha();
+        // Kick off Sefaria calendar fetch immediately — don't block on it yet
+        const parshaNamePromise = fetchCurrentParsha();
 
-        console.log('✅ Current parsha fetched:', currentParshaName);
-
-        if (currentParshaName) {
-            const matchingParsha = TORAH_PARSHAS.find(p =>
-                p.name.toLowerCase() === currentParshaName.toLowerCase() ||
-                currentParshaName.toLowerCase().includes(p.name.toLowerCase())
-            );
-
-            if (matchingParsha) {
-                const matchingIndex = TORAH_PARSHAS.indexOf(matchingParsha);
+        // ⚡ Use cached weekly parsha to populate UI instantly on repeat visits
+        const cachedWeeklyParsha = getCachedCurrentParsha();
+        if (cachedWeeklyParsha) {
+            const cachedMatch = TORAH_PARSHAS.find(p => p.reference === cachedWeeklyParsha.ref);
+            if (cachedMatch) {
+                const idx = TORAH_PARSHAS.indexOf(cachedMatch);
                 const initialWeekStart = getWeekStartForDate();
                 setState({
-                    currentParshaRef: matchingParsha.reference,
-                    currentParshaIndex: matchingIndex,
-                    weeklyParshaRef: matchingParsha.reference,
-                    weeklyParshaIndex: matchingIndex,
+                    currentParshaRef: cachedMatch.reference,
+                    currentParshaIndex: idx,
+                    weeklyParshaRef: cachedMatch.reference,
+                    weeklyParshaIndex: idx,
                     weeklyParshaWeekStart: initialWeekStart.toISOString()
                 });
-                console.log('✅ Matched current parsha:', matchingParsha.name);
+                console.log('⚡ Using cached parsha:', cachedMatch.name);
             }
         }
 
@@ -419,13 +541,62 @@ async function init() {
         updateNavigationButtons();
         setupEventListeners();
 
+        // Daily quote is already rendered (non-module script runs first),
+        // so apply the community green tint now
+        fetchAndApplyDailyQuoteTint();
+
         console.log('✅ Setup complete, loading parsha:', state.currentParshaRef);
 
-        if (state.currentParshaRef) {
-            await loadParsha(state.currentParshaRef);
+        // Start loading parsha text (instant from cache on repeat visits) in parallel
+        // with the ongoing Sefaria calendar API call
+        const parshaLoadPromise = state.currentParshaRef
+            ? loadParsha(state.currentParshaRef)
+            : Promise.resolve();
+
+        const [, currentParshaName] = await Promise.all([parshaLoadPromise, parshaNamePromise]);
+
+        console.log('✅ Current parsha fetched:', currentParshaName);
+
+        if (currentParshaName) {
+            const matchingParsha = TORAH_PARSHAS.find(p =>
+                p.name.toLowerCase() === currentParshaName.toLowerCase() ||
+                currentParshaName.toLowerCase().includes(p.name.toLowerCase())
+            );
+
+            if (matchingParsha) {
+                const matchingIndex = TORAH_PARSHAS.indexOf(matchingParsha);
+                const initialWeekStart = getWeekStartForDate();
+
+                // Persist for next visit so it loads instantly
+                cacheCurrentParsha(currentParshaName, matchingParsha.reference);
+
+                setState({
+                    currentParshaRef: matchingParsha.reference,
+                    currentParshaIndex: matchingIndex,
+                    weeklyParshaRef: matchingParsha.reference,
+                    weeklyParshaIndex: matchingIndex,
+                    weeklyParshaWeekStart: initialWeekStart.toISOString()
+                });
+                console.log('✅ Matched current parsha:', matchingParsha.name);
+
+                // Only re-load if the live parsha differs from what was cached/shown
+                if (!cachedWeeklyParsha || cachedWeeklyParsha.ref !== matchingParsha.reference) {
+                    await loadParsha(matchingParsha.reference);
+                }
+            }
         }
 
         startWeeklyParshaMonitor();
+
+        // Auto-open panels based on URL hash (e.g. redirected from other pages)
+        const hash = window.location.hash;
+        if (hash === '#bookmarks') {
+            window.history.replaceState(null, '', window.location.pathname);
+            openBookmarksPanel('verses');
+        } else if (hash === '#bookmarks-quotes') {
+            window.history.replaceState(null, '', window.location.pathname);
+            openBookmarksPanel('quotes');
+        }
 
         console.log('✅ Application initialized successfully');
 
@@ -592,6 +763,7 @@ function setupEventListeners() {
 
     document.addEventListener('dailyQuoteRendered', () => {
         updateDailyQuoteBookmarkButtonState();
+        fetchAndApplyDailyQuoteTint();
     });
 }
 
@@ -2817,12 +2989,17 @@ async function handleDailyQuoteBookmarkToggle(quotePayload) {
         if (isBookmarked) {
             await removeDailyQuoteBookmark(String(quoteId), userId);
             bookmarkedQuoteIds.delete(String(quoteId));
+            currentQuoteBookmarkCount = Math.max(0, currentQuoteBookmarkCount - 1);
         } else {
             await addDailyQuoteBookmark(normalizedQuote, userId, { displayDate: normalizedQuote.displayDate });
             bookmarkedQuoteIds.add(String(quoteId));
+            currentQuoteBookmarkCount++;
         }
 
+        applyDailyQuoteCommunityTint(currentQuoteBookmarkCount);
         updateDailyQuoteBookmarkButtonState();
+        invalidateDailyQuoteTooltipCache();
+        setupDailyQuoteBookmarkTooltip(String(quoteId));
         await refreshBookmarkedQuotes();
     } catch (error) {
         console.error('Error toggling quote bookmark:', error);
@@ -3740,6 +3917,19 @@ async function openBookmarksPanel(defaultTab = 'verses') {
 
     const safeDefault = defaultTab === 'quotes' ? 'quotes' : 'verses';
 
+    // ── Open the panel IMMEDIATELY with a loading spinner ────────────────
+    const infoContent = document.getElementById('info-content');
+    if (infoContent) {
+        infoContent.classList.add('info-content-bookmarks');
+        infoContent.innerHTML = `
+            <div class="bookmarks-loading">
+                <div class="community-loading-spinner"></div>
+                <p>Loading your bookmarks\u2026</p>
+            </div>
+        `;
+    }
+    showInfoPanel();
+
     const renderVerseBookmarks = (bookmarks = []) => {
         if (!bookmarks || bookmarks.length === 0) {
             return `
@@ -3938,40 +4128,40 @@ async function openBookmarksPanel(defaultTab = 'verses') {
             </div>
         `;
 
-        const infoContent = document.getElementById('info-content');
-        infoContent.classList.add('info-content-bookmarks');
-        infoContent.innerHTML = html;
+        // Panel is already open — just swap in the content
+        const infoContentEl = document.getElementById('info-content');
+        if (infoContentEl) {
+            infoContentEl.classList.add('info-content-bookmarks');
+            infoContentEl.innerHTML = html;
+            wireInteractiveHandlers(infoContentEl);
 
-        wireInteractiveHandlers(infoContent);
+            setupBookmarkTabs(safeDefault, async (tabName) => {
+                if (tabName !== 'community') return;
+                const communityPanel = infoContentEl.querySelector('[data-panel="community"]');
+                if (!communityPanel || communityPanel.dataset.communityLoaded === 'true') return;
 
-        setupBookmarkTabs(safeDefault, async (tabName) => {
-            if (tabName !== 'community') return;
-            const communityPanel = infoContent.querySelector('[data-panel="community"]');
-            if (!communityPanel || communityPanel.dataset.communityLoaded === 'true') return;
+                communityPanel.dataset.communityLoaded = 'true';
+                communityPanel.innerHTML = `
+                    <div class="community-quotes-empty">
+                        <div class="community-loading-spinner"></div>
+                        <p class="community-quotes-empty-hint" style="margin-top:0.6rem">Loading community quotes\u2026</p>
+                    </div>
+                `;
 
-            communityPanel.dataset.communityLoaded = 'true';
-            communityPanel.innerHTML = `
-                <div class="community-quotes-empty">
-                    <div class="community-loading-spinner"></div>
-                    <p class="community-quotes-empty-hint" style="margin-top:0.6rem">Loading community quotes…</p>
-                </div>
-            `;
+                try {
+                    const communityQuotes = await getCommunityQuoteBookmarks();
+                    communityPanel.innerHTML = renderCommunityQuotes(communityQuotes || []);
+                    wireInteractiveHandlers(communityPanel);
 
-            try {
-                const communityQuotes = await getCommunityQuoteBookmarks();
-                communityPanel.innerHTML = renderCommunityQuotes(communityQuotes || []);
-                wireInteractiveHandlers(communityPanel);
-
-                const communityTab = infoContent.querySelector('[data-tab="community"]');
-                if (communityTab && communityQuotes && communityQuotes.length) {
-                    communityTab.innerHTML = `Community <span class="bookmark-tab-pill community-tab-pill">${communityQuotes.length}</span>`;
+                    const communityTab = infoContentEl.querySelector('[data-tab="community"]');
+                    if (communityTab && communityQuotes && communityQuotes.length) {
+                        communityTab.innerHTML = `Community <span class="bookmark-tab-pill community-tab-pill">${communityQuotes.length}</span>`;
+                    }
+                } catch (err) {
+                    communityPanel.innerHTML = `<div class="community-quotes-empty"><p class="community-quotes-empty-hint">Could not load community quotes.</p></div>`;
                 }
-            } catch (err) {
-                communityPanel.innerHTML = `<div class="community-quotes-empty"><p class="community-quotes-empty-hint">Could not load community quotes.</p></div>`;
-            }
-        });
-
-        showInfoPanel();
+            });
+        }
     } catch (error) {
         console.error('Error loading bookmarks:', error);
         showError('Failed to load bookmarks');

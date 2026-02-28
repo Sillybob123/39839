@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Letter in the Scroll</title>
-    <link rel="icon" type="image/png" href="Icon.png">
-    <link rel="apple-touch-icon" href="Icon.png">
+    <link rel="icon" type="image/png" href="media/images/Icon.png">
+    <link rel="apple-touch-icon" href="media/images/Icon.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="A Letter in the Scroll">
     <meta property="og:title" content="A Letter in the Scroll">
     <meta property="og:description" content="Interactive Weekly Torah Portion Study and Discussion. Explore the Parsha with commentary, insights, and community.">
     <meta property="og:image" content="https://sillybob123.github.io/39839/Icon.png">
     <meta property="og:url" content="https://sillybob123.github.io/39839/">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/shabbat.css">
     <!-- Mobile-only overrides for subtle online friends bar -->
-    <link rel="stylesheet" href="mobile-overrides.css">
+    <link rel="stylesheet" href="css/mobile-overrides.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -185,6 +186,12 @@
                         </svg>
                         <span class="header-btn-text">Songs and Poems</span>
                     </a>
+                    <a href="holidays.html" class="header-btn header-btn-secondary" title="Jewish Holidays">
+                        <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="header-btn-text">Holidays</span>
+                    </a>
                     <a href="about.html" class="header-btn header-btn-secondary" title="About this project">
                         <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -215,18 +222,15 @@
                         <div class="daily-inspiration-actions">
                             <button
                                 type="button"
-                                class="daily-quote-bookmark-btn"
+                                class="reaction-btn daily-quote-bookmark-btn"
                                 data-quote-bookmark="true"
                                 aria-pressed="false"
-                                title="Save this quote"
+                                aria-label="Bookmark this quote"
                             >
-                                <span class="sr-only">Bookmark this quote</span>
-                                <svg class="bookmark-icon-desktop" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                    <path d="M6 4a2 2 0 012-2h8a2 2 0 012 2v18l-7-4-7 4V4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                                <svg class="bookmark-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" fill="currentColor"></path>
                                 </svg>
-                                <svg class="bookmark-icon-mobile" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                    <path d="M5 2h14a1 1 0 011 1v20l-8-5-8 5V3a1 1 0 011-1z" fill="currentColor"/>
-                                </svg>
+                                <span class="daily-quote-bookmark-count"></span>
                             </button>
                         </div>
                         <div class="daily-inspiration-main">
@@ -247,7 +251,7 @@
     </header>
 
     <!-- Improved Navigation Bar -->
-    <nav class="bg-white shadow-md sticky top-0 z-10 border-b-2 border-gray-200">
+    <nav class="bg-white shadow-md z-10 border-b-2 border-gray-200">
         <div class="container mx-auto px-4 py-4">
             <!-- Desktop Layout -->
             <div id="nav-desktop" class="hidden md:flex items-center justify-between gap-4">
@@ -353,9 +357,29 @@
                 <span id="error-text">Something went wrong.</span>
             </div>
 
+            <section
+                id="weekly-holiday-box"
+                class="weekly-holiday-box hidden"
+                data-show-from="2026-02-27"
+                data-show-until="2026-03-09"
+                aria-label="Weekly holiday spotlight"
+            >
+                <div class="weekly-holiday-box__glow" aria-hidden="true"></div>
+                <div class="weekly-holiday-box__content">
+                    <p class="weekly-holiday-box__eyebrow">Holiday Spotlight</p>
+                    <h2 class="weekly-holiday-box__title">Read About This Week&rsquo;s Holiday</h2>
+                    <p class="weekly-holiday-box__text">
+                        Purim begins Sunday night, March 1, 2026. Open the Purim landing page to choose between <strong>Story Summary &amp; Interpretations</strong> and the full <strong>Book of Esther</strong>.
+                    </p>
+                    <div class="weekly-holiday-box__actions">
+                        <a class="weekly-holiday-box__button" href="purim.html">Read About This Week&rsquo;s Holiday</a>
+                    </div>
+                </div>
+            </section>
+
             <!-- Text Display -->
             <div id="mitzvah-challenge-section" class="mitzvah-challenge hidden">
-                <div class="mitzvah-card">
+                <div class="mitzvah-card"
                     <div class="mitzvah-card__header" id="mitzvah-toggle-header" style="cursor: pointer;">
                         <div class="mitzvah-card__title-row">
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -550,9 +574,11 @@
         </div>
     </footer>
 
-    <script src="daily-inspiration.js"></script>
+    <script src="js/shabbat.js"></script>
+    <script src="js/daily-inspiration.js"></script>
     <script type="module" src="js/main.js"></script>
-    <script src="text-size-control.js"></script>
+    <script src="js/sidebar-nav.js"></script>
+    <script src="js/text-size-control.js"></script>
 
     <script>
         // Mitzvah Challenge Collapse/Expand Functionality
@@ -560,6 +586,22 @@
             const toggleHeader = document.getElementById('mitzvah-toggle-header');
             const collapsibleContent = document.getElementById('mitzvah-collapsible-content');
             const toggleIcon = document.getElementById('mitzvah-toggle-icon');
+            const weeklyHolidayBox = document.getElementById('weekly-holiday-box');
+
+            if (weeklyHolidayBox) {
+                const fromDateRaw = weeklyHolidayBox.dataset.showFrom;
+                const untilDateRaw = weeklyHolidayBox.dataset.showUntil;
+                const today = new Date();
+                const localDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                const fromDate = fromDateRaw ? new Date(`${fromDateRaw}T00:00:00`) : null;
+                const untilDate = untilDateRaw ? new Date(`${untilDateRaw}T00:00:00`) : null;
+
+                const shouldShow =
+                    (!fromDate || localDate >= fromDate) &&
+                    (!untilDate || localDate < untilDate);
+
+                weeklyHolidayBox.classList.toggle('hidden', !shouldShow);
+            }
 
             if (toggleHeader && collapsibleContent && toggleIcon) {
                 toggleHeader.addEventListener('click', function() {

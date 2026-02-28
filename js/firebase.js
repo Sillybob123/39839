@@ -812,6 +812,69 @@ async function getUserDailyQuoteBookmarks(userId) {
   }
 }
 
+// Get the total bookmark count for a specific daily quote
+async function getDailyQuoteBookmarkCount(quoteId) {
+  try {
+    const q = query(
+      collection(db, 'dailyQuoteBookmarks'),
+      where('quoteId', '==', String(quoteId))
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.size;
+  } catch (error) {
+    console.error('Error getting daily quote bookmark count:', error);
+    return 0;
+  }
+}
+
+// Get users who bookmarked a specific daily quote (for hover tooltips)
+async function getDailyQuoteInteractors(quoteId) {
+  try {
+    const q = query(
+      collection(db, 'dailyQuoteBookmarks'),
+      where('quoteId', '==', String(quoteId)),
+      orderBy('timestamp', 'desc'),
+      limit(15)
+    );
+    let snapshot;
+    try {
+      snapshot = await getDocs(q);
+    } catch (indexErr) {
+      // Fallback without orderBy if index doesn't exist
+      const fallbackQ = query(
+        collection(db, 'dailyQuoteBookmarks'),
+        where('quoteId', '==', String(quoteId)),
+        limit(15)
+      );
+      snapshot = await getDocs(fallbackQ);
+    }
+    const userIds = [];
+    const timestamps = new Map();
+    snapshot.forEach((docSnapshot) => {
+      const data = docSnapshot.data();
+      if (data.userId) {
+        userIds.push(data.userId);
+        timestamps.set(data.userId, data.timestamp);
+      }
+    });
+    // Fetch user info objects (same shape as getVerseInteractors, so resolveDisplayName works)
+    const results = await Promise.all(
+      userIds.map(async (userId) => {
+        try {
+          const info = await getUserInfo(userId);
+          return { user: info, timestamp: timestamps.get(userId) };
+        } catch (_) {
+          return { user: null, timestamp: timestamps.get(userId) };
+        }
+      })
+    );
+    return results.filter(r => r.user !== null);
+  } catch (error) {
+    console.error('Error getting daily quote interactors:', error);
+    return [];
+  }
+}
+
 // Get all daily quote bookmarks across all users, grouped by quoteId
 async function getCommunityQuoteBookmarks() {
   try {
@@ -1941,6 +2004,8 @@ export {
   isDailyQuoteBookmarked,
   getUserDailyQuoteBookmarks,
   getCommunityQuoteBookmarks,
+  getDailyQuoteBookmarkCount,
+  getDailyQuoteInteractors,
   recordUserLogin,
   updateUserPresence,
   markUserOffline,

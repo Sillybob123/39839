@@ -1,6 +1,46 @@
 // API Service Module
 import { API_CONFIG } from './config.js';
 
+// ─── localStorage cache helpers ───────────────────────────────────────────────
+const CACHE_V = 'v1';
+const TEXT_TTL  = 8  * 24 * 60 * 60 * 1000; // 8 days  — text never changes
+const REF_TTL   = 12 *      60 * 60 * 1000; // 12 hours — weekly parsha check
+
+function _cacheGet(key) {
+    try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        const { data, expires } = JSON.parse(raw);
+        return Date.now() < expires ? data : null;
+    } catch { return null; }
+}
+
+function _cacheSet(key, data, ttl) {
+    try {
+        localStorage.setItem(key, JSON.stringify({ data, expires: Date.now() + ttl }));
+    } catch { /* storage full or unavailable — silently skip */ }
+}
+
+/** Return cached parsha text for `parshaRef`, or null if absent/stale. */
+function getCachedParshaText(parshaRef) {
+    return _cacheGet(`sefaria_text_${CACHE_V}_${parshaRef}`);
+}
+
+function cacheParshaText(parshaRef, data) {
+    _cacheSet(`sefaria_text_${CACHE_V}_${parshaRef}`, data, TEXT_TTL);
+}
+
+/** Return { name, ref } for this week's parsha from cache, or null. */
+export function getCachedCurrentParsha() {
+    return _cacheGet(`sefaria_weekly_${CACHE_V}`);
+}
+
+/** Persist this week's parsha { name, ref } so next visit starts instantly. */
+export function cacheCurrentParsha(name, ref) {
+    _cacheSet(`sefaria_weekly_${CACHE_V}`, { name, ref }, REF_TTL);
+}
+// ──────────────────────────────────────────────────────────────────────────────
+
 /**
  * Fetch current week's parsha from Sefaria calendar
  */
@@ -25,9 +65,18 @@ export async function fetchCurrentParsha() {
 }
 
 /**
- * Fetch Torah text for a specific parsha reference using v3 API
+ * Fetch Torah text for a specific parsha reference using v3 API.
+ * Returns cached data instantly on repeat visits (8-day TTL).
  */
 export async function fetchParshaText(parshaRef) {
+    const cached = getCachedParshaText(parshaRef);
+    if (cached) {
+        return cached;
+    }
+    return _fetchAndCacheParshaText(parshaRef);
+}
+
+async function _fetchAndCacheParshaText(parshaRef) {
     try {
         // Use v3 API endpoint with text_only format to strip all annotations
         const apiUrl = `${API_CONFIG.SEFARIA_BASE}/v3/texts/${encodeURIComponent(parshaRef)}?version=english&version=hebrew&return_format=text_only`;
@@ -44,8 +93,10 @@ export async function fetchParshaText(parshaRef) {
 
         const data = await response.json();
 
-        // Transform v3 response to expected format
-        return transformV3Response(data);
+        // Transform v3 response to expected format and cache it
+        const result = transformV3Response(data);
+        cacheParshaText(parshaRef, result);
+        return result;
     } catch (error) {
         console.error('Error in fetchParshaText:', error);
         // Fallback to v1 API if v3 fails
@@ -160,7 +211,7 @@ function transformV3Response(v3Data) {
  */
 export async function loadCommentaryData() {
     try {
-        const response = await fetch('data.json');
+        const response = await fetch('data/data.json');
         if (!response.ok) {
             throw new Error('Failed to load commentary data');
         }
@@ -176,7 +227,7 @@ export async function loadCommentaryData() {
  */
 export async function loadMitzvahChallenges() {
     try {
-        const response = await fetch('mitzvah-challenges.json');
+        const response = await fetch('data/mitzvah-challenges.json');
         if (!response.ok) {
             throw new Error('Failed to load mitzvah challenge data');
         }

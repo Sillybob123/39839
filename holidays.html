@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jewish Holidays — A Letter in the Scroll</title>
+    <meta name="description" content="Explore Jewish holidays throughout the year — stories, songs, prayers, and traditions for Purim, Passover, Shavuot, Rosh Hashana, Yom Kippur, Sukkot, Hanukkah, and more.">
+    <link rel="icon" type="image/png" href="media/images/Icon.png">
+    <link rel="apple-touch-icon" href="media/images/Icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile-overrides.css">
+    <style>
+        /* ── Holidays Page Styles ─────────────────────────────── */
+        :root {
+            --hol-navy:   #0d1b3e;
+            --hol-blue:   #152555;
+            --hol-gold:   #d4af37;
+            --hol-gold-lt:#f0d060;
+            --hol-white:  #f8f6f0;
+            --hol-card-bg:rgba(255,255,255,0.07);
+            --hol-radius: 18px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body.holidays-body {
+            background: linear-gradient(160deg, var(--hol-navy) 0%, #1a2d5a 60%, #0d2040 100%);
+            min-height: 100vh;
+            color: var(--hol-white);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ── Top Bar ─────────────────────────────────────────── */
+        .hol-topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(13,27,62,0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(212,175,55,0.2);
+            padding: 0.75rem 1.5rem;
+        }
+        .hol-topbar__inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .hol-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--hol-gold);
+            text-decoration: none;
+        }
+        .hol-brand:hover { color: var(--hol-gold-lt); }
+        .hol-back {
+            font-size: 0.85rem;
+            color: rgba(248,246,240,0.7);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: color 0.2s;
+        }
+        .hol-back:hover { color: var(--hol-gold); }
+
+        /* ── Hero ────────────────────────────────────────────── */
+        .hol-hero {
+            text-align: center;
+            padding: 3.5rem 1.5rem 2.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .hol-hero__eyebrow {
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--hol-gold);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        .hol-hero__title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.25rem);
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.15;
+            margin-bottom: 0.75rem;
+        }
+        .hol-hero__title span {
+            color: var(--hol-gold);
+        }
+        .hol-hero__subtitle {
+            font-size: 1rem;
+            color: rgba(248,246,240,0.72);
+            line-height: 1.6;
+            max-width: 560px;
+            margin: 0 auto 1.5rem;
+        }
+        .hol-hero__hebrew {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--hol-gold-lt);
+            direction: rtl;
+            letter-spacing: 0.02em;
+            margin-bottom: 1rem;
+        }
+
+        /* ── API Status ──────────────────────────────────────── */
+        .hol-status {
+            text-align: center;
+            font-size: 0.78rem;
+            color: rgba(248,246,240,0.45);
+            padding: 0 1.5rem 1rem;
+        }
+        .hol-status.loaded { color: rgba(180,255,160,0.55); }
+        .hol-status.error  { color: rgba(255,160,130,0.65); }
+
+        /* ── Grid ────────────────────────────────────────────── */
+        .hol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem;
+        }
+
+        /* ── Card ────────────────────────────────────────────── */
+        .hol-card {
+            background: var(--hol-card-bg);
+            border: 1px solid rgba(212,175,55,0.18);
+            border-radius: var(--hol-radius);
+            padding: 1.6rem 1.5rem 1.4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .hol-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+            border-color: rgba(212,175,55,0.4);
+        }
+
+        /* Accent strip on left edge */
+        .hol-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            border-radius: 18px 0 0 18px;
+            background: var(--card-accent, var(--hol-gold));
+        }
+
+        .hol-card--purim    { --card-accent: #d4af37; }
+        .hol-card--passover { --card-accent: #7ec8e3; }
+        .hol-card--shavuot  { --card-accent: #7ed68a; }
+        .hol-card--rosh     { --card-accent: #f4a261; }
+        .hol-card--yomkippur{ --card-accent: #c9b1e8; }
+        .hol-card--sukkot   { --card-accent: #e8c97a; }
+        .hol-card--hanukkah { --card-accent: #5ba4e8; }
+        .hol-card--tubishvat{ --card-accent: #a8e67c; }
+        .hol-card--shabbat  { --card-accent: #c4d4f5; }
+        .hol-card--lag      { --card-accent: #f4935a; }
+
+        .hol-card__hebrew {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--hol-gold-lt);
+            direction: rtl;
+            line-height: 1;
+            margin-bottom: 0.15rem;
+        }
+        .hol-card__name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+        }
+        .hol-card__date {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--hol-gold);
+            letter-spacing: 0.04em;
+            margin-top: 0.1rem;
+        }
+        .hol-card__date-loading {
+            display: inline-block;
+            width: 130px;
+            height: 12px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 6px;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0%   { opacity: 0.4; }
+            50%  { opacity: 0.7; }
+            100% { opacity: 0.4; }
+        }
+        .hol-card__countdown {
+            font-size: 0.75rem;
+            color: rgba(248,246,240,0.5);
+        }
+        .hol-card__countdown.soon {
+            color: #f0d060;
+            font-weight: 600;
+        }
+        .hol-card__desc {
+            font-size: 0.9rem;
+            color: rgba(248,246,240,0.75);
+            line-height: 1.55;
+            margin-top: 0.3rem;
+            flex: 1;
+        }
+        .hol-card__actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+        .hol-card__btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.45rem 1rem;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s, transform 0.15s;
+        }
+        .hol-card__btn--primary {
+            background: var(--hol-gold);
+            color: var(--hol-navy);
+        }
+        .hol-card__btn--primary:hover {
+            background: var(--hol-gold-lt);
+            transform: scale(1.03);
+        }
+        .hol-card__btn--secondary {
+            background: rgba(255,255,255,0.1);
+            color: rgba(248,246,240,0.85);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .hol-card__btn--secondary:hover {
+            background: rgba(255,255,255,0.18);
+            color: #fff;
+        }
+        .hol-card__coming-soon {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.3rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.06);
+            color: rgba(248,246,240,0.45);
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-top: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* ── Featured badge ──────────────────────────────────── */
+        .hol-card--featured {
+            border-color: rgba(212,175,55,0.45);
+            background: rgba(212,175,55,0.07);
+        }
+        .hol-card__badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: var(--hol-gold);
+            color: var(--hol-navy);
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+        }
+
+        /* ── Section heading ─────────────────────────────────── */
+        .hol-section-label {
+            max-width: 1100px;
+            margin: 2rem auto 0.75rem;
+            padding: 0 1.5rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(212,175,55,0.7);
+        }
+
+        /* ── Footer ──────────────────────────────────────────── */
+        .hol-footer {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            border-top: 1px solid rgba(212,175,55,0.12);
+            font-size: 0.8rem;
+            color: rgba(248,246,240,0.35);
+        }
+        .hol-footer a {
+            color: var(--hol-gold);
+            text-decoration: none;
+        }
+        .hol-footer a:hover { color: var(--hol-gold-lt); text-decoration: underline; }
+
+        /* ── Responsive ──────────────────────────────────────── */
+        @media (max-width: 600px) {
+            .hol-hero { padding: 2.5rem 1rem 2rem; }
+            .hol-grid { grid-template-columns: 1fr; padding: 0 1rem 3rem; }
+            .hol-card { padding: 1.3rem 1.2rem 1.2rem; }
+        }
+    </style>
+</head>
+<body class="holidays-body">
+
+    <!-- Top Navigation Bar -->
+    <nav class="hol-topbar">
+        <div class="hol-topbar__inner">
+            <a class="hol-brand" href="index.html">A Letter in the Scroll</a>
+            <a class="hol-back" href="index.html">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hol-hero">
+        <p class="hol-hero__eyebrow">ב״ה &nbsp;·&nbsp; Jewish Calendar</p>
+        <div class="hol-hero__hebrew">מועדי ישראל</div>
+        <h1 class="hol-hero__title">Jewish <span>Holidays</span></h1>
+        <p class="hol-hero__subtitle">
+            Explore the stories, songs, and traditions of the Jewish year. Dates update automatically every year based on the Hebrew calendar.
+        </p>
+    </header>
+
+    <p class="hol-status" id="hol-api-status">Loading holiday dates…</p>
+
+    <!-- Currently Observing / Upcoming -->
+    <p class="hol-section-label">Holidays with Content</p>
+
+    <div class="hol-grid">
+
+        <!-- Purim — full content -->
+        <article class="hol-card hol-card--purim hol-card--featured">
+            <span class="hol-card__badge">Content Available</span>
+            <div class="hol-card__hebrew">פּוּרִים</div>
+            <h2 class="hol-card__name">Purim</h2>
+            <p class="hol-card__date" data-holiday="Purim"><span class="hol-card__date-loading"></span></p>
+            <p class="hol-card__countdown" data-holiday-countdown="Purim"></p>
+            <p class="hol-card__desc">
+                The joyful holiday commemorating the miraculous salvation of the Jewish people in Ancient Persia, as told in the Book of Esther. Read the Megillah, wear costumes, send gift baskets, and make noise when Haman's name is read!
+            </p>
+            <div class="hol-card__actions">
+                <a class="hol-card__btn hol-card__btn--primary" href="purim.html">Explore Purim</a>
+                <a class="hol-card__btn hol-card__btn--secondary" href="purim-story.html">Read the Story</a>
+                <a class="hol-card__btn hol-card__btn--secondary" href="esther.html">Book of Esther</a>
+                <a class="hol-card__btn hol-card__btn--secondary" href="purim-songs.html">Songs</a>
+            </div>
+        </article>
+
+        <!-- Passover — content exists -->
+        <article class="hol-card hol-card--passover hol-card--featured">
+            <span class="hol-card__badge">Content Available</span>
+            <div class="hol-card__hebrew">פֶּסַח</div>
+            <h2 class="hol-card__name">Passover</h2>
+            <p class="hol-card__date" data-holiday="Passover"><span class="hol-card__date-loading"></span></p>
+            <p class="hol-card__countdown" data-holiday-countdown="Passover"></p>
+            <p class="hol-card__desc">
+                The eight-day festival of freedom celebrating the Exodus from Egypt. The Passover Seder is one of the most widely observed Jewish rituals — matza, the four cups of wine, and the retelling of the Haggadah.
+            </p>
+            <div class="hol-card__actions">
+                <a class="hol-card__btn hol-card__btn--primary" href="passover.html">Explore Passover</a>
+            </div>
+        </article>
+
+    </div>
+
+    <p class="hol-section-label">More Holidays &mdash; Coming Soon</p>
+
+    <div class="hol-grid">
+
+        <!-- Shavuot -->
+        <article class="hol-card hol-card--shavuot">
+            <div class="hol-card__hebrew">שָׁבוּעוֹת</div>
+            <h2 class="hol-card__name">Shavuot</h2>
+            <p class="hol-card__date" data-holiday="Shavuot"><span class="hol-card__date-loading"></span></p>
+            <p class="hol-card__countdown" data-holiday-countdown="Shavuot"></p>
+            <p class="hol-card__desc">
+                The Festival of Weeks, celebrating the giving of the Torah at Mount Sinai. Traditionally observed with all-night Torah study, dairy foods, and the reading of the Book of Ruth.
+            </p>
+            <span class="hol-card__coming-soon">Content Coming Soon</span>
+        </article>
+
+        <!-- Rosh Hashana -->
+        <article class="hol-card hol-card--rosh">
+            <div class="hol-card__hebrew">רֹאשׁ הַשָּׁנָה</div>
+            <h2 class="hol-card__name">Rosh Hashana</h2>
+            <p class="hol-card__date" data-holiday="Rosh Hashana"><span class="hol-card__date-loading"></span></p>
+            <p class="hol-card__countdown" data-holiday-countdown="Rosh Hashana"></p>
+            <p class="hol-card__desc">
+                The Jewish New Year, a time of introspection and prayer. The shofar is sounded, sweet foods like apples and honey are eaten, and we pray for a good and sweet new year.
+            </p>
+            <span class="hol-card__coming-soon">Content Coming Soon</span>
+        </article>
+
+        <!-- Yom Kippur -->
+        <article class="hol-card hol-card--yomkippur">
+            <div class="hol-card__hebrew">יוֹם כִּיפּוּר</div>
+            <h2 class="hol-card__name">Yom Kippur</h2>
+            <p class="hol-card__date" data-holiday="Yom Kippur"><span class="hol-card__date-loading"></span></p>
+            <p class="hol-card__countdown" data-holiday-countdown="Yom Kippur"></p>
+            <p class="hol-card__desc">
+                The holiest day of the Jewish year — the Day of Atonement. A 25-hour fast, intensive prayer, and a profound opportunity to seek forgiveness and return to our best selves.
+            </p>
+            <span class="hol-card__coming-soon">Content Coming Soon</span>
+        </article>
+
+        <!-- Sukkot -->
+        <article class="hol-card hol-card--sukkot">
+            <div class="hol-card__hebrew">סוּכּוֹת</div>
+            <h2 class="hol-card__name">Sukkot</h2>
+            <p class="hol-card__date" data-holiday="Sukkot"><span class="hol-card__date-loading"></span></p>
+            <p class="hol-card__countdown" data-holiday-countdown="Sukkot"></p>
+            <p class="hol-card__desc">
+                The Festival of Tabernacles, a seven-day harvest festival. Families build and eat in a sukkah (temporary hut), waving the four species — etrog, lulav, hadas, and arava.
+            </p>
+            <span class="hol-card__coming-soon">Content Coming Soon</span>
+        </article>
+
+        <!-- Hanukkah -->
+        <article class="hol-card hol-card--hanukkah">
+            <div class="hol-card__hebrew">חֲנֻכָּה</div>
+            <h2 class="hol-card__name">Hanukkah</h2>
+            <p class="hol-card__date" data-holiday="Chanukah"><span class="hol-card__date-loading"></span></p>
+            <p class="hol-card__countdown" data-holiday-countdown="Chanukah"></p>
+            <p class="hol-card__desc">
+                The eight-day Festival of Lights celebrating the rededication of the Temple and the miracle of the oil. Candles are lit each night, latkes are eaten, and dreidels are spun.
+            </p>
+            <span class="hol-card__coming-soon">Content Coming Soon</span>
+        </article>
+
+        <!-- Tu BiShvat -->
+        <article class="hol-card hol-card--tubishvat">
+            <div class="hol-card__hebrew">ט"ו בִּשְׁבָט</div>
+            <h2 class="hol-card__name">Tu BiShvat</h2>
+            <p class="hol-card__date" data-holiday="Tu BiShvat"><span class="hol-card__date-loading"></span></p>
+            <p class="hol-card__countdown" data-holiday-countdown="Tu BiShvat"></p>
+            <p class="hol-card__desc">
+                The New Year of the Trees, a minor holiday with major ecological significance. Traditionally celebrated by eating fruits of the Land of Israel and reflecting on our relationship with nature.
+            </p>
+            <span class="hol-card__coming-soon">Content Coming Soon</span>
+        </article>
+
+        <!-- Lag BaOmer -->
+        <article class="hol-card hol-card--lag">
+            <div class="hol-card__hebrew">לַ"ג בָּעֹמֶר</div>
+            <h2 class="hol-card__name">Lag BaOmer</h2>
+            <p class="hol-card__date" data-holiday="Lag B'Omer"><span class="hol-card__date-loading"></span></p>
+            <p class="hol-card__countdown" data-holiday-countdown="Lag B'Omer"></p>
+            <p class="hol-card__desc">
+                The 33rd day of the Omer counting between Passover and Shavuot, a joyful break during the semi-mourning period. Celebrated with bonfires, outdoor activities, and music.
+            </p>
+            <span class="hol-card__coming-soon">Content Coming Soon</span>
+        </article>
+
+        <!-- Shabbat -->
+        <article class="hol-card hol-card--shabbat">
+            <div class="hol-card__hebrew">שַׁבָּת</div>
+            <h2 class="hol-card__name">Shabbat</h2>
+            <p class="hol-card__date" id="shabbat-next-date">Every Friday at sundown</p>
+            <p class="hol-card__countdown" id="shabbat-countdown"></p>
+            <p class="hol-card__desc">
+                The weekly day of rest, observed from Friday sunset to Saturday night. Candles are lit, kiddush is recited, and the world pauses. The holiest unit of time in Jewish life.
+            </p>
+            <div class="hol-card__actions">
+                <a class="hol-card__btn hol-card__btn--secondary" href="shabbat-preview.html">Shabbat Preview</a>
+            </div>
+        </article>
+
+    </div>
+
+    <footer class="hol-footer">
+        <p>Holiday dates provided by <a href="https://www.hebcal.com" target="_blank" rel="noopener">Hebcal.com</a> &nbsp;&middot;&nbsp; <a href="index.html">Return to A Letter in the Scroll</a></p>
+    </footer>
+
+    <script>
+    (async function () {
+        'use strict';
+
+        const STATUS_EL = document.getElementById('hol-api-status');
+
+        // ── Hebcal API: fetch major holidays for current + next year ───────
+        async function fetchHolidays(year) {
+            const url = `https://www.hebcal.com/api/holidays?v=1&year=${year}&maj=on&cfg=json`;
+            const cached = sessionStorage.getItem(`hol_${year}`);
+            if (cached) return JSON.parse(cached);
+            const res = await fetch(url);
+            if (!res.ok) throw new Error(`Hebcal returned ${res.status}`);
+            const data = await res.json();
+            sessionStorage.setItem(`hol_${year}`, JSON.stringify(data));
+            return data;
+        }
+
+        // ── Format a date string (YYYY-MM-DD) to readable form ───────────
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            // Parse as local date to avoid off-by-one from UTC conversion
+            const [y, m, d] = dateStr.split('-').map(Number);
+            const dt = new Date(y, m - 1, d);
+            return dt.toLocaleDateString('en-US', {
+                weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+            });
+        }
+
+        // ── Days until a date string ──────────────────────────────────────
+        function daysUntil(dateStr) {
+            const [y, m, d] = dateStr.split('-').map(Number);
+            const target = new Date(y, m - 1, d);
+            const today  = new Date();
+            today.setHours(0, 0, 0, 0);
+            return Math.round((target - today) / 86400000);
+        }
+
+        // ── Countdown text ────────────────────────────────────────────────
+        function countdownText(days) {
+            if (days < 0)   return `${Math.abs(days)} day${Math.abs(days) !== 1 ? 's' : ''} ago`;
+            if (days === 0) return 'Today!';
+            if (days === 1) return 'Tomorrow!';
+            if (days <= 14) return `${days} days away`;
+            if (days <= 60) return `${days} days away (${Math.ceil(days / 7)} weeks)`;
+            return `${days} days away`;
+        }
+
+        // ── Find the best holiday date (upcoming or most recent) ─────────
+        function findBestDate(allItems, searchName) {
+            const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const target = norm(searchName);
+
+            const matches = allItems.filter(item => {
+                const t = norm(item.title || '');
+                return t === target || t.startsWith(target) || target.startsWith(t.substring(0, 5));
+            });
+
+            if (!matches.length) return null;
+
+            // Sort by date
+            matches.sort((a, b) => a.date.localeCompare(b.date));
+
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
+            // Prefer an upcoming or today date
+            const upcoming = matches.find(item => {
+                const [y, m, d] = item.date.split('-').map(Number);
+                return new Date(y, m - 1, d) >= today;
+            });
+
+            return upcoming || matches[matches.length - 1];
+        }
+
+        // ── Populate a card's date and countdown ──────────────────────────
+        function populateCard(searchName, allItems) {
+            const dateEls     = document.querySelectorAll(`[data-holiday="${searchName}"]`);
+            const countdownEls = document.querySelectorAll(`[data-holiday-countdown="${searchName}"]`);
+
+            const item = findBestDate(allItems, searchName);
+
+            dateEls.forEach(el => {
+                if (item) {
+                    const days = daysUntil(item.date);
+                    el.textContent = formatDate(item.date);
+                    if (days >= 0 && days <= 14) el.style.color = '#f0d060';
+                } else {
+                    el.textContent = 'Date unavailable';
+                }
+            });
+
+            countdownEls.forEach(el => {
+                if (item) {
+                    const days = daysUntil(item.date);
+                    el.textContent = countdownText(days);
+                    if (days >= 0 && days <= 7) el.classList.add('soon');
+                }
+            });
+        }
+
+        // ── Shabbat next occurrence ───────────────────────────────────────
+        function populateShabbat() {
+            const today = new Date();
+            const dayOfWeek = today.getDay(); // 0=Sun, 5=Fri, 6=Sat
+            const daysToFri = ((5 - dayOfWeek) + 7) % 7 || 7;
+            const nextFri = new Date(today);
+            nextFri.setDate(today.getDate() + daysToFri);
+
+            const el = document.getElementById('shabbat-next-date');
+            const countEl = document.getElementById('shabbat-countdown');
+            if (el) {
+                el.textContent = 'Every Friday at sundown — next: ' + nextFri.toLocaleDateString('en-US', {
+                    weekday: 'long', month: 'long', day: 'numeric'
+                });
+            }
+            if (countEl) {
+                countEl.textContent = daysToFri === 7 ? 'Tonight!' :
+                    daysToFri === 1 ? 'Tomorrow night!' :
+                    `${daysToFri} days away`;
+                if (daysToFri <= 1) countEl.classList.add('soon');
+            }
+        }
+
+        // ── Main ──────────────────────────────────────────────────────────
+        const HOLIDAY_KEYS = [
+            'Purim', 'Passover', 'Shavuot', 'Rosh Hashana',
+            'Yom Kippur', 'Sukkot', 'Chanukah', 'Tu BiShvat', "Lag B'Omer"
+        ];
+
+        populateShabbat();
+
+        try {
+            const year = new Date().getFullYear();
+            // Fetch this year and next year to always have an upcoming date
+            const [dataThis, dataNext] = await Promise.all([
+                fetchHolidays(year),
+                fetchHolidays(year + 1)
+            ]);
+
+            const allItems = [
+                ...(dataThis.items || []),
+                ...(dataNext.items || [])
+            ];
+
+            HOLIDAY_KEYS.forEach(key => populateCard(key, allItems));
+
+            STATUS_EL.textContent = `Holiday dates loaded for ${year}–${year + 1}`;
+            STATUS_EL.className = 'hol-status loaded';
+
+        } catch (err) {
+            console.warn('Hebcal API unavailable:', err);
+            STATUS_EL.textContent = 'Holiday dates unavailable — check your connection';
+            STATUS_EL.className = 'hol-status error';
+
+            // Clear loading skeletons gracefully
+            document.querySelectorAll('[data-holiday]').forEach(el => {
+                el.textContent = 'Date unavailable';
+            });
+        }
+
+    })();
+    </script>
+
+</body>
+</html>
