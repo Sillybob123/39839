@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosh Hashanah Seder Guide | A Letter in the Scroll</title>
+    <meta name="description" content="A complete guide to the Rosh Hashanah Seder night: Kiddush, symbolic foods with prayers, and a downloadable PDF for your table.">
+    <link rel="icon" type="image/png" href="media/images/Icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/holiday-pages.css">
+    <style>
+        body {
+            background:
+                radial-gradient(circle at 100% -20%, rgba(234, 88, 12, 0.12), transparent 45%),
+                radial-gradient(circle at 0% -10%, rgba(245, 158, 11, 0.1), transparent 40%),
+                #fffdf9;
+        }
+
+        /* Download button */
+        .rh-download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            background: linear-gradient(135deg, #ea580c, #c2410c);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.97rem;
+            text-decoration: none;
+            border-radius: 999px;
+            padding: 0.72rem 1.35rem;
+            box-shadow: 0 8px 20px rgba(194, 65, 12, 0.32);
+            transition: transform 0.15s, box-shadow 0.15s;
+            border: none;
+        }
+        .rh-download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(194, 65, 12, 0.42);
+        }
+
+        /* Section headers */
+        .rh-section-title {
+            font-family: "Playfair Display", Georgia, serif;
+            font-size: clamp(1.35rem, 3vw, 1.85rem);
+            color: #7c2d12;
+            margin: 0 0 0.2rem;
+            line-height: 1.2;
+        }
+        .rh-section-hebrew {
+            font-family: "Playfair Display", serif;
+            font-size: clamp(1rem, 2.2vw, 1.35rem);
+            color: #b45309;
+            direction: rtl;
+            text-align: right;
+            margin: 0 0 1rem;
+        }
+
+        /* Instruction callout */
+        .rh-instruction {
+            background: #fff8ed;
+            border-left: 4px solid #f59e0b;
+            border-radius: 10px;
+            padding: 0.7rem 1rem;
+            font-size: 0.93rem;
+            color: #7c4e2a;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        /* Prayer block: Hebrew + transliteration + English */
+        .rh-blessing {
+            background: #fffdf7;
+            border: 1px solid rgba(180, 83, 9, 0.18);
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 0.85rem;
+        }
+        .rh-blessing__he {
+            direction: rtl;
+            text-align: right;
+            font-family: "Playfair Display", Georgia, serif;
+            font-size: 1.12rem;
+            line-height: 1.85;
+            color: #92400e;
+            margin: 0 0 0.55rem;
+        }
+        .rh-blessing__tl {
+            font-style: italic;
+            color: #78716c;
+            font-size: 0.95rem;
+            margin: 0 0 0.45rem;
+            line-height: 1.7;
+        }
+        .rh-blessing__en {
+            color: #374151;
+            font-size: 0.95rem;
+            margin: 0;
+            line-height: 1.7;
+        }
+
+        /* Yehi Ratzon highlight block */
+        .rh-yehi {
+            background: linear-gradient(135deg, #fff8e1, #fffdf0);
+            border: 1px solid rgba(245, 158, 11, 0.28);
+            border-radius: 12px;
+            padding: 0.9rem 1.1rem;
+            margin-top: 0.7rem;
+        }
+        .rh-yehi__label {
+            font-size: 0.74rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #b45309;
+            margin: 0 0 0.45rem;
+        }
+
+        /* Symbols grid */
+        .rh-symbols-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .rh-symbol-card {
+            background: #fff;
+            border: 1px solid rgba(180, 83, 9, 0.14);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .rh-symbol-card__head {
+            background: linear-gradient(135deg, #fff8ed, #fef3c7);
+            padding: 0.8rem 1.1rem 0.65rem;
+            border-bottom: 1px solid rgba(180, 83, 9, 0.1);
+        }
+        .rh-symbol-card__name-he {
+            direction: rtl;
+            font-family: "Playfair Display", serif;
+            font-size: 1.25rem;
+            color: #92400e;
+            margin: 0 0 0.12rem;
+            text-align: right;
+        }
+        .rh-symbol-card__name-en {
+            font-weight: 700;
+            font-size: 0.96rem;
+            color: #7c2d12;
+            margin: 0;
+        }
+        .rh-symbol-card__body {
+            padding: 0.85rem 1.1rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            flex: 1;
+        }
+        .rh-symbol-card__meaning {
+            font-size: 0.93rem;
+            color: #374151;
+            line-height: 1.65;
+            margin: 0;
+        }
+        .rh-symbol-card__meaning strong {
+            color: #92400e;
+        }
+
+        /* Psalm / prayer in blue */
+        .rh-psalm-block {
+            background: linear-gradient(145deg, #f0f4ff, #f7f9ff);
+            border: 1px solid rgba(30, 58, 138, 0.13);
+            border-radius: 14px;
+            padding: 1.05rem 1.2rem;
+            margin-bottom: 0.85rem;
+        }
+        .rh-psalm-block__he {
+            direction: rtl;
+            text-align: right;
+            font-family: "Playfair Display", serif;
+            font-size: 1.04rem;
+            line-height: 1.95;
+            color: #1e3a8a;
+            margin: 0 0 0.8rem;
+        }
+        .rh-psalm-block__en {
+            color: #1e3a8a;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin: 0;
+            font-style: italic;
+        }
+        .rh-psalm-block__he + .rh-psalm-block__en {
+            border-top: 1px solid rgba(30, 58, 138, 0.1);
+            padding-top: 0.7rem;
+            margin-top: 0.7rem;
+        }
+
+        /* Shana Tova footer banner */
+        .rh-shana-tova {
+            text-align: center;
+            margin-top: 1.8rem;
+            padding: 1.6rem 1rem 1.4rem;
+            background: linear-gradient(135deg, #fff8e1, #fef3c7);
+            border-radius: 20px;
+            border: 1px solid rgba(245, 158, 11, 0.28);
+        }
+        .rh-shana-tova__he {
+            font-family: "Playfair Display", serif;
+            font-size: clamp(1.6rem, 4.5vw, 2.5rem);
+            color: #92400e;
+            direction: rtl;
+            margin: 0 0 0.25rem;
+            line-height: 1.2;
+        }
+        .rh-shana-tova__en {
+            font-size: 1.05rem;
+            color: #7c4e2a;
+            margin: 0 0 1.1rem;
+        }
+
+        @media (max-width: 640px) {
+            .rh-symbols-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="holiday-topbar">
+        <div class="holiday-topbar__inner">
+            <a class="holiday-topbar__brand" href="index.html">A Letter in the Scroll</a>
+            <nav class="holiday-topbar__links" aria-label="Holiday navigation">
+                <a class="holiday-topbar__link" href="holidays/">All Holidays</a>
+                <a class="holiday-topbar__link" href="index.html">Home</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="holiday-shell">
+
+        <!-- ── Hero ─────────────────────────────────────────────────── -->
+        <section class="holiday-hero" aria-labelledby="rh-title">
+            <span class="holiday-badge">Holiday Guide &middot; Rosh Hashanah</span>
+            <div style="direction:rtl;font-family:'Playfair Display',serif;font-size:clamp(1.15rem,2.5vw,1.6rem);color:#92400e;margin:0.65rem 0 0.15rem;">סֵדֶר לֵיל רֹאשׁ הַשָּׁנָה</div>
+            <h1 id="rh-title" class="holiday-title">A Seder for the Night of Rosh Hashanah</h1>
+            <p class="holiday-subtitle">
+                Rosh Hashanah is the Jewish New Year and the Day of Judgment — when our fate for the coming year is decided. This seder guide walks your table through the evening's blessings, symbolic foods, and prayers for a good and sweet year.
+            </p>
+            <div class="holiday-actions">
+                <a class="rh-download-btn" href="RoshHashanahSeder.pdf" download>
+                    <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 3v12m0 0l-4-4m4 4l4-4M3 17v2a2 2 0 002 2h14a2 2 0 002-2v-2"/>
+                    </svg>
+                    Download Seder Guide (PDF)
+                </a>
+                <a class="holiday-button holiday-button--secondary" href="holidays/">All Holidays</a>
+            </div>
+        </section>
+
+        <!-- ── What is the Rosh Hashanah Seder ──────────────────────── -->
+        <div class="holiday-grid" style="margin-top:1.2rem;">
+            <article class="holiday-card holiday-card--full">
+                <h2 class="rh-section-title">What is the Rosh Hashanah Seder?</h2>
+                <p class="rh-section-hebrew">מהו סדר ראש השנה</p>
+                <p>
+                    Rosh Hashanah is the holiday that opens the Hebrew year and is also the Day of Judgment, when our fate for the coming year is decided.
+                </p>
+                <p>
+                    Despite the serious atmosphere, we hold festive meals to rejoice and hope for a better year. The Rosh Hashanah Seder features a series of symbolic foods — each connected to a special prayer — that express our hopes for the year ahead.
+                </p>
+            </article>
+        </div>
+
+        <!-- ── Kiddush and Opening Blessings ─────────────────────────── -->
+        <div class="holiday-grid">
+            <article class="holiday-card holiday-card--full">
+                <h2 class="rh-section-title">Kiddush and Opening Blessings</h2>
+                <p class="rh-section-hebrew">קידוש וברכות הפתיחה</p>
+                <div class="rh-instruction">
+                    Fill a Kiddush cup with wine or grape juice. The leader holds the cup and recites the following.
+                </div>
+
+                <h3 style="font-size:0.97rem;color:#92400e;font-weight:700;margin:0 0 0.5rem;">Kiddush for Rosh Hashanah</h3>
+                <div class="rh-blessing">
+                    <p class="rh-blessing__he">בָּרוּךְ אַתָּה ה' אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, בּוֹרֵא פְּרִי הַגָּפֶן:</p>
+                    <p class="rh-blessing__tl">Baruch atah Adonai, Eloheinu Melech ha'olam, borei p'ri hagafen.</p>
+                    <p class="rh-blessing__en">Blessed are You, Lord our God, King of the universe, who creates the fruit of the vine.</p>
+                </div>
+
+                <div class="rh-blessing">
+                    <p class="rh-blessing__he">בָּרוּךְ אַתָּה ה' אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר בָּחַר בָּנוּ מִכָּל עָם, וְרוֹמְמָנוּ מִכָּל לָשׁוֹן, וְקִדְּשָׁנוּ בְּמִצְוֹתָיו. וַתִּתֶּן לָנוּ ה' אֱלוֹהֵינוּ בְּאַהֲבָה אֶת יוֹם הַזִכָּרוֹן, יוֹם זִכְרוֹן תְּרוּעָה בְּאַהֲבָה מִקְרָא קֹדֶשׁ, זֵכֶר לִיצִיאַת מִצְרָיִם. כִּי בָנוּ בָחַרְתָּ וְאוֹתָנוּ קִדַּשְׁתָּ מִכָּל הָעַמִים, וּדְבָרְךָ אֱמֶת וְקַיָם לָעַד. בָּרוּךְ אַתָּה ה', מֶלֶךְ עַל כֹּל הָאָרֶץ, מְקַדֵשׁ יִשְׂרָאֵל וְיוֹם הַזִכָּרוֹן:</p>
+                    <p class="rh-blessing__tl">Baruch atah Adonai, Eloheinu Melech ha'olam, asher bachar banu mikol am, v'rom'manu mikol lashon, v'kid'shanu b'mitzvotav. Va-titen lanu Adonai Eloheinu b'ahavah et yom ha-zikaron, yom zichron t'ruah b'ahavah mikra kodesh, zecher litziat Mitzrayim. Ki vanu vacharta v'otanu kidashta mikol ha'amim, u-d'varecha emet v'kayam la'ad. Baruch atah Adonai, Melech al kol ha'aretz, m'kadesh Yisrael v'yom ha-zikaron.</p>
+                    <p class="rh-blessing__en">Blessed are You, Lord our God, King of the universe, who has chosen us from all people, and exalted us above every tongue, and sanctified us with His commandments. And You have given us, Lord our God, with love, this Day of Remembrance, a day of memory and sounding the shofar, a holy convocation, a memorial of the Exodus from Egypt. For You have chosen us and sanctified us from all the nations, and Your word is true and endures forever. Blessed are You, Lord, King over all the earth, who sanctifies Israel and the Day of Remembrance.</p>
+                </div>
+
+                <h3 style="font-size:0.97rem;color:#92400e;font-weight:700;margin:0.9rem 0 0.5rem;">Shehecheyanu — Who Has Kept Us Alive</h3>
+                <div class="rh-blessing">
+                    <p class="rh-blessing__he">בָּרוּךְ אַתָּה ה', אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁהֶחֱיָנוּ וְקִיְּמָנוּ וְהִגִּיעָנוּ לַזְמַן הַזֶּה:</p>
+                    <p class="rh-blessing__tl">Baruch atah Adonai, Eloheinu Melech ha'olam, shehecheyanu v'kiy'manu v'higianu lazman hazeh.</p>
+                    <p class="rh-blessing__en">Blessed are You, Lord our God, King of the universe, who has kept us alive, sustained us, and brought us to this season.</p>
+                </div>
+                <div class="rh-instruction">Everyone drinks from the wine or grape juice.</div>
+
+                <h3 style="font-size:0.97rem;color:#92400e;font-weight:700;margin:0.9rem 0 0.5rem;">Washing Hands</h3>
+                <div class="rh-instruction">Go to a sink and wash hands by pouring water over the right hand, then the left. Recite the blessing before drying your hands.</div>
+                <div class="rh-blessing">
+                    <p class="rh-blessing__he">בָּרוּךְ אַתָּה ה' אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ עַל נְטִילַת יָדָיִם:</p>
+                    <p class="rh-blessing__tl">Baruch atah Adonai, Eloheinu Melech ha'olam, asher kid'shanu b'mitzvotav v'tzivanu al netilat yadayim.</p>
+                    <p class="rh-blessing__en">Blessed are You, Lord our God, King of the universe, who has sanctified us with His commandments and commanded us concerning the washing of hands.</p>
+                </div>
+
+                <h3 style="font-size:0.97rem;color:#92400e;font-weight:700;margin:0.9rem 0 0.5rem;">Blessing on the Challah</h3>
+                <div class="rh-instruction">
+                    Return to the table. The leader holds the round challah, recites the blessing, and cuts or breaks it. A piece is dipped in honey and passed to everyone.
+                </div>
+                <div class="rh-blessing">
+                    <p class="rh-blessing__he">בָּרוּךְ אַתָּה ה' אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, הַמּוֹצִיא לֶחֶם מִן הָאָרֶץ:</p>
+                    <p class="rh-blessing__tl">Baruch atah Adonai, Eloheinu Melech ha'olam, ha-motzi lechem min ha'aretz.</p>
+                    <p class="rh-blessing__en">Blessed are You, Lord our God, King of the universe, who brings forth bread from the earth.</p>
+                </div>
+            </article>
+        </div>
+
+        <!-- ── Symbols of Rosh Hashanah ───────────────────────────────── -->
+        <div class="holiday-grid">
+            <article class="holiday-card holiday-card--full">
+                <h2 class="rh-section-title">The Symbols of Rosh Hashanah</h2>
+                <p class="rh-section-hebrew">סימני ראש השנה</p>
+                <p style="color:#4b5563;font-size:0.95rem;margin-bottom:0;">Each symbolic food is accompanied by a special Yehi Ratzon prayer expressing our hopes for the New Year. The Hebrew name of each food connects — by sound or meaning — to the theme of its prayer.</p>
+
+                <div class="rh-symbols-grid">
+
+                    <!-- Date -->
+                    <div class="rh-symbol-card">
+                        <div class="rh-symbol-card__head">
+                            <p class="rh-symbol-card__name-he">תָּמָר</p>
+                            <p class="rh-symbol-card__name-en">Date (Tamar)</p>
+                        </div>
+                        <div class="rh-symbol-card__body">
+                            <p class="rh-symbol-card__meaning"><strong>The Meaning:</strong> The prayer asks that our enemies "will come to an end" (<em>sheyitamu</em>) — a play on the word for date, <em>tamar</em>. We eat the date to symbolize the hope for the end of all animosity and hardship.</p>
+                            <div class="rh-instruction">Take a date, recite the blessing over fruit, take a bite, then say the Yehi Ratzon.</div>
+                            <div class="rh-blessing">
+                                <p class="rh-blessing__he">בָּרוּךְ אַתָּה ה' אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, בּוֹרֵא פְּרִי הָעֵץ:</p>
+                                <p class="rh-blessing__tl">Baruch atah Adonai, Eloheinu Melech ha'olam, borei p'ri ha'etz.</p>
+                                <p class="rh-blessing__en">Blessed are You, Lord our God, King of the universe, who creates the fruit of the tree.</p>
+                            </div>
+                            <div class="rh-yehi">
+                                <p class="rh-yehi__label">Yehi Ratzon</p>
+                                <p class="rh-blessing__he" style="color:#92400e;">יְהִי רָצוֹן מִלְפָנֶיךָ ה' אֱלֹהֵינוּ וֵאלֹהֵי אֲבוֹתֵינוּ שֶׁיִתַּמוּ אוֹיְבֵנוּ וְשׂנְאֵינוּ וְכָל-מְבַקְשֵׁי רָעָתֵנוּ:</p>
+                                <p class="rh-blessing__tl">Yehi ratzon milfanecha Adonai Eloheinu v'Elohei avoteinu, sheyitamu oyveinu v'soneinu v'chol m'vakshei ra'ateinu.</p>
+                                <p class="rh-blessing__en">May it be Your will, Lord our God and God of our fathers, that our enemies, our haters, and all those who seek our harm will come to an end.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pomegranate -->
+                    <div class="rh-symbol-card">
+                        <div class="rh-symbol-card__head">
+                            <p class="rh-symbol-card__name-he">רִימּוֹן</p>
+                            <p class="rh-symbol-card__name-en">Pomegranate (Rimon)</p>
+                        </div>
+                        <div class="rh-symbol-card__body">
+                            <p class="rh-symbol-card__meaning"><strong>The Meaning:</strong> A pomegranate is filled with hundreds of seeds. We eat it while praying that our merits in the new year will be as numerous as its seeds.</p>
+                            <div class="rh-instruction">Take some pomegranate seeds and say the following.</div>
+                            <div class="rh-yehi">
+                                <p class="rh-yehi__label">Yehi Ratzon</p>
+                                <p class="rh-blessing__he" style="color:#92400e;">יְהִי רָצוֹן מִלְפָנֶיךָ ה' אֱלֹהֵינוּ וֵאלֹהֵי אֲבוֹתֵינוּ שֶׁנִהְיֶה מְלֵאִים מִצְוֹת כָּרִמוֹן.</p>
+                                <p class="rh-blessing__tl">Yehi ratzon milfanecha Adonai Eloheinu v'Elohei avoteinu, she'nihiyeh m'leim mitzvot ka'rimon.</p>
+                                <p class="rh-blessing__en">May it be Your will, Lord our God and God of our fathers, that we be as full of mitzvot as the pomegranate.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gourd -->
+                    <div class="rh-symbol-card">
+                        <div class="rh-symbol-card__head">
+                            <p class="rh-symbol-card__name-he">קָרָא</p>
+                            <p class="rh-symbol-card__name-en">Gourd / Pumpkin (Kara)</p>
+                        </div>
+                        <div class="rh-symbol-card__body">
+                            <p class="rh-symbol-card__meaning"><strong>The Meaning:</strong> The Aramaic name <em>K'ra</em> sounds like the Hebrew for "to tear" (<em>likro'a</em>) and "to be read" (<em>likarei</em>). We ask that God "tear up" any negative decrees and that our merits be "read" before Him.</p>
+                            <div class="rh-instruction">Take a piece of cooked gourd, recite the blessing over vegetables, take a bite, then say the Yehi Ratzon.</div>
+                            <div class="rh-blessing">
+                                <p class="rh-blessing__he">בָּרוּךְ אַתָּה ה' אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, בּוֹרֵא פְּרִי הָאֲדָמָה:</p>
+                                <p class="rh-blessing__tl">Baruch atah Adonai, Eloheinu Melech ha'olam, borei p'ri ha'adamah.</p>
+                                <p class="rh-blessing__en">Blessed are You, Lord our God, King of the universe, who creates the fruit of the earth.</p>
+                            </div>
+                            <div class="rh-yehi">
+                                <p class="rh-yehi__label">Yehi Ratzon</p>
+                                <p class="rh-blessing__he" style="color:#92400e;">יְהִי רָצוֹן מִלְפָנֶיךָ ה' אֱלֹהֵינוּ וֵאלֹהֵי אֲבוֹתֵינוּ שֶׁתִּקְרַע רֹעַ גְזַר דִינֵנוּ, וַיְקָרְאוּ לְפָנֶיךָ מַעֲשִׂינוּ הַטוֹבִים.</p>
+                                <p class="rh-blessing__tl">Yehi ratzon milfanecha Adonai Eloheinu v'Elohei avoteinu, she'tikra ro'a g'zar dinenu, v'yikare'u l'fanecha ma'aseinu ha'tovim.</p>
+                                <p class="rh-blessing__en">May it be Your will, Lord our God and God of our fathers, that You tear up the evil of our verdict, and may our good deeds be read before You.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rubia -->
+                    <div class="rh-symbol-card">
+                        <div class="rh-symbol-card__head">
+                            <p class="rh-symbol-card__name-he">רוּבִּיָּא</p>
+                            <p class="rh-symbol-card__name-en">Rubia (Fenugreek / Beans)</p>
+                        </div>
+                        <div class="rh-symbol-card__body">
+                            <p class="rh-symbol-card__meaning"><strong>The Meaning:</strong> The Aramaic name <em>Rubia</em> sounds like the Hebrew word for "increase" (<em>ribui</em>). We eat it to symbolize our hope that our merits will increase and abound in the new year.</p>
+                            <div class="rh-instruction">Take a bite after saying the following.</div>
+                            <div class="rh-yehi">
+                                <p class="rh-yehi__label">Yehi Ratzon</p>
+                                <p class="rh-blessing__he" style="color:#92400e;">יְהִי רָצוֹן מִלְפָנִיךְ ה' אֶלהֵינוּ וְאָלֹהֵי אֲבוֹתֵינוּ שֶׁיִרְבּוּ זְכֻיּוֹתֵנוּ וּתְרַבֶּה הַבְּרָכָה בְּכָל עֲמָלֵנוּ.</p>
+                                <p class="rh-blessing__tl">Yehi ratzon milfanecha Adonai Eloheinu v'Elohei avoteinu, she'yirbu z'chuyoteinu u'trabeh ha'bracha b'chol amaleinu.</p>
+                                <p class="rh-blessing__en">May it be Your will, Lord our God and God of our fathers, that our merits increase and that blessing abound in all our labors.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Leek -->
+                    <div class="rh-symbol-card">
+                        <div class="rh-symbol-card__head">
+                            <p class="rh-symbol-card__name-he">כַּרְתִּי</p>
+                            <p class="rh-symbol-card__name-en">Leek (Karti)</p>
+                        </div>
+                        <div class="rh-symbol-card__body">
+                            <p class="rh-symbol-card__meaning"><strong>The Meaning:</strong> The Aramaic name <em>Karti</em> sounds like the Hebrew verb "to cut off" (<em>yikartu</em>). We eat this to symbolize our hope that our enemies will be "cut off."</p>
+                            <div class="rh-instruction">Take a bite of cooked leek after saying the following.</div>
+                            <div class="rh-yehi">
+                                <p class="rh-yehi__label">Yehi Ratzon</p>
+                                <p class="rh-blessing__he" style="color:#92400e;">יְהִי רָצוֹן מִלְפָנִיךָ ה' אֱלֹהֵינוּ וְאָלֹהֵי אֲבוֹתֵינוּ שֶׁיִכָּרְתוּ אוֹיְבֵנוּ וְכָל מְבַקְשֵׁי רָעָתֵנוּ.</p>
+                                <p class="rh-blessing__tl">Yehi ratzon milfanecha Adonai Eloheinu v'Elohei avoteinu, she'yikartu oyveinu v'chol m'vakshei ra'ateinu.</p>
+                                <p class="rh-blessing__en">May it be Your will, Lord our God and God of our fathers, that our enemies and all who seek our harm be cut off.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Beet -->
+                    <div class="rh-symbol-card">
+                        <div class="rh-symbol-card__head">
+                            <p class="rh-symbol-card__name-he">סֶלֶק</p>
+                            <p class="rh-symbol-card__name-en">Beet (Selek)</p>
+                        </div>
+                        <div class="rh-symbol-card__body">
+                            <p class="rh-symbol-card__meaning"><strong>The Meaning:</strong> The Hebrew word for beet, <em>Selek</em>, sounds like the word for "remove" (<em>yistalku</em>). We ask that our sins be "removed."</p>
+                            <div class="rh-instruction">Take a bite of cooked beet and say the following.</div>
+                            <div class="rh-yehi">
+                                <p class="rh-yehi__label">Yehi Ratzon</p>
+                                <p class="rh-blessing__he" style="color:#92400e;">יְהִי רָצוֹן מִלְפָנִיךָ ה' אֱלֹהֵינוּ וְאָלֹהֵי אֲבוֹתֵינוּ שֶׁיִסְתַּלְקוּ עֲווֹנוֹתֵינוּ.</p>
+                                <p class="rh-blessing__tl">Yehi ratzon milfanecha Adonai Eloheinu v'Elohei avoteinu, she'yistalku avonoteinu.</p>
+                                <p class="rh-blessing__en">May it be Your will, Lord our God and God of our fathers, that our iniquities be removed.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Carrot -->
+                    <div class="rh-symbol-card">
+                        <div class="rh-symbol-card__head">
+                            <p class="rh-symbol-card__name-he">גֶּזֶר</p>
+                            <p class="rh-symbol-card__name-en">Carrot (Gezer)</p>
+                        </div>
+                        <div class="rh-symbol-card__body">
+                            <p class="rh-symbol-card__meaning"><strong>The Meaning:</strong> The Hebrew word for carrot, <em>Gezer</em>, sounds like the word for decree, <em>g'zar</em>. We eat carrots as we ask God to nullify harsh decrees against us and issue good ones for the new year.</p>
+                            <div class="rh-instruction">Take a bite of cooked carrot after saying the following.</div>
+                            <div class="rh-yehi">
+                                <p class="rh-yehi__label">Yehi Ratzon</p>
+                                <p class="rh-blessing__he" style="color:#92400e;">יְהִי רָצוֹן מִלְפָנֶיךָ ה' אֶלהֵינוּ וְאָלֹהֵי אֲבוֹתֵינוּ שֶׁתַּעֲבִיר רֹעַ גְזַר דִינֵנוּ וְשֶׁתִּגְזֹר עָלֵינוּ שָׁנָה טוֹבָה.</p>
+                                <p class="rh-blessing__tl">Yehi ratzon milfanecha Adonai Eloheinu v'Elohei avoteinu, she'ta'avir ro'a g'zar dinenu, v'shetigzor aleinu shanah tovah.</p>
+                                <p class="rh-blessing__en">May it be Your will, Lord our God and God of our fathers, that You remove the evil of our verdict's decree, and decree upon us a good year.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Apple in Honey -->
+                    <div class="rh-symbol-card">
+                        <div class="rh-symbol-card__head">
+                            <p class="rh-symbol-card__name-he">תַּפּוּחַ בִּדְבַשׁ</p>
+                            <p class="rh-symbol-card__name-en">Apple in Honey</p>
+                        </div>
+                        <div class="rh-symbol-card__body">
+                            <p class="rh-symbol-card__meaning"><strong>The Meaning:</strong> Perhaps the most well-known Rosh Hashanah ritual. The apple's sweetness combined with honey is a direct symbol for our hope for a "good and sweet year."</p>
+                            <div class="rh-instruction">Take a slice of apple, dip it in honey, and say the following before eating.</div>
+                            <div class="rh-yehi">
+                                <p class="rh-yehi__label">Yehi Ratzon</p>
+                                <p class="rh-blessing__he" style="color:#92400e;">יְהִי רָצוֹן מִלְפָנֶיךָ יהוה אֱלֹהֵינוּ וֵאלֹהֵי אֲבוֹתֵינוּ שֶׁתְּחַדֵּשׁ עָלֵינוּ שָׁנָה טוֹבָה וּמְתוּקָה.</p>
+                                <p class="rh-blessing__tl">Yehi ratzon milfanecha Adonai Eloheinu v'Elohei avoteinu, she't'chadesh aleinu shanah tovah u'm'tukah.</p>
+                                <p class="rh-blessing__en">May it be Your will, Lord our God and God of our fathers, that You renew for us a good and sweet year.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fish Head -->
+                    <div class="rh-symbol-card">
+                        <div class="rh-symbol-card__head">
+                            <p class="rh-symbol-card__name-he">רֹאשׁ שֶׁל דָּג</p>
+                            <p class="rh-symbol-card__name-en">Head of a Fish</p>
+                        </div>
+                        <div class="rh-symbol-card__body">
+                            <p class="rh-symbol-card__meaning"><strong>The Meaning:</strong> The Hebrew word for "head" is <em>Rosh</em> — the same word that opens the holiday's name, <em>Rosh Hashanah</em>. We eat from the head to symbolize our desire to be "a head and not a tail" — leaders, not followers — in the year to come. The prayer also includes a wish to be fruitful and multiply like fish.</p>
+                            <div class="rh-instruction">Take a small piece from the head of the fish and say the following.</div>
+                            <div class="rh-yehi">
+                                <p class="rh-yehi__label">Yehi Ratzon</p>
+                                <p class="rh-blessing__he" style="color:#92400e;">יְהִי רָצוֹן מִלִפְנֵי אָבִינוּ שֶׁבַּשָּׁמַיִם, שֶׁנִּהְיֶה לְרֹאשׁ וְלֹא לְזָנָב שֶׁנִּפְרֶה וְנִרְבֶּה כַּדָּגִים.</p>
+                                <p class="rh-blessing__tl">Yehi ratzon milifnei avinu shebashamayim, she'nihiyeh l'rosh v'lo l'zanav, she'nifreh v'nirbeh ka'dagim.</p>
+                                <p class="rh-blessing__en">May it be the will of our Father in Heaven that we be as a head and not as a tail, and that we be fruitful and multiply like fish.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /.rh-symbols-grid -->
+            </article>
+        </div>
+
+        <!-- ── Prayers for Soldiers and Hostages ──────────────────────── -->
+        <div class="holiday-grid">
+            <article class="holiday-card holiday-card--full">
+                <h2 class="rh-section-title">Prayers for Our Soldiers and the Return of the Hostages</h2>
+                <p class="rh-section-hebrew">תפילות לשלום חיילי צה"ל והשבת החטופים</p>
+
+                <h3 style="font-size:0.97rem;color:#1e3a8a;font-weight:700;margin:0 0 0.6rem;">Psalm 121 / תהילים קכ״א</h3>
+                <div class="rh-psalm-block">
+                    <p class="rh-psalm-block__he">שִׁ֗יר לַֽמַּ֫עֲל֥וֹת אֶשָּׂ֣א עֵ֭ינַי אֶל־הֶהָרִ֑ים מֵ֝אַ֗יִן יָבֹ֥א עֶזְרִֽי׃ עֶ֭זְרִי מֵעִ֣ם יְהֹוָ֑ה עֹ֝שֵׂ֗ה שָׁמַ֥יִם וָאָֽרֶץ׃ אַל־יִתֵּ֣ן לַמּ֣וֹט רַגְלֶ֑ךָ אַל־יָ֝נ֗וּם שֹׁמְרֶֽךָ׃ הִנֵּ֣ה לֹֽא־יָ֭נוּם וְלֹ֣א יִישָׁ֑ן שׁ֝וֹמֵ֗ר יִשְׂרָאֵֽל׃ יְהֹוָ֥ה שֹׁמְרֶ֑ךָ יְהֹוָ֥ה צִ֝לְּךָ֗ עַל־יַ֥ד יְמִינֶֽךָ׃ יוֹמָ֗ם הַשֶּׁ֥מֶשׁ לֹֽא־יַכֶּ֗כָּה וְיָרֵ֥חַ בַּלָּֽיְלָה׃ יְֽהֹוָ֗ה יִשְׁמׇרְךָ֥ מִכׇּל־רָ֑ע יִ֝שְׁמֹ֗ר אֶת־נַפְשֶֽׁךָ׃ יְֽהֹוָ֗ה יִשְׁמׇר־צֵאתְךָ֥ וּבוֹאֶ֑ךָ מֵ֝עַתָּ֗ה וְעַד־עוֹלָֽם׃</p>
+                    <p class="rh-psalm-block__en">A song for ascents. I turn my eyes to the mountains; from where will my help come? My help comes from the Lord, maker of heaven and earth. He will not let your foot give way; your guardian will not slumber. See, the guardian of Israel neither slumbers nor sleeps! The Lord is your guardian, the Lord is your protection at your right hand. By day the sun will not strike you, nor the moon by night. The Lord will guard you from all harm; He will guard your life. The Lord will guard your going and coming now and forever.</p>
+                </div>
+
+                <h3 style="font-size:0.97rem;color:#1e3a8a;font-weight:700;margin:0.8rem 0 0.6rem;">Prayer for the IDF Soldiers / תפילה לשלום חיילי צה"ל</h3>
+                <div class="rh-psalm-block">
+                    <p class="rh-psalm-block__he">מִי שֶׁבֵּרַךְ אֲבוֹתֵינוּ אַבְרָהָם יִצְחָק וְיַעֲקֹב, הוּא יְבָרֵךְ אֶת חַיָּלֵי צְבָא הֲגַנָּה לְיִשְׂרָאֵל, הָעוֹמְדִים עַל מִשְׁמַר אַרְצֵנוּ וְעָרֵי אֱלֹהֵינוּ. הַקָּדוֹשׁ בָּרוּךְ הוּא יִשְׁמֹר וְיַצִּיל אֶת חַיָלֵינוּ מִכָּל צָרָה וְצוּקָה וּמִכָּל נֶגַע וּמַחְלָה, וְיִשְׁלַח בְּרָכָה וְהַצְלָחָה בְּכָל מַעֲשֵׂה יְדֵיהֶם. וִיקֻיַּם בָּהֶם הַכָּתוּב: "כִּי ה' אֱלֹהֵיכֶם הַהֹלֵךְ עִמָּכֶם לְהִלָּחֵם לָכֶם עִם אֹיְבֵיכֶם לְהוֹשִׁיעַ אֶתְכֶם." וְנֹאמַר אָמֵן.</p>
+                    <p class="rh-psalm-block__en">May He who blessed our fathers, Abraham, Isaac and Jacob, bless the soldiers of the Israel Defense Forces, in their standing guard upon our land and the cities of our God. May the Holy One, blessed be He, guard and rescue our soldiers from all trouble and distress and from all affliction and illness; and send blessing and success in all the work of their hands. And through them let the verse be fulfilled: "For it is the Lord, your God, that walks with you to fight for you against your enemies to save you." And let us say, Amen.</p>
+                </div>
+
+                <h3 style="font-size:0.97rem;color:#1e3a8a;font-weight:700;margin:0.8rem 0 0.6rem;">Prayer for Those Held in Captivity / תפילה להשבת החטופים</h3>
+                <div class="rh-psalm-block">
+                    <p class="rh-psalm-block__he">מִי שֶׁבֵּרַךְ אֲבוֹתֵינוּ, הוּא יְבָרֵךְ וְיִשְׁמֹר אֶת הַשְּׁבוּיִים בְּתוֹךְ שְׁאָר אֲחֵינוּ בֵּית יִשְֹרָאֵל הַנְּתוּנִים בְּצָרָה וּבְשִׁבְיָה. הַקָּדוֹשׁ בָּרוּךְ הוּא יִמָּלֵא רַחֲמִים עֲלֵיהֶם, וְיוֹצִיאֵם מֵחֹשֶׁךְ וְצַלְמָוֶת, וּמוֹסְרוֹתֵיהֶם יְנַתֵּק, וּמִמְּצוּקוֹתֵיהֶם יוֹשִׁיעֵם, וִישִׁיבֵם מְהֵרָה לְחֵיק מִשְׁפְּחוֹתֵיהֶם. "וּפְדוּיֵי ה' יְשׁוּבוּן וּבָאוּ צִיּוֹן בְּרִנָּה וְשִׂמְחַת עוֹלָם עַל רֹאשָׁם." וְנֹאמַר אָמֵן.</p>
+                    <p class="rh-psalm-block__en">May He who blessed our fathers bless and protect and guard the hostages amongst our brethren the House of Israel who are placed in trouble and in captivity. May the Holy One, blessed be He, have compassion upon them and bring them out from darkness and the shadow of death. May He break their bonds, deliver them from distress, and bring them safely back to their families' embrace. And may there be fulfilled in them the verse: "Those redeemed by the Lord will return; they will enter Zion with singing and everlasting joy will crown their heads." And let us say: Amen.</p>
+                </div>
+            </article>
+        </div>
+
+        <!-- ── Shana Tova + Download CTA ──────────────────────────────── -->
+        <div class="rh-shana-tova">
+            <p class="rh-shana-tova__he">!שָׁנָה טוֹבָה וּמְתוּקָה</p>
+            <p class="rh-shana-tova__en">A Good and Sweet Year!</p>
+            <a class="rh-download-btn" href="RoshHashanahSeder.pdf" download>
+                <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 3v12m0 0l-4-4m4 4l4-4M3 17v2a2 2 0 002 2h14a2 2 0 002-2v-2"/>
+                </svg>
+                Download the Complete Seder Guide (PDF)
+            </a>
+        </div>
+
+        <p class="holiday-footer">Rosh Hashanah Seder Guide &middot; A Letter in the Scroll</p>
+    </main>
+</body>
+</html>
