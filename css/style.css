@@ -5286,6 +5286,23 @@ body.sidebar-nav-enabled .site-sidebar-head {
     flex-shrink: 0;
 }
 
+/* Brand link wraps the icon + site name and navigates home */
+body.sidebar-nav-enabled .site-sidebar-brand-link {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex: 1;
+    min-width: 0;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 8px;
+    padding: 2px 4px 2px 0;
+    transition: opacity 0.18s;
+}
+body.sidebar-nav-enabled .site-sidebar-brand-link:hover {
+    opacity: 0.8;
+}
+
 body.sidebar-nav-enabled .site-sidebar-brand {
     display: inline-flex;
     align-items: center;
@@ -5302,13 +5319,14 @@ body.sidebar-nav-enabled .site-sidebar-brand svg {
 
 body.sidebar-nav-enabled .site-sidebar-title {
     flex: 1;
-    color: rgba(30, 58, 138, 0.42);
-    font-size: 0.6rem;
+    color: rgba(30, 58, 138, 0.68);
+    font-size: 0.7rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    text-transform: none;
     white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
     text-shadow: 0 1px 0 rgba(255,255,255,0.7);
     transition: opacity var(--sidebar-transition), width var(--sidebar-transition);
 }
@@ -5582,8 +5600,8 @@ body.sidebar-nav-enabled.sidebar-nav-collapsed .site-sidebar {
     padding-right: 0.5rem;
 }
 
-/* Hide brand icon in collapsed state so collapse button stays visible */
-body.sidebar-nav-enabled.sidebar-nav-collapsed .site-sidebar-brand {
+/* Hide brand link entirely in collapsed state so collapse button stays visible */
+body.sidebar-nav-enabled.sidebar-nav-collapsed .site-sidebar-brand-link {
     display: none;
 }
 
@@ -5710,8 +5728,8 @@ body.sidebar-nav-enabled.sidebar-nav-collapsed .site-sidebar .text-size-menu::be
     body.sidebar-nav-enabled .site-sidebar-title {
         opacity: 1;
         width: auto;
-        font-size: 0.7rem;
-        color: rgba(30, 58, 138, 0.55);
+        font-size: 0.72rem;
+        color: rgba(30, 58, 138, 0.72);
     }
 
     /* Sidebar head — prominent divider */

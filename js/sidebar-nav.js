@@ -45,9 +45,15 @@
         actionsWrap.setAttribute('aria-label', 'Primary navigation');
         document.body.appendChild(actionsWrap);
 
-        // ── 2. Build the sidebar head (brand icon + "Navigation" label + collapse btn)
+        // ── 2. Build the sidebar head (brand link → home + collapse btn)
         var sidebarHead = document.createElement('div');
         sidebarHead.className = 'site-sidebar-head';
+
+        // Wrap brand icon + site name in a home link
+        var brandLink = document.createElement('a');
+        brandLink.href = 'index.html';
+        brandLink.className = 'site-sidebar-brand-link';
+        brandLink.title = 'A Letter in the Scroll — Home';
 
         var brand = document.createElement('span');
         brand.className = 'site-sidebar-brand';
@@ -56,7 +62,10 @@
 
         var sidebarTitle = document.createElement('span');
         sidebarTitle.className = 'site-sidebar-title';
-        sidebarTitle.textContent = 'Navigation';
+        sidebarTitle.textContent = 'A Letter in the Scroll';
+
+        brandLink.appendChild(brand);
+        brandLink.appendChild(sidebarTitle);
 
         var collapseBtn = document.createElement('button');
         collapseBtn.type = 'button';
@@ -72,8 +81,7 @@
         closeBtn.setAttribute('aria-label', 'Close navigation');
         closeBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
 
-        sidebarHead.appendChild(brand);
-        sidebarHead.appendChild(sidebarTitle);
+        sidebarHead.appendChild(brandLink);
         sidebarHead.appendChild(collapseBtn);
         sidebarHead.appendChild(closeBtn);
         actionsWrap.insertBefore(sidebarHead, hActions);
