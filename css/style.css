@@ -5510,25 +5510,15 @@ body.sidebar-nav-enabled .site-sidebar .header-btn--active:hover {
     border-color: rgba(29, 78, 216, 0.40);
 }
 
-/* Primary button (home) keeps its gradient when active, just gains the accent bar + glow */
+/* Primary button (home) — same tinted active style as secondary buttons (no white icon) */
 body.sidebar-nav-enabled .site-sidebar .header-btn-primary.header-btn--active {
-    background: linear-gradient(135deg, #1d4ed8, #2563eb);
-    color: #fff;
-    border-color: rgba(147, 197, 253, 0.50);
+    background: rgba(29, 78, 216, 0.13);
+    color: #1d4ed8;
+    border-color: rgba(29, 78, 216, 0.32);
     box-shadow:
-        inset 3px 0 0 #93c5fd,
-        0 0 10px rgba(59, 130, 246, 0.25);
-}
-
-body.sidebar-nav-enabled .site-sidebar .header-btn-primary.header-btn--active .header-btn-icon {
-    color: #fff;
-}
-
-body.sidebar-nav-enabled .site-sidebar .header-btn-primary.header-btn--active:hover {
-    background: linear-gradient(135deg, #1e40af, #2563eb);
-    box-shadow:
-        inset 3px 0 0 #93c5fd,
-        0 0 14px rgba(59, 130, 246, 0.30);
+        inset 3px 0 0 #3b82f6,
+        inset 0 1px 0 rgba(255, 255, 255, 0.45),
+        0 1px 4px rgba(59, 130, 246, 0.10);
 }
 
 /* ── Text size control ──────────────────────────────────────────────────── */
