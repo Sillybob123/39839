@@ -27,6 +27,20 @@
         var hContainer  = header ? header.querySelector('.header-container') : null;
         var actionsWrap = hContainer ? hContainer.querySelector('.header-actions-wrapper') : null;
         var hActions    = actionsWrap ? actionsWrap.querySelector('#header-actions') : null;
+        var scriptEl    = document.currentScript || Array.prototype.find.call(document.scripts, function (s) {
+            return s && s.src && /sidebar-nav\.js(?:$|\?)/.test(s.src);
+        });
+        var srcAttr = scriptEl && scriptEl.getAttribute ? scriptEl.getAttribute('src') : '';
+        var srcMatch = srcAttr && srcAttr.match(/^(.*)js\/sidebar-nav\.js(?:[?#].*)?$/);
+        var siteBasePath = srcMatch ? srcMatch[1] : '';
+
+        function getSitePath(relativePath) {
+            return siteBasePath + relativePath;
+        }
+
+        function getAssetPath(fileName) {
+            return getSitePath('media/images/' + fileName);
+        }
 
         // Bail if the required header structure is missing on this page
         if (!body || !header || !hContainer || !actionsWrap || !hActions) {
@@ -51,14 +65,25 @@
 
         // Wrap brand icon + site name in a home link
         var brandLink = document.createElement('a');
-        brandLink.href = 'index.html';
+        brandLink.href = getSitePath('index.html');
         brandLink.className = 'site-sidebar-brand-link';
         brandLink.title = 'A Letter in the Scroll — Home';
 
         var brand = document.createElement('span');
         brand.className = 'site-sidebar-brand';
         brand.setAttribute('aria-hidden', 'true');
-        brand.innerHTML = '<img src="media/images/IconOnly.png" alt="" style="width:28px;height:28px;object-fit:contain;display:block;">';
+        var brandImg = document.createElement('img');
+        brandImg.src = getAssetPath('IconOnly.png');
+        brandImg.alt = '';
+        brandImg.style.width = '28px';
+        brandImg.style.height = '28px';
+        brandImg.style.objectFit = 'contain';
+        brandImg.style.display = 'block';
+        brandImg.addEventListener('error', function () {
+            // Fallback if IconOnly is unavailable in a given deployment.
+            this.src = getAssetPath('Icon.png');
+        }, { once: true });
+        brand.appendChild(brandImg);
 
         var sidebarTitle = document.createElement('span');
         sidebarTitle.className = 'site-sidebar-title';
@@ -85,6 +110,13 @@
         sidebarHead.appendChild(collapseBtn);
         sidebarHead.appendChild(closeBtn);
         actionsWrap.insertBefore(sidebarHead, hActions);
+
+        // Keep sign-out visually isolated at the bottom of the sidebar.
+        var logoutBtn = hActions.querySelector('#logout-btn');
+        if (logoutBtn) {
+            logoutBtn.classList.add('site-sidebar-signout');
+            hActions.appendChild(logoutBtn);
+        }
 
         // ── 3. Hamburger button — appended directly to document.body
         //       so NO ancestor CSS can interfere with its visibility or z-index
