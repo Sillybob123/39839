@@ -116,7 +116,7 @@
         </p>
     </footer>
 
-    <audio id="esther-noiser-audio" preload="auto">
+    <audio id="esther-noiser-audio" preload="auto" playsinline>
         <source src="media/audio/Noisersound.mp3" type="audio/mpeg">
     </audio>
 
@@ -141,6 +141,7 @@
         'פֶּרֶק ט', 'פֶּרֶק י'
     ];
     const NOISER_AUDIO_FALLBACKS = [
+        'media/audio/Noisersound1.mp3',
         'media/audio/Noisersound.mp3'
     ];
     const HAMAN_REGEX = /\bHaman\b/gi;
@@ -282,8 +283,35 @@
         if (noiserAudio) return noiserAudio;
         noiserAudio = noiserAudioEl || new Audio();
         noiserAudio.preload = 'auto';
+        noiserAudio.playsInline = true;
         setNoiserSource(noiserAudio, 0);
         return noiserAudio;
+    }
+
+    function tryPlayNoiser(audio, sourceIndex) {
+        setNoiserSource(audio, sourceIndex);
+        try {
+            audio.pause();
+            audio.currentTime = 0;
+            const p = audio.play();
+            if (p && typeof p.catch === 'function') {
+                p.catch(err => {
+                    const nextIndex = sourceIndex + 1;
+                    if (nextIndex < NOISER_AUDIO_FALLBACKS.length) {
+                        tryPlayNoiser(audio, nextIndex);
+                        return;
+                    }
+                    console.warn('Noiser playback failed:', err);
+                });
+            }
+        } catch (err) {
+            const nextIndex = sourceIndex + 1;
+            if (nextIndex < NOISER_AUDIO_FALLBACKS.length) {
+                tryPlayNoiser(audio, nextIndex);
+                return;
+            }
+            console.warn('Noiser playback failed:', err);
+        }
     }
 
     // Kept synchronous so Safari doesn't lose the user-gesture activation context.
@@ -291,16 +319,7 @@
     function playNoiserSound() {
         const audio = initNoiserAudio();
         if (!audio) return;
-        try {
-            audio.pause();
-            audio.currentTime = 0;
-            const p = audio.play();
-            if (p && typeof p.catch === 'function') {
-                p.catch(err => console.warn('Noiser playback failed:', err));
-            }
-        } catch (err) {
-            console.warn('Noiser playback failed:', err);
-        }
+        tryPlayNoiser(audio, noiserSourceIndex);
     }
 
     /* ── Build verse HTML ───────────────────────────────────────── */
