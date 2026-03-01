@@ -5484,6 +5484,53 @@ body.sidebar-nav-enabled .site-sidebar .header-btn-secondary:active {
     transform: none;
 }
 
+/* ── Active page indicator ── */
+body.sidebar-nav-enabled .site-sidebar .header-btn--active {
+    background: rgba(29, 78, 216, 0.13);
+    color: #1d4ed8;
+    border-color: rgba(29, 78, 216, 0.32);
+    box-shadow:
+        inset 3px 0 0 #3b82f6,
+        inset 0 1px 0 rgba(255, 255, 255, 0.45),
+        0 1px 4px rgba(59, 130, 246, 0.10);
+    font-weight: 700;
+}
+
+body.sidebar-nav-enabled .site-sidebar .header-btn--active .header-btn-icon {
+    color: #2563eb;
+    opacity: 1;
+}
+
+body.sidebar-nav-enabled .site-sidebar .header-btn--active img.header-btn-icon {
+    filter: brightness(0) saturate(100%) invert(26%) sepia(94%) saturate(1800%) hue-rotate(215deg) brightness(95%);
+}
+
+body.sidebar-nav-enabled .site-sidebar .header-btn--active:hover {
+    background: rgba(29, 78, 216, 0.18);
+    border-color: rgba(29, 78, 216, 0.40);
+}
+
+/* Primary button (home) keeps its gradient when active, just gains the accent bar + glow */
+body.sidebar-nav-enabled .site-sidebar .header-btn-primary.header-btn--active {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    color: #fff;
+    border-color: rgba(147, 197, 253, 0.50);
+    box-shadow:
+        inset 3px 0 0 #93c5fd,
+        0 0 10px rgba(59, 130, 246, 0.25);
+}
+
+body.sidebar-nav-enabled .site-sidebar .header-btn-primary.header-btn--active .header-btn-icon {
+    color: #fff;
+}
+
+body.sidebar-nav-enabled .site-sidebar .header-btn-primary.header-btn--active:hover {
+    background: linear-gradient(135deg, #1e40af, #2563eb);
+    box-shadow:
+        inset 3px 0 0 #93c5fd,
+        0 0 14px rgba(59, 130, 246, 0.30);
+}
+
 /* ── Text size control ──────────────────────────────────────────────────── */
 body.sidebar-nav-enabled .site-sidebar .text-size-control {
     width: 100%;
@@ -5647,6 +5694,13 @@ body.sidebar-nav-enabled.sidebar-nav-collapsed .site-sidebar .header-btn-text {
     display: none;
 }
 
+/* Active indicator persists in collapsed mode (icon-only) */
+body.sidebar-nav-enabled.sidebar-nav-collapsed .site-sidebar .header-btn--active {
+    background: rgba(29, 78, 216, 0.13);
+    border-color: rgba(29, 78, 216, 0.30);
+    box-shadow: inset 3px 0 0 #3b82f6;
+}
+
 body.sidebar-nav-enabled.sidebar-nav-collapsed .site-sidebar .text-size-toggle {
     justify-content: center;
     padding: 0.52rem 0.4rem;
@@ -5781,6 +5835,20 @@ body.sidebar-nav-enabled.sidebar-nav-collapsed .site-sidebar .text-size-menu::be
     body.sidebar-nav-enabled .site-sidebar .header-btn-secondary:hover,
     body.sidebar-nav-enabled .site-sidebar .header-btn-secondary:active {
         background: rgba(255, 255, 255, 0.65);
+    }
+
+    /* Active page indicator — mobile drawer */
+    body.sidebar-nav-enabled .site-sidebar .header-btn--active {
+        background: rgba(29, 78, 216, 0.14);
+        color: #1d4ed8;
+        border-color: rgba(29, 78, 216, 0.30);
+        box-shadow: inset 3px 0 0 #3b82f6;
+        font-weight: 700;
+    }
+
+    body.sidebar-nav-enabled .site-sidebar .header-btn--active:hover,
+    body.sidebar-nav-enabled .site-sidebar .header-btn--active:active {
+        background: rgba(29, 78, 216, 0.20);
     }
 
     /* Text size control — same large target */

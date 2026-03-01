@@ -19,6 +19,31 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 min-h-screen" data-enable-text-size="true" data-header-fallback="true">
+    <!-- Community Status Bar (Subtle Header Bar) -->
+    <div id="community-status-bar" class="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200" data-always-visible="true">
+        <div class="container mx-auto">
+            <div id="community-status-content" class="flex flex-wrap items-center gap-4 text-sm text-gray-700">
+                <!-- Online Users Section -->
+                <div id="header-online-section" class="status-section hidden flex items-center gap-1.5">
+                    <div class="flex items-center gap-1">
+                        <div class="status-leading-dot bg-green-500 rounded-full animate-pulse"></div>
+                        <span class="text-xs font-medium text-gray-700">Online:</span>
+                    </div>
+                    <span id="header-online-concurrency" class="status-concurrency hidden"></span>
+                    <div id="header-online-users-list" class="status-scroll flex flex-nowrap items-center gap-1.5 overflow-x-auto">
+                        <!-- Online users will be listed here -->
+                    </div>
+                </div>
+                <!-- Your Status Section -->
+                <div id="header-your-status" class="status-section hidden flex items-center gap-1 ml-auto">
+                    <span id="header-your-username" class="text-xs font-medium text-gray-800"></span>
+                    <span class="text-xs text-gray-400">•</span>
+                    <span id="header-your-login-time" class="text-xs text-gray-600">just now</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Professional Responsive Header -->
     <header class="header-main relative z-30">
         <div class="header-container">
@@ -37,7 +62,7 @@
                 <div id="header-actions" class="header-actions">
                     <button id="go-to-weekly" class="header-btn header-btn-primary" title="Go to this week's parsha">
                         <svg class="header-btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                         </svg>
                         <span class="header-btn-text">This Week's Parsha</span>
                     </button>
@@ -82,55 +107,12 @@
         </div>
     </header>
 
-    <!-- Community Status Bar (Subtle Header Bar) -->
-    <div id="community-status-bar" class="hidden bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200">
-        <div class="container mx-auto">
-            <div id="community-status-content" class="flex flex-wrap items-center gap-4 text-sm text-gray-700">
-                <!-- Online Users Section -->
-                <div id="header-online-section" class="status-section hidden flex items-center gap-1.5">
-                    <div class="flex items-center gap-1">
-                        <div class="status-leading-dot bg-green-500 rounded-full animate-pulse"></div>
-                        <span class="text-xs font-medium text-gray-700">Online:</span>
-                    </div>
-                    <span id="header-online-concurrency" class="status-concurrency hidden"></span>
-                    <div id="header-online-users-list" class="status-scroll flex flex-nowrap items-center gap-1.5 overflow-x-auto">
-                        <!-- Online users will be listed here -->
-                    </div>
-                </div>
-
-                <!-- Your Status Section -->
-                <div id="header-your-status" class="status-section hidden flex items-center gap-1 ml-auto">
-                    <span id="header-your-username" class="text-xs font-medium text-gray-800"></span>
-                    <span class="text-xs text-gray-400">•</span>
-                    <span id="header-your-login-time" class="text-xs text-gray-600">just now</span>
-                </div>
-            </div>
+    <!-- Page Title Bar -->
+    <div style="background:#1a3264;border-bottom:2px solid rgba(212,175,55,0.25);padding:9px 0;">
+        <div style="max-width:1200px;margin:0 auto;padding:0 1rem;">
+            <p style="margin:0;font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#d4af37;">Important Prayers &amp; Readings</p>
         </div>
     </div>
-
-    <!-- Daily Inspiration -->
-    <section id="daily-inspiration" class="daily-inspiration-header-section prayers-compact">
-        <div class="container mx-auto px-4 py-1">
-            <div class="daily-inspiration-card">
-                <div class="daily-inspiration-content">
-                    <div class="daily-inspiration-main">
-                        <div class="daily-inspiration-quotes">
-                            <span class="quote-mark quote-mark-start">"</span><span data-quote-hebrew class="daily-inspiration-hebrew">Loading today's teaching...</span><span class="quote-mark quote-mark-end">"</span>
-                            <span data-quote-translation class="daily-inspiration-translation"></span>
-                            <span data-quote-source class="daily-inspiration-source"></span>
-                        </div>
-                    </div>
-                    <div class="daily-inspiration-explanation-section">
-                        <span class="daily-inspiration-explanation-label">Explanation:</span>
-                        <p data-quote-reflection class="daily-inspiration-reflection">An inspiring reflection will appear here each day.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Note: Parsha navigation bar removed from prayers page - it's not relevant here
-         and duplicate element IDs were causing JavaScript conflicts on mobile -->
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 pt-2 pb-8">
@@ -235,7 +217,6 @@
     </footer>
 
     <script src="js/shabbat.js"></script>
-    <script src="js/daily-inspiration.js"></script>
     <script src="js/prayers-data.js"></script>
     <script src="js/prayers.js"></script>
     <script src="js/header-fallback.js"></script>

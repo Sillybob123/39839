@@ -328,6 +328,9 @@ export function updateUsernameDisplay() {
     const nameDisplay = document.getElementById('name-display');
     const currentUsernameSpan = document.getElementById('current-username');
 
+    // Pages without a comment panel won't have these elements
+    if (!nameDisplay || !currentUsernameSpan) return;
+
     // Get the current user's email from localStorage (set during authentication)
     const userEmail = localStorage.getItem('currentUserEmail');
 
@@ -593,7 +596,7 @@ function updateCommunityStatusLayout() {
         }
     });
 
-    if (visibleSections.length === 0) {
+    if (visibleSections.length === 0 && !statusBar.dataset.alwaysVisible) {
         statusBar.classList.add('hidden');
     } else {
         statusBar.classList.remove('hidden');

@@ -118,6 +118,37 @@
             hActions.appendChild(logoutBtn);
         }
 
+        // ── Highlight the sidebar button for the current page ──
+        (function highlightActivePage() {
+            var path = window.location.pathname;
+            // Normalise: strip trailing slash, treat bare domain as index
+            var page = path.replace(/\/$/, '').split('/').pop() || 'index.html';
+
+            // Map page filenames → selector for matching sidebar element
+            var pageMap = {
+                'index.html':  '#go-to-weekly',
+                'prayers.html': 'a[href$="prayers.html"]',
+                'songs.html':   'a[href$="songs.html"]',
+                'about.html':   'a[href$="about.html"]',
+                'song-detail.html': 'a[href$="songs.html"]'  // song-detail → Songs
+            };
+
+            // Holiday pages → highlight Holidays button
+            if (path.indexOf('/holidays') !== -1) {
+                page = '__holidays__';
+                pageMap['__holidays__'] = 'a[href$="holidays/"], a[href$="holidays/index.html"]';
+            }
+
+            var selector = pageMap[page];
+            if (!selector) return;
+
+            var activeEl = hActions.querySelector(selector);
+            if (activeEl) {
+                activeEl.classList.add('header-btn--active');
+                activeEl.setAttribute('aria-current', 'page');
+            }
+        })();
+
         // ── 3. Hamburger button — appended directly to document.body
         //       so NO ancestor CSS can interfere with its visibility or z-index
         var hamburger = document.createElement('button');
