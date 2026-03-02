@@ -464,44 +464,9 @@ function highlightVerseAndScroll(verseRef, attempt = 0) {
 
 async function init() {
     try {
-        // Wait for the first authentication state result before continuing
-        await new Promise((resolve) => {
-            let initialResolved = false;
-            initAuth(async (user) => {
-                isAuthReady = true;
-                try {
-                    await handleAuthStateChange(user);
-                } catch (error) {
-                    console.error('Error in auth state change handler:', error);
-                }
-                if (!initialResolved) {
-                    initialResolved = true;
-                    resolve();
-                }
-            });
-        });
-
-        console.log('✅ Auth initialized');
-
-        const [commentaryData, mitzvahChallengeData] = await Promise.all([
-            loadCommentaryData(),
-            loadMitzvahChallenges()
-        ]);
-
-        console.log('✅ Data loaded');
-
-        setState({
-            commentaryData,
-            mitzvahChallenges: (mitzvahChallengeData && Array.isArray(mitzvahChallengeData.challenges))
-                ? mitzvahChallengeData.challenges
-                : []
-        });
+        // ── Phase 1: Instant UI — render cached parsha text before auth ──
         setState({ allParshas: TORAH_PARSHAS });
 
-        // Kick off Sefaria calendar fetch immediately — don't block on it yet
-        const parshaNamePromise = fetchCurrentParsha();
-
-        // ⚡ Use cached weekly parsha to populate UI instantly on repeat visits
         const cachedWeeklyParsha = getCachedCurrentParsha();
         if (cachedWeeklyParsha) {
             const cachedMatch = TORAH_PARSHAS.find(p => p.reference === cachedWeeklyParsha.ref);
@@ -524,7 +489,6 @@ async function init() {
                 currentParshaRef: TORAH_PARSHAS[0].reference,
                 currentParshaIndex: 0
             });
-            console.log('✅ Set to first parsha');
         }
 
         if ((state.weeklyParshaIndex == null || state.weeklyParshaIndex < 0) && state.currentParshaRef) {
@@ -540,21 +504,68 @@ async function init() {
         populateParshaSelector();
         updateNavigationButtons();
         setupEventListeners();
-
-        // Daily quote is already rendered (non-module script runs first),
-        // so apply the community green tint now
         fetchAndApplyDailyQuoteTint();
 
-        console.log('✅ Setup complete, loading parsha:', state.currentParshaRef);
-
-        // Start loading parsha text (instant from cache on repeat visits) in parallel
-        // with the ongoing Sefaria calendar API call
-        const parshaLoadPromise = state.currentParshaRef
-            ? loadParsha(state.currentParshaRef)
+        // Render parsha text immediately from localStorage cache (no auth needed).
+        // loadParsha's count functions gracefully skip when auth isn't ready.
+        const earlyRef = state.currentParshaRef;
+        let earlyLoadPromise = earlyRef
+            ? loadParsha(earlyRef)
             : Promise.resolve();
 
-        const [, currentParshaName] = await Promise.all([parshaLoadPromise, parshaNamePromise]);
+        console.log('⚡ Rendering parsha (pre-auth):', earlyRef);
 
+        // ── Phase 2: Auth + data — runs in parallel with the text render ──
+        const parshaNamePromise = fetchCurrentParsha();
+
+        const authPromise = new Promise((resolve) => {
+            let initialResolved = false;
+            initAuth(async (user) => {
+                isAuthReady = true;
+                try {
+                    await handleAuthStateChange(user);
+                } catch (error) {
+                    console.error('Error in auth state change handler:', error);
+                }
+                if (!initialResolved) {
+                    initialResolved = true;
+                    resolve();
+                }
+            });
+        });
+
+        const dataPromise = Promise.all([
+            loadCommentaryData(),
+            loadMitzvahChallenges()
+        ]);
+
+        // Wait for the early text render to finish (instant if cached)
+        await earlyLoadPromise;
+
+        // Wait for auth + data in parallel
+        const [, [commentaryData, mitzvahChallengeData]] = await Promise.all([authPromise, dataPromise]);
+
+        console.log('✅ Auth + data ready');
+
+        setState({
+            commentaryData,
+            mitzvahChallenges: (mitzvahChallengeData && Array.isArray(mitzvahChallengeData.challenges))
+                ? mitzvahChallengeData.challenges
+                : []
+        });
+
+        // ── Phase 3: Post-auth — reload counts + check live parsha ──
+        // Now that auth is ready, reload the current parsha to pick up
+        // reaction/comment/bookmark counts that were skipped in Phase 1
+        if (earlyRef) {
+            await Promise.all([
+                loadCommentCounts(earlyRef),
+                loadReactionCounts(earlyRef),
+                loadBookmarkCounts(earlyRef)
+            ]);
+        }
+
+        const currentParshaName = await parshaNamePromise;
         console.log('✅ Current parsha fetched:', currentParshaName);
 
         if (currentParshaName) {
@@ -567,7 +578,6 @@ async function init() {
                 const matchingIndex = TORAH_PARSHAS.indexOf(matchingParsha);
                 const initialWeekStart = getWeekStartForDate();
 
-                // Persist for next visit so it loads instantly
                 cacheCurrentParsha(currentParshaName, matchingParsha.reference);
 
                 setState({
@@ -579,7 +589,6 @@ async function init() {
                 });
                 console.log('✅ Matched current parsha:', matchingParsha.name);
 
-                // Only re-load if the live parsha differs from what was cached/shown
                 if (!cachedWeeklyParsha || cachedWeeklyParsha.ref !== matchingParsha.reference) {
                     await loadParsha(matchingParsha.reference);
                 }
@@ -588,7 +597,6 @@ async function init() {
 
         startWeeklyParshaMonitor();
 
-        // Auto-open panels based on URL hash (e.g. redirected from other pages)
         const hash = window.location.hash;
         if (hash === '#bookmarks') {
             window.history.replaceState(null, '', window.location.pathname);

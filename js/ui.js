@@ -978,6 +978,14 @@ export function displayOnlineUsers(onlineUsers = []) {
 
     onlineSection.classList.remove('hidden');
     updateCommunityStatusLayout();
+
+    // Cache rendered HTML for instant restore on next page load
+    try {
+        sessionStorage.setItem('presenceCache', JSON.stringify({
+            html: usersList.innerHTML,
+            ts: Date.now()
+        }));
+    } catch (e) { /* quota or private mode — ignore */ }
 }
 
 /**
@@ -995,6 +1003,9 @@ export function hideOnlineUsers() {
     if (usersList) {
         usersList.innerHTML = '';
     }
+
+    // Clear cache so stale empty state isn't restored
+    try { sessionStorage.removeItem('presenceCache'); } catch (e) { /* ignore */ }
 
     if (concurrencyIndicator) {
         concurrencyIndicator.textContent = '';

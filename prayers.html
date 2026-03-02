@@ -43,6 +43,10 @@
             </div>
         </div>
     </div>
+    <!-- Instant presence restore — runs before any module loads -->
+    <script>
+    (function(){try{var c=JSON.parse(sessionStorage.getItem('presenceCache'));if(!c||!c.html||Date.now()-c.ts>1800000)return;var l=document.getElementById('header-online-users-list');var s=document.getElementById('header-online-section');var b=document.getElementById('community-status-bar');if(l&&s&&b){l.innerHTML=c.html;s.classList.remove('hidden');b.classList.remove('hidden')}}catch(e){}})();
+    </script>
 
     <!-- Professional Responsive Header -->
     <header class="header-main relative z-30">
