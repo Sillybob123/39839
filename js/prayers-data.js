@@ -756,6 +756,50 @@ Pote'ach et yadecha u'masbia l'chol chai ratzon.
 Baruch hagever asher yivtach baAdonai, v'hayah Adonai mivtacho.
 Na'ar hayiti gam zakanti v'lo ra'iti tzadik ne'ezav v'zaro m'vakesh lachem.
 Adonai oz l'amo yiten; Adonai yevarech et amo bashalom.`
+  },
+  {
+    id: "birkat-hagomel",
+    order: 26,
+    title: "Birkat HaGomel (Blessing of Thanksgiving)",
+    label: "Birkat HaGomel",
+    summary: "A blessing of thanks recited after surviving danger, illness, a long journey, or childbirth.",
+    category: "celebration",
+    details: {
+      significance: "Recited by those who survived a life-threatening experience: dangerous travel (including overseas flights), serious illness, release from imprisonment, or any life-threatening mishap. Women also recite it after childbirth. Say the blessing while standing, during daytime. It is customary to give charity upon reciting it. Some hold a Seudah Hodayah — a festive meal of thanksgiving.",
+      when: "Ideally within three days of the event; if that is not possible, within five days, or up to 30 days if a minyan cannot be gathered. Preferred setting: at a Torah reading, immediately after reciting the final Torah blessing during an Aliyah. If no Torah is available, do not delay past three days — gather ten men and recite it. The person reciting counts as one of the ten required."
+    },
+    english: `— Individual's Blessing —
+Blessed are You, Lord our God, King of the universe, Who bestows kindness upon the culpable, for He has bestowed goodness to me.
+
+— Congregation Responds (after Amen) —
+May He who has bestowed goodness upon you, continue to bestow every goodness upon you forever.
+(For a woman, the congregation says: "…she-gemalach… yigmalach…")
+
+Who recites this blessing?
+• Travelers who crossed an ocean or desert — including overseas flights
+• Those who recovered from a serious, life-threatening illness
+• Those released from dangerous imprisonment
+• Anyone saved from a life-threatening mishap (accidents, natural disasters, etc.)
+• Women after childbirth (customarily after seven days have passed)
+
+Additional notes:
+• Children under Bar/Bat Mitzvah age do not say this blessing.
+• If multiple dangers occurred at the same time, say the blessing once to cover all of them.
+• Women may recite it in the synagogue where they can be heard by a minyan, so the congregation can respond.`,
+    hebrew: `— המברך —
+בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, הַגּוֹמֵל לְחַיָּבִים טוֹבוֹת, שֶׁגְּמָלַנִי כָּל טוֹב.
+
+— תשובת הקהל —
+מִי שֶׁגְּמָלְךָ כָּל טוֹב, הוּא יִגְמָלְךָ כָּל טוֹב סֶלָה.
+(לאישה: מִי שֶׁגְּמָלֵךְ כָּל טוֹב, הוּא יִגְמָלֵךְ כָּל טוֹב סֶלָה.)`,
+    transliteration: `— Individual —
+Baruch Atah Adonai, Eloheinu Melech Ha-olam, Ha-gomel le-chayavim tovot, she-gemalani kol tov.
+
+— Congregation Responds —
+Mi she-gemalcha kol tov, hu yigmalcha kol tov selah.
+(For a woman: Mi she-gemalach kol tov, hu yigmalach kol tov selah.)
+
+Note: Make a slight pause between "Ha-gomel" and "le-chayavim" so the words do not slur together.`
   }
 ];
 
@@ -849,7 +893,8 @@ const PRAYER_CATEGORIES = [
     title: "Joy & Gratitude",
     description: "Mark milestones and new experiences with words of heartfelt thanks.",
     links: [
-      { id: "shehecheyanu", label: "Shehecheyanu" }
+      { id: "shehecheyanu", label: "Shehecheyanu" },
+      { id: "birkat-hagomel", label: "Birkat HaGomel" }
     ]
   }
 ];
