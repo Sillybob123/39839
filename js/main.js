@@ -554,6 +554,10 @@ async function init() {
                 : []
         });
 
+        // Commentary data just arrived — re-enable the significance button if
+        // renderParsha ran before this data was available (the common case).
+        refreshSignificanceButtons();
+
         // ── Phase 3: Post-auth — reload counts + check live parsha ──
         // Now that auth is ready, reload the current parsha to pick up
         // reaction/comment/bookmark counts that were skipped in Phase 1
@@ -3377,6 +3381,24 @@ function parseParshaReference(parshaRef) {
         endChapter: match[4] ? parseInt(match[4]) : null,
         endVerse: match[5] ? parseInt(match[5]) : null
     };
+}
+
+function refreshSignificanceButtons() {
+    const ref = state.currentParshaRef;
+    if (!ref || !state.commentaryData || !Array.isArray(state.commentaryData.parshas)) return;
+    const activeParsha = (state.allParshas || []).find(p => p.reference === ref);
+    if (!activeParsha) return;
+    const parshaEntry = state.commentaryData.parshas.find(p => p.name === activeParsha.name);
+    const significanceText = parshaEntry?.significance || null;
+    setState({ currentParshaSignificance: significanceText, currentParshaSignificanceName: activeParsha.name });
+    [document.getElementById('show-significance'), document.getElementById('show-significance-mobile')].forEach(btn => {
+        if (!btn) return;
+        const enabled = Boolean(significanceText);
+        btn.disabled = !enabled;
+        btn.classList.toggle('opacity-40', !enabled);
+        btn.classList.toggle('cursor-not-allowed', !enabled);
+        btn.classList.toggle('pointer-events-none', !enabled);
+    });
 }
 
 function openParshaSignificanceModal() {
