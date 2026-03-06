@@ -226,14 +226,14 @@
 
         banner.innerHTML =
             '<div class="shabbat-floating-icons" aria-hidden="true">' +
-                '<div class="shabbat-icon shabbat-icon--challah-1"><img src="Challah.png" alt=""></div>' +
-                '<div class="shabbat-icon shabbat-icon--challah-2"><img src="Challah.png" alt=""></div>' +
-                '<div class="shabbat-icon shabbat-icon--candle-1"><img src="shabbatcandle.png" alt=""></div>' +
-                '<div class="shabbat-icon shabbat-icon--candle-2"><img src="shabbatcandle.png" alt=""></div>' +
-                '<div class="shabbat-icon shabbat-icon--note-1"><img src="doublenote.png" alt=""></div>' +
-                '<div class="shabbat-icon shabbat-icon--note-2"><img src="note2.png" alt=""></div>' +
-                '<div class="shabbat-icon shabbat-icon--note-3"><img src="doublenote.png" alt=""></div>' +
-                '<div class="shabbat-icon shabbat-icon--note-4"><img src="note2.png" alt=""></div>' +
+                '<div class="shabbat-icon shabbat-icon--challah-1"><img src="media/images/Challah.png" alt=""></div>' +
+                '<div class="shabbat-icon shabbat-icon--challah-2"><img src="media/images/Challah.png" alt=""></div>' +
+                '<div class="shabbat-icon shabbat-icon--candle-1"><img src="media/images/shabbatcandle.png" alt=""></div>' +
+                '<div class="shabbat-icon shabbat-icon--candle-2"><img src="media/images/shabbatcandle.png" alt=""></div>' +
+                '<div class="shabbat-icon shabbat-icon--note-1"><img src="media/images/doublenote.png" alt=""></div>' +
+                '<div class="shabbat-icon shabbat-icon--note-2"><img src="media/images/note2.png" alt=""></div>' +
+                '<div class="shabbat-icon shabbat-icon--note-3"><img src="media/images/doublenote.png" alt=""></div>' +
+                '<div class="shabbat-icon shabbat-icon--note-4"><img src="media/images/note2.png" alt=""></div>' +
             '</div>' +
             '<div class="shabbat-greeting-row">' +
                 '<div class="shabbat-audio-shell">' +
