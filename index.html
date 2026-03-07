@@ -359,30 +359,9 @@
                 <span id="error-text">Something went wrong.</span>
             </div>
 
-            <section
-                id="weekly-holiday-box"
-                class="weekly-holiday-box hidden"
-                data-show-from="2026-02-27"
-                data-show-until="2026-03-09"
-                aria-label="Weekly holiday spotlight"
-            >
-                <div class="weekly-holiday-box__glow" aria-hidden="true"></div>
-                <div class="weekly-holiday-box__content">
-                    <p class="weekly-holiday-box__eyebrow">Holiday Feature</p>
-                    <h2 class="weekly-holiday-box__title">Purim</h2>
-                    <p class="weekly-holiday-box__text">
-                        Purim begins Sunday night, March 1, 2026. Read the full story of Esther, Mordechai, and the miraculous reversal — or open the complete Book of Esther in Hebrew and English.
-                    </p>
-                    <div class="weekly-holiday-box__actions">
-                        <a class="weekly-holiday-box__button" href="holidays/purim/story.html">Read About Purim</a>
-                        <a class="weekly-holiday-box__button" href="holidays/purim/esther.html" style="background:rgba(146,64,14,0.12);color:#92400e;box-shadow:none;border:1.5px solid rgba(146,64,14,0.3);">Read the Book of Esther</a>
-                    </div>
-                </div>
-            </section>
-
             <!-- Text Display -->
             <div id="mitzvah-challenge-section" class="mitzvah-challenge hidden">
-                <div class="mitzvah-card"
+                <div class="mitzvah-card">
                     <div class="mitzvah-card__header" id="mitzvah-toggle-header" style="cursor: pointer;">
                         <div class="mitzvah-card__title-row">
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -589,22 +568,6 @@
             const toggleHeader = document.getElementById('mitzvah-toggle-header');
             const collapsibleContent = document.getElementById('mitzvah-collapsible-content');
             const toggleIcon = document.getElementById('mitzvah-toggle-icon');
-            const weeklyHolidayBox = document.getElementById('weekly-holiday-box');
-
-            if (weeklyHolidayBox) {
-                const fromDateRaw = weeklyHolidayBox.dataset.showFrom;
-                const untilDateRaw = weeklyHolidayBox.dataset.showUntil;
-                const today = new Date();
-                const localDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-                const fromDate = fromDateRaw ? new Date(`${fromDateRaw}T00:00:00`) : null;
-                const untilDate = untilDateRaw ? new Date(`${untilDateRaw}T00:00:00`) : null;
-
-                const shouldShow =
-                    (!fromDate || localDate >= fromDate) &&
-                    (!untilDate || localDate < untilDate);
-
-                weeklyHolidayBox.classList.toggle('hidden', !shouldShow);
-            }
 
             if (toggleHeader && collapsibleContent && toggleIcon) {
                 toggleHeader.addEventListener('click', function() {

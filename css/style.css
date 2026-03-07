@@ -4822,6 +4822,10 @@ body.torah-text-size-xlarge #parsha-text .english-text {
     margin-bottom: 2rem;
 }
 
+#parsha-text {
+    margin-top: 2rem;
+}
+
 .mitzvah-locked__card {
     background: rgba(37, 99, 235, 0.08);
     border: 1px solid rgba(37, 99, 235, 0.18);
