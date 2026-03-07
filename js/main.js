@@ -3967,10 +3967,38 @@ function handleHebrewWordSelection() {
 
 function hebrewConsonantMatchScore(selectedConsonants, headword) {
     const headConsonants = headword.replace(/[\u0591-\u05C7]/g, '');
-    if (selectedConsonants === headConsonants) return 3;          // exact
-    if (headConsonants === selectedConsonants) return 3;
-    if (selectedConsonants.startsWith(headConsonants) && headConsonants.length >= 2) return 1; // prefix
-    if (headConsonants.startsWith(selectedConsonants) && selectedConsonants.length >= 2) return 1;
+    if (!headConsonants) return 0;
+
+    // Build candidate forms by progressively stripping up to 2 common
+    // single-letter Hebrew prefixes (ו and/וֹ, הַ, לְ, בְּ, כְּ, מִ, שֶׁ).
+    const PREFIXES = ['ו', 'ה', 'ל', 'ב', 'כ', 'מ', 'ש'];
+    const candidates = [selectedConsonants];
+    let s = selectedConsonants;
+    for (let i = 0; i < 2; i++) {
+        let stripped = false;
+        for (const p of PREFIXES) {
+            if (s.startsWith(p) && s.length > p.length) {
+                s = s.slice(p.length);
+                candidates.push(s);
+                stripped = true;
+                break;
+            }
+        }
+        if (!stripped) break;
+    }
+
+    // Exact match — score decreases slightly for each prefix we had to strip
+    for (let i = 0; i < candidates.length; i++) {
+        if (candidates[i] === headConsonants) return 3 - i;
+    }
+
+    // Partial/prefix match on any candidate form
+    for (const cand of candidates) {
+        if (cand.length >= 2 && headConsonants.length >= 2) {
+            if (cand.startsWith(headConsonants) || headConsonants.startsWith(cand)) return 0.5;
+        }
+    }
+
     return 0;
 }
 
