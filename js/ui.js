@@ -115,6 +115,8 @@ export function hideInfoPanel() {
  * Display keyword definition in info panel - NO EMOJIS
  */
 export function showKeywordDefinition(word, definition) {
+    const titleEl = document.querySelector('.info-panel-title');
+    if (titleEl) titleEl.textContent = 'Definition';
     const infoContent = document.getElementById('info-content');
     infoContent.classList.remove('info-content-bookmarks');
     infoContent.innerHTML = `
@@ -131,7 +133,8 @@ export function showKeywordDefinition(word, definition) {
  */
 export function showCommentary(verseRef, commentaries) {
     if (!commentaries || commentaries.length === 0) return;
-    
+    const titleEl = document.querySelector('.info-panel-title');
+    if (titleEl) titleEl.textContent = 'Commentary & Insights';
     const infoContent = document.getElementById('info-content');
     infoContent.classList.remove('info-content-bookmarks');
     let html = `<h4 class="text-lg font-bold mb-4 text-blue-900 border-b-2 border-blue-200 pb-2">${escapeHtml(verseRef)}</h4>`;

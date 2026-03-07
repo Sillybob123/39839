@@ -749,7 +749,14 @@ function setupEventListeners() {
     });
     
     document.getElementById('parsha-text').addEventListener('click', handleTextClick);
-    
+
+    // Hebrew word selection → Sefaria definition
+    const parshaTextEl = document.getElementById('parsha-text');
+    parshaTextEl.addEventListener('mouseup', handleHebrewWordSelection);
+    parshaTextEl.addEventListener('touchend', () => {
+        setTimeout(handleHebrewWordSelection, 120);
+    });
+
     setupCommentPanelListeners();
     setupLoginListeners();
 
@@ -3847,11 +3854,223 @@ function handleTextClick(e) {
 
     const verseContainer = e.target.closest('.verse-container');
     if (verseContainer && !e.target.closest('.verse-indicators')) {
+        // Don't open comments panel if the user is selecting/highlighting text
+        const selection = window.getSelection();
+        if (selection && !selection.isCollapsed && selection.toString().trim().length > 0) {
+            return;
+        }
         const verseRef = verseContainer.dataset.ref;
         openCommentsPanel(verseRef, (ref) => {
             listenForComments(ref, displayComments);
         });
     }
+}
+
+/**
+ * Approximate Hebrew → English transliteration (SBL-simplified).
+ * Handles consonants, nikud vowels, dagesh in bgdkpt, shin/sin dots.
+ * Cantillation marks and meteg are silently skipped.
+ */
+function transliterateHebrew(heb) {
+    const consonants = {
+        '\u05D0': '', '\u05D1': 'v', '\u05D2': 'g', '\u05D3': 'd', '\u05D4': 'h',
+        '\u05D5': 'v', '\u05D6': 'z', '\u05D7': 'kh', '\u05D8': 't', '\u05D9': 'y',
+        '\u05DA': 'kh', '\u05DB': 'kh', '\u05DC': 'l', '\u05DD': 'm', '\u05DE': 'm',
+        '\u05DF': 'n', '\u05E0': 'n', '\u05E1': 's', '\u05E2': '', '\u05E3': 'f',
+        '\u05E4': 'f', '\u05E5': 'ts', '\u05E6': 'ts', '\u05E7': 'q', '\u05E8': 'r',
+        '\u05E9': 'sh', '\u05EA': 't',
+    };
+    const dagesh = {
+        '\u05D1': 'b', '\u05D3': 'd', '\u05D4': 'h',
+        '\u05DA': 'k', '\u05DB': 'k', '\u05E3': 'p', '\u05E4': 'p', '\u05EA': 't',
+    };
+    const vowels = {
+        '\u05B0': 'e', '\u05B1': 'e', '\u05B2': 'a', '\u05B3': 'o',
+        '\u05B4': 'i', '\u05B5': 'e', '\u05B6': 'e', '\u05B7': 'a',
+        '\u05B8': 'a', '\u05B9': 'o', '\u05BA': 'o', '\u05BB': 'u',
+    };
+
+    const chars = [...heb.normalize('NFD')];
+    let result = '';
+    let i = 0;
+
+    while (i < chars.length) {
+        const ch = chars[i];
+        const cp = ch.codePointAt(0);
+
+        // Skip cantillation marks (U+0591–U+05AF) and meteg (U+05BD)
+        if ((cp >= 0x0591 && cp <= 0x05AF) || cp === 0x05BD) { i++; continue; }
+
+        if (cp >= 0x05D0 && cp <= 0x05EA) {
+            let hasDagesh = false, shinDot = false, sinDot = false, vowel = '';
+
+            let j = i + 1;
+            while (j < chars.length) {
+                const nc = chars[j];
+                const ncp = nc.codePointAt(0);
+                if ((ncp >= 0x0591 && ncp <= 0x05AF) || ncp === 0x05BD) { j++; continue; }
+                if (ncp >= 0x05D0 && ncp <= 0x05EA) break;
+                if (nc === '\u05BC') hasDagesh = true;
+                else if (nc === '\u05C1') shinDot = true;
+                else if (nc === '\u05C2') sinDot = true;
+                else if (vowels[nc] !== undefined) vowel = vowels[nc];
+                j++;
+            }
+
+            // Vav as vowel carrier
+            if (ch === '\u05D5') {
+                if (hasDagesh) { result += 'u'; i = j; continue; } // shuruk
+                if (vowel === 'o') { result += 'o'; i = j; continue; } // holam vav
+            }
+
+            let con;
+            if (ch === '\u05E9') {
+                con = sinDot ? 's' : 'sh';
+            } else if (hasDagesh && dagesh[ch]) {
+                con = dagesh[ch];
+            } else {
+                con = consonants[ch] ?? '';
+            }
+
+            result += con + vowel;
+            i = j;
+        } else if (ch === '-' || ch === ' ') {
+            result += ch; i++;
+        } else {
+            i++;
+        }
+    }
+
+    return result;
+}
+
+function handleHebrewWordSelection() {
+    const selection = window.getSelection();
+    if (!selection || selection.isCollapsed) return;
+
+    const selectedText = selection.toString().trim();
+    // Only act on a single word (no whitespace)
+    if (!selectedText || /\s/.test(selectedText)) return;
+
+    // Must be selected inside a Hebrew text element
+    const anchorNode = selection.anchorNode;
+    if (!anchorNode) return;
+    const parentEl = anchorNode.nodeType === Node.TEXT_NODE ? anchorNode.parentElement : anchorNode;
+    if (!parentEl || !parentEl.closest('.hebrew-text')) return;
+
+    // Strip nikud (vowel points + cantillation marks) for the API query
+    const baseWord = selectedText.replace(/[\u0591-\u05C7]/g, '');
+    if (!baseWord) return;
+
+    lookupHebrewWordSefaria(baseWord, selectedText);
+}
+
+async function lookupHebrewWordSefaria(word, displayWord) {
+    const titleEl = document.querySelector('.info-panel-title');
+    if (titleEl) titleEl.textContent = 'Definition';
+    showKeywordDefinition(displayWord, 'Loading definition...');
+
+    try {
+        const url = `https://www.sefaria.org/api/words/${encodeURIComponent(word)}?lookup_ref=&never_split=1&always_consonants=1`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+
+        if (!Array.isArray(data) || data.length === 0) {
+            showKeywordDefinition(displayWord, 'No definition found for this word.');
+            return;
+        }
+
+        // Primary: first non-Jastrow result; rest go into "other definitions"
+        const primaryIndex = data.findIndex(e => e.parent_lexicon !== 'Jastrow Dictionary');
+        const primary = data[primaryIndex !== -1 ? primaryIndex : 0];
+        const others = data.filter((_, i) => i !== (primaryIndex !== -1 ? primaryIndex : 0));
+
+        if (titleEl) titleEl.textContent = 'Definition';
+        const infoContent = document.getElementById('info-content');
+        infoContent.classList.remove('info-content-bookmarks');
+
+        let html = renderSefariaEntry(primary, displayWord, false);
+
+        // "See other definitions" collapsible
+        if (others.length > 0) {
+            html += `<details class="sdict-other-wrap">`;
+            html += `<summary class="sdict-other-toggle">See other definitions (${others.length})</summary>`;
+            html += `<div class="sdict-other-entries">`;
+            others.forEach(entry => {
+                html += renderSefariaEntry(entry, displayWord, true);
+            });
+            html += `</div></details>`;
+        }
+
+        infoContent.innerHTML = html;
+        showInfoPanel();
+    } catch (err) {
+        console.error('Sefaria lexicon lookup failed:', err);
+        showKeywordDefinition(displayWord, 'Could not load definition. Please try again.');
+    }
+}
+
+function renderSefariaEntry(entry, displayWord, showSource = false) {
+    const headword = entry.headword || displayWord;
+    const morphology = (entry.content && entry.content.morphology) ? entry.content.morphology.trim() : '';
+    const senses = (entry.content && entry.content.senses) ? entry.content.senses : [];
+    const translit = transliterateHebrew(headword);
+    const source = entry.parent_lexicon || '';
+
+    let html = `<div class="sefaria-dict">`;
+
+    html += `<div class="sdict-header">`;
+    html += `<span class="sdict-headword">${escapeHtmlLocal(headword)}</span>`;
+    if (morphology) html += `<span class="sdict-pos">(${escapeHtmlLocal(morphology)})</span>`;
+    html += `<span class="sdict-lang">heb</span>`;
+    if (translit) html += `<span class="sdict-translit">· ${escapeHtmlLocal(translit)}</span>`;
+    html += `</div>`;
+
+    if (showSource && source) html += `<div class="sdict-source">${escapeHtmlLocal(source)}</div>`;
+
+    if (senses.length > 0) {
+        html += renderSefariaSenses(senses, 1);
+    } else {
+        html += `<p class="sdict-no-result">No senses available.</p>`;
+    }
+
+    html += `</div>`;
+    return html;
+}
+
+function renderSefariaSenses(senses, level) {
+    if (!senses || senses.length === 0 || level > 3) return '';
+
+    let html = `<ol class="sdict-senses sdict-senses--l${level}">`;
+    senses.forEach(sense => {
+        html += `<li class="sdict-sense sdict-sense--l${level}">`;
+
+        if (sense.definition) {
+            const plain = sense.definition
+                .replace(/<[^>]+>/g, '')
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&nbsp;/g, ' ')
+                .trim();
+            html += escapeHtmlLocal(plain);
+        }
+
+        if (sense.senses && sense.senses.length > 0) {
+            html += renderSefariaSenses(sense.senses, level + 1);
+        }
+
+        html += `</li>`;
+    });
+    html += `</ol>`;
+    return html;
+}
+
+function escapeHtmlLocal(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 function getCommentariesForVerse(verseRef) {
