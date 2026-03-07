@@ -1757,6 +1757,34 @@ select {
     font-style: italic;
 }
 
+/* Word header — highlighted word + transliteration shown at top of panel */
+.sdict-word-header {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.sdict-word-display {
+    font-family: 'EB Garamond', 'Garamond', Palatino, Georgia, serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    direction: rtl;
+    unicode-bidi: embed;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+.sdict-word-translit {
+    font-family: 'EB Garamond', 'Garamond', Palatino, Georgia, serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: #475569;
+}
+
 /* "See other definitions" collapsible */
 .sdict-other-wrap {
     margin-top: 0.9rem;

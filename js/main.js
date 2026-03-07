@@ -3965,6 +3965,15 @@ function handleHebrewWordSelection() {
     lookupHebrewWordSefaria(baseWord, selectedText);
 }
 
+function hebrewConsonantMatchScore(selectedConsonants, headword) {
+    const headConsonants = headword.replace(/[\u0591-\u05C7]/g, '');
+    if (selectedConsonants === headConsonants) return 3;          // exact
+    if (headConsonants === selectedConsonants) return 3;
+    if (selectedConsonants.startsWith(headConsonants) && headConsonants.length >= 2) return 1; // prefix
+    if (headConsonants.startsWith(selectedConsonants) && selectedConsonants.length >= 2) return 1;
+    return 0;
+}
+
 async function lookupHebrewWordSefaria(word, displayWord) {
     const titleEl = document.querySelector('.info-panel-title');
     if (titleEl) titleEl.textContent = 'Definition';
@@ -3981,16 +3990,31 @@ async function lookupHebrewWordSefaria(word, displayWord) {
             return;
         }
 
-        // Primary: first non-Jastrow result; rest go into "other definitions"
-        const primaryIndex = data.findIndex(e => e.parent_lexicon !== 'Jastrow Dictionary');
-        const primary = data[primaryIndex !== -1 ? primaryIndex : 0];
-        const others = data.filter((_, i) => i !== (primaryIndex !== -1 ? primaryIndex : 0));
+        // Sort entries: exact consonant match first, then non-Jastrow, then rest
+        const sorted = [...data].sort((a, b) => {
+            const scoreA = hebrewConsonantMatchScore(word, a.headword || '');
+            const scoreB = hebrewConsonantMatchScore(word, b.headword || '');
+            if (scoreB !== scoreA) return scoreB - scoreA;
+            const jA = a.parent_lexicon === 'Jastrow Dictionary' ? 1 : 0;
+            const jB = b.parent_lexicon === 'Jastrow Dictionary' ? 1 : 0;
+            return jA - jB;
+        });
+
+        const primary = sorted[0];
+        const others = sorted.slice(1);
 
         if (titleEl) titleEl.textContent = 'Definition';
         const infoContent = document.getElementById('info-content');
         infoContent.classList.remove('info-content-bookmarks');
 
-        let html = renderSefariaEntry(primary, displayWord, false);
+        // Word header: the actual selected word + its transliteration
+        const headerTranslit = transliterateHebrew(displayWord);
+        let html = `<div class="sdict-word-header">`;
+        html += `<span class="sdict-word-display">${escapeHtmlLocal(displayWord)}</span>`;
+        if (headerTranslit) html += `<span class="sdict-word-translit">· ${escapeHtmlLocal(headerTranslit)}</span>`;
+        html += `</div>`;
+
+        html += renderSefariaEntry(primary, displayWord, false);
 
         // "See other definitions" collapsible
         if (others.length > 0) {
