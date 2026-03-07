@@ -2092,4 +2092,299 @@
   }
 
   document.addEventListener('DOMContentLoaded', renderDailyInspiration);
+
+  /* ── ⌘C / ⌘U  Verse Copy ──────────────────────────────────────── */
+  /*   ⌘C (with verse selection) → rich HTML copy for emails        */
+  /*   ⌘U                        → clean plain-text copy            */
+  var SITE_URL = 'https://sillybob123.github.io/39839/';
+  var LOGO_URL = SITE_URL + 'media/images/Icon.png';
+
+  function showCopyToast(message, success) {
+    var existing = document.getElementById('verse-copy-toast');
+    if (existing) existing.remove();
+
+    var toast = document.createElement('div');
+    toast.id = 'verse-copy-toast';
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
+    Object.assign(toast.style, {
+      position: 'fixed',
+      bottom: '28px',
+      left: '50%',
+      transform: 'translateX(-50%) translateY(16px)',
+      background: success
+        ? 'linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%)'
+        : '#c53030',
+      color: '#fff',
+      padding: '10px 22px',
+      borderRadius: '10px',
+      fontSize: '13px',
+      fontWeight: '600',
+      fontFamily: 'Georgia, "Times New Roman", serif',
+      boxShadow: '0 6px 24px rgba(0,0,0,0.22)',
+      zIndex: '99999',
+      opacity: '0',
+      transition: 'opacity 0.3s ease, transform 0.3s ease',
+      pointerEvents: 'none',
+      letterSpacing: '0.02em'
+    });
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(function () {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+    });
+
+    setTimeout(function () {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(-50%) translateY(16px)';
+      setTimeout(function () { toast.remove(); }, 350);
+    }, 2200);
+  }
+
+  /* ── Collect selected verses from the DOM ───────────────────── */
+  function getSelectedVerses() {
+    var sel = window.getSelection();
+    if (!sel || sel.isCollapsed || !sel.rangeCount) return null;
+
+    var range = sel.getRangeAt(0);
+    var ancestor = range.commonAncestorContainer;
+    if (ancestor.nodeType === Node.TEXT_NODE) ancestor = ancestor.parentElement;
+
+    var allContainers = document.querySelectorAll('.verse-container');
+    var matched = [];
+    var seen = {};
+
+    for (var i = 0; i < allContainers.length; i++) {
+      var vc = allContainers[i];
+      if (!range.intersectsNode(vc)) continue;
+
+      var ref = vc.dataset.ref || '';
+      if (seen[ref]) continue;
+      seen[ref] = true;
+
+      var hebrewEl = vc.querySelector('.hebrew-text');
+      var englishEl = vc.querySelector('.english-text');
+      if (!hebrewEl && !englishEl) continue;
+
+      matched.push({
+        ref:     ref,
+        hebrew:  hebrewEl  ? hebrewEl.textContent.trim()  : '',
+        english: englishEl ? englishEl.textContent.trim() : ''
+      });
+    }
+
+    return matched.length ? matched : null;
+  }
+
+  /* ── Check if user selected text inside the daily inspiration ── */
+  function getSelectedDailyQuote() {
+    var sel = window.getSelection();
+    if (!sel || sel.isCollapsed || !sel.rangeCount) return null;
+
+    var range = sel.getRangeAt(0);
+    var inspirationEl = document.getElementById('daily-inspiration');
+    if (!inspirationEl || !range.intersectsNode(inspirationEl)) return null;
+
+    var quote = window.currentDailyQuote;
+    if (!quote) return null;
+
+    return [{
+      ref:     quote.source || '',
+      hebrew:  quote.hebrew || '',
+      english: quote.translation || ''
+    }];
+  }
+
+  /* ── Resolve verses (selection → daily quote fallback) ───────── */
+  function resolveVersesToCopy() {
+    var verses = getSelectedVerses();
+    if (!verses) verses = getSelectedDailyQuote();
+    if (!verses) {
+      var q = window.currentDailyQuote;
+      if (q) {
+        verses = [{
+          ref:     q.source || '',
+          hebrew:  q.hebrew || '',
+          english: q.translation || ''
+        }];
+      }
+    }
+    return verses;
+  }
+
+  /* ── Build a single verse block (compact) ──────────────────── */
+  function buildVerseBlock(verse) {
+    var block = '';
+
+    if (verse.hebrew) {
+      block +=
+        '<p style="' +
+          'font-family:Georgia,\'Times New Roman\',serif;' +
+          'font-size:15px;line-height:1.7;direction:rtl;text-align:right;' +
+          'color:#1a202c;margin:0 0 6px 0;' +
+        '">' + escapeForHTML(verse.hebrew) + '</p>';
+    }
+
+    if (verse.english) {
+      block +=
+        '<p style="' +
+          'font-family:Georgia,\'Times New Roman\',serif;' +
+          'font-size:13px;line-height:1.65;color:#2d3748;' +
+          'margin:0 0 4px 0;font-style:italic;' +
+        '">' +
+          '&ldquo;' + escapeForHTML(verse.english) + '&rdquo;' +
+        '</p>';
+    }
+
+    if (verse.ref) {
+      block +=
+        '<p style="' +
+          'font-family:Georgia,\'Times New Roman\',serif;' +
+          'font-size:11px;color:#4a5568;margin:0;font-weight:bold;' +
+          'letter-spacing:0.03em;' +
+        '">' +
+          '\u2014 ' + escapeForHTML(verse.ref) +
+        '</p>';
+    }
+
+    return block;
+  }
+
+  /* ── Build the full HTML clipboard payload (compact) ────────── */
+  function buildClipboardHTML(verses) {
+    var versesHTML = '';
+
+    for (var i = 0; i < verses.length; i++) {
+      if (i > 0) {
+        versesHTML +=
+          '<div style="border-top:1px solid #d4dae8;margin:10px 0;"></div>';
+      }
+      versesHTML += buildVerseBlock(verses[i]);
+    }
+
+    return (
+      '<div style="' +
+        'max-width:420px;margin:0 auto;padding:16px 20px 12px 20px;' +
+        'background:#f8f9fc;' +
+        'border-radius:10px;border:1px solid #d0d5e3;' +
+      '">' +
+
+        versesHTML +
+
+        '<div style="border-top:1px solid #cbd5e0;margin:12px 0 10px 0;"></div>' +
+
+        '<table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">' +
+          '<tr>' +
+            '<td style="vertical-align:middle;padding-right:7px;">' +
+              '<a href="' + SITE_URL + '" target="_blank" style="text-decoration:none;">' +
+                '<img src="' + LOGO_URL + '" alt="A Letter in the Scroll" ' +
+                  'width="22" height="22" style="' +
+                  'width:22px;height:22px;border-radius:4px;display:block;' +
+                '" />' +
+              '</a>' +
+            '</td>' +
+            '<td style="vertical-align:middle;">' +
+              '<a href="' + SITE_URL + '" target="_blank" style="' +
+                'font-family:Georgia,\'Times New Roman\',serif;' +
+                'font-size:11px;color:#2b6cb0;text-decoration:none;font-weight:bold;' +
+                'letter-spacing:0.03em;' +
+              '">A Letter in the Scroll</a>' +
+            '</td>' +
+          '</tr>' +
+        '</table>' +
+
+      '</div>' +
+      '<p style="margin:0;font-size:14px;line-height:1.5;"><br></p>'
+    );
+  }
+
+  /* ── Build plain-text (for ⌘U clean copy) ──────────────────── */
+  function buildClipboardPlainText(verses) {
+    var parts = [];
+    for (var i = 0; i < verses.length; i++) {
+      var v = verses[i];
+      var chunk = '';
+      if (v.hebrew)  chunk += v.hebrew + '\n';
+      if (v.english) chunk += '\u201C' + v.english + '\u201D\n';
+      if (v.ref)     chunk += '\u2014 ' + v.ref;
+      parts.push(chunk.trim());
+    }
+    parts.push('A Letter in the Scroll\n' + SITE_URL);
+    return parts.join('\n\n');
+  }
+
+  /* ── Minimal HTML entity escaping ──────────────────────────── */
+  function escapeForHTML(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  /* ── Clipboard write helpers ───────────────────────────────── */
+  function writeRichClipboard(htmlContent, plainContent, toastMsg) {
+    if (navigator.clipboard && typeof ClipboardItem !== 'undefined') {
+      navigator.clipboard.write([
+        new ClipboardItem({
+          'text/html':  new Blob([htmlContent],  { type: 'text/html' }),
+          'text/plain': new Blob([plainContent], { type: 'text/plain' })
+        })
+      ]).then(function () {
+        showCopyToast(toastMsg, true);
+      }).catch(function () {
+        showCopyToast('\u2717  Could not copy verse', false);
+      });
+    } else {
+      navigator.clipboard.writeText(plainContent).then(function () {
+        showCopyToast(toastMsg, true);
+      }).catch(function () {
+        showCopyToast('\u2717  Could not copy verse', false);
+      });
+    }
+  }
+
+  function writePlainClipboard(plainContent, toastMsg) {
+    navigator.clipboard.writeText(plainContent).then(function () {
+      showCopyToast(toastMsg, true);
+    }).catch(function () {
+      showCopyToast('\u2717  Could not copy verse', false);
+    });
+  }
+
+  /* ── Keydown listener ──────────────────────────────────────── */
+  document.addEventListener('keydown', function (e) {
+    if (!(e.metaKey || e.ctrlKey)) return;
+
+    /* ─── ⌘C — Beautiful formatted copy (only when verses selected) ─── */
+    if (e.key === 'c') {
+      var versesForC = getSelectedVerses();
+      if (!versesForC) versesForC = getSelectedDailyQuote();
+      if (!versesForC) return;   // no verse text selected — let normal ⌘C happen
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      var html  = buildClipboardHTML(versesForC);
+      var plain = buildClipboardPlainText(versesForC);
+      writeRichClipboard(html, plain, '\u2713  Verse copied \u2014 paste it into an email!');
+      return;
+    }
+
+    /* ─── ⌘U — Clean plain-text copy (no formatting) ─── */
+    if (e.key === 'u') {
+      var versesForU = resolveVersesToCopy();
+      if (!versesForU || !versesForU.length) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      var plainOnly = buildClipboardPlainText(versesForU);
+      writePlainClipboard(plainOnly, '\u2713  Verse copied as plain text');
+      return;
+    }
+  });
 })();
+
