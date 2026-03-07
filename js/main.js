@@ -1191,7 +1191,30 @@ async function renderMitzvahChallengeSection(parshaName, providedChallenge = nul
 
     await refreshMitzvahCompletionStatus(challengeId);
     updateMitzvahAuthState();
-    refreshMitzvahLeaderboardDisplay();
+    await refreshMitzvahLeaderboardDisplay();
+
+    // Self-heal: if this user completed the challenge but is missing from the
+    // leaderboard (e.g. a prior write was blocked by a rules mismatch), silently
+    // recalculate their total from their stored progress and refresh the display.
+    if (currentMitzvahCompletion) {
+        const selfHealUserId = getCurrentUserId();
+        if (selfHealUserId) {
+            const selfHealCanonicalId = resolveCanonicalLeaderboardUserId(selfHealUserId);
+            const alreadyOnBoard = Array.isArray(state.mitzvahLeaderboard)
+                && state.mitzvahLeaderboard.some(
+                    (e) => e && (e.userId === selfHealCanonicalId || e.userId === selfHealUserId)
+                );
+            if (!alreadyOnBoard) {
+                const selfHealUsername = resolveLeaderboardUsernameForDisplay(null);
+                const selfHealEmail = (currentUserProfile && typeof currentUserProfile.email === 'string')
+                    ? currentUserProfile.email
+                    : null;
+                recalculateMitzvahLeaderboard(selfHealUserId, selfHealUsername, selfHealEmail)
+                    .then(() => refreshMitzvahLeaderboardDisplay())
+                    .catch(console.error);
+            }
+        }
+    }
 
     if (challengeMode === 'current') {
         populateMitzvahModalContent(challenge, parshaName);
