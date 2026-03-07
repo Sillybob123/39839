@@ -595,6 +595,10 @@ async function init() {
 
                 if (!cachedWeeklyParsha || cachedWeeklyParsha.ref !== matchingParsha.reference) {
                     await loadParsha(matchingParsha.reference);
+                } else {
+                    // Parsha text already rendered pre-auth; challenge data is now available,
+                    // so trigger the mitzvah section which was skipped on the early render.
+                    updateMitzvahChallengeForParsha(matchingParsha.name);
                 }
             }
         }
