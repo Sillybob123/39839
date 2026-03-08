@@ -484,13 +484,8 @@ async function init() {
             }
         }
 
-        if (!state.currentParshaRef && TORAH_PARSHAS.length > 0) {
-            setState({
-                currentParshaRef: TORAH_PARSHAS[0].reference,
-                currentParshaIndex: 0
-            });
-        }
-
+        // If no cache, don't fall back to Genesis 1:1 — wait for the API
+        // so the correct weekly parsha is always shown on page load.
         if ((state.weeklyParshaIndex == null || state.weeklyParshaIndex < 0) && state.currentParshaRef) {
             const fallbackIndex = state.currentParshaIndex >= 0 ? state.currentParshaIndex : 0;
             const initialWeekStart = getWeekStartForDate();
@@ -506,16 +501,7 @@ async function init() {
         setupEventListeners();
         fetchAndApplyDailyQuoteTint();
 
-        // Render parsha text immediately from localStorage cache (no auth needed).
-        // loadParsha's count functions gracefully skip when auth isn't ready.
-        const earlyRef = state.currentParshaRef;
-        let earlyLoadPromise = earlyRef
-            ? loadParsha(earlyRef)
-            : Promise.resolve();
-
-        console.log('⚡ Rendering parsha (pre-auth):', earlyRef);
-
-        // ── Phase 2: Auth + data — runs in parallel with the text render ──
+        // ── Launch ALL async work in parallel immediately ──
         const parshaNamePromise = fetchCurrentParsha();
 
         const authPromise = new Promise((resolve) => {
@@ -539,10 +525,50 @@ async function init() {
             loadMitzvahChallenges()
         ]);
 
-        // Wait for the early text render to finish (instant if cached)
-        await earlyLoadPromise;
+        // ── Fast path: cached weekly parsha → render instantly ──
+        const earlyRef = state.currentParshaRef;
+        if (earlyRef) {
+            await loadParsha(earlyRef);
+            console.log('⚡ Rendered cached parsha:', earlyRef);
+        } else {
+            // ── No cache: get parsha from API ASAP, don't wait for auth ──
+            showLoading();
+            console.log('⚡ No cached parsha — fetching from API...');
+            const currentParshaName = await parshaNamePromise;
+            if (currentParshaName) {
+                const matchingParsha = TORAH_PARSHAS.find(p =>
+                    p.name.toLowerCase() === currentParshaName.toLowerCase() ||
+                    currentParshaName.toLowerCase().includes(p.name.toLowerCase())
+                );
+                if (matchingParsha) {
+                    const matchingIndex = TORAH_PARSHAS.indexOf(matchingParsha);
+                    const initialWeekStart = getWeekStartForDate();
+                    cacheCurrentParsha(currentParshaName, matchingParsha.reference);
+                    setState({
+                        currentParshaRef: matchingParsha.reference,
+                        currentParshaIndex: matchingIndex,
+                        weeklyParshaRef: matchingParsha.reference,
+                        weeklyParshaIndex: matchingIndex,
+                        weeklyParshaWeekStart: initialWeekStart.toISOString()
+                    });
+                    document.querySelectorAll('select#parsha-selector').forEach(s => {
+                        s.value = matchingParsha.reference;
+                    });
+                    updateNavigationButtons();
+                    await loadParsha(matchingParsha.reference);
+                    console.log('✅ Loaded weekly parsha from API:', matchingParsha.name);
+                } else {
+                    setState({ currentParshaRef: TORAH_PARSHAS[0].reference, currentParshaIndex: 0 });
+                    await loadParsha(TORAH_PARSHAS[0].reference);
+                }
+            } else {
+                // API failed — fall back to first parsha as last resort
+                setState({ currentParshaRef: TORAH_PARSHAS[0].reference, currentParshaIndex: 0 });
+                await loadParsha(TORAH_PARSHAS[0].reference);
+            }
+        }
 
-        // Wait for auth + data in parallel
+        // ── Wait for auth + data (may already be done while parsha loaded) ──
         const [, [commentaryData, mitzvahChallengeData]] = await Promise.all([authPromise, dataPromise]);
 
         console.log('✅ Auth + data ready');
@@ -558,47 +584,51 @@ async function init() {
         // renderParsha ran before this data was available (the common case).
         refreshSignificanceButtons();
 
-        // ── Phase 3: Post-auth — reload counts + check live parsha ──
-        // Now that auth is ready, reload the current parsha to pick up
-        // reaction/comment/bookmark counts that were skipped in Phase 1
-        if (earlyRef) {
+        // ── Post-auth: reload counts + confirm weekly parsha from API ──
+        const activeRef = state.currentParshaRef;
+        if (activeRef) {
             await Promise.all([
-                loadCommentCounts(earlyRef),
-                loadReactionCounts(earlyRef),
-                loadBookmarkCounts(earlyRef)
+                loadCommentCounts(activeRef),
+                loadReactionCounts(activeRef),
+                loadBookmarkCounts(activeRef)
             ]);
         }
 
-        const currentParshaName = await parshaNamePromise;
-        console.log('✅ Current parsha fetched:', currentParshaName);
+        // If we had a cache hit, confirm/update the weekly parsha from the API
+        if (earlyRef) {
+            const currentParshaName = await parshaNamePromise;
+            console.log('✅ Current parsha fetched:', currentParshaName);
 
-        if (currentParshaName) {
-            const matchingParsha = TORAH_PARSHAS.find(p =>
-                p.name.toLowerCase() === currentParshaName.toLowerCase() ||
-                currentParshaName.toLowerCase().includes(p.name.toLowerCase())
-            );
+            if (currentParshaName) {
+                const matchingParsha = TORAH_PARSHAS.find(p =>
+                    p.name.toLowerCase() === currentParshaName.toLowerCase() ||
+                    currentParshaName.toLowerCase().includes(p.name.toLowerCase())
+                );
 
-            if (matchingParsha) {
-                const matchingIndex = TORAH_PARSHAS.indexOf(matchingParsha);
-                const initialWeekStart = getWeekStartForDate();
+                if (matchingParsha) {
+                    const matchingIndex = TORAH_PARSHAS.indexOf(matchingParsha);
+                    const initialWeekStart = getWeekStartForDate();
 
-                cacheCurrentParsha(currentParshaName, matchingParsha.reference);
+                    cacheCurrentParsha(currentParshaName, matchingParsha.reference);
 
-                setState({
-                    currentParshaRef: matchingParsha.reference,
-                    currentParshaIndex: matchingIndex,
-                    weeklyParshaRef: matchingParsha.reference,
-                    weeklyParshaIndex: matchingIndex,
-                    weeklyParshaWeekStart: initialWeekStart.toISOString()
-                });
-                console.log('✅ Matched current parsha:', matchingParsha.name);
+                    setState({
+                        currentParshaRef: matchingParsha.reference,
+                        currentParshaIndex: matchingIndex,
+                        weeklyParshaRef: matchingParsha.reference,
+                        weeklyParshaIndex: matchingIndex,
+                        weeklyParshaWeekStart: initialWeekStart.toISOString()
+                    });
 
-                if (!cachedWeeklyParsha || cachedWeeklyParsha.ref !== matchingParsha.reference) {
-                    await loadParsha(matchingParsha.reference);
-                } else {
-                    // Parsha text already rendered pre-auth; challenge data is now available,
-                    // so trigger the mitzvah section which was skipped on the early render.
-                    updateMitzvahChallengeForParsha(matchingParsha.name);
+                    if (cachedWeeklyParsha?.ref !== matchingParsha.reference) {
+                        // Cache was stale — switch to the correct weekly parsha
+                        document.querySelectorAll('select#parsha-selector').forEach(s => {
+                            s.value = matchingParsha.reference;
+                        });
+                        updateNavigationButtons();
+                        await loadParsha(matchingParsha.reference);
+                    } else {
+                        updateMitzvahChallengeForParsha(matchingParsha.name);
+                    }
                 }
             }
         }

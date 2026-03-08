@@ -4,7 +4,7 @@ import { API_CONFIG } from './config.js';
 // ─── localStorage cache helpers ───────────────────────────────────────────────
 const CACHE_V = 'v1';
 const TEXT_TTL  = 8  * 24 * 60 * 60 * 1000; // 8 days  — text never changes
-const REF_TTL   = 12 *      60 * 60 * 1000; // 12 hours — weekly parsha check
+const REF_TTL   = 7  * 24 * 60 * 60 * 1000; // 7 days   — parsha changes weekly
 
 function _cacheGet(key) {
     try {
