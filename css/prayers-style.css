@@ -1143,6 +1143,14 @@ main.container.prayers-searching #prayer-finder {
     order: 1;
 }
 
+main.container.prayers-searching #bracha-finder {
+    order: 20;
+}
+
+main.container.prayers-searching #back-to-top {
+    order: 21;
+}
+
 /* Enable flexbox on main when searching so order properties work */
 main.container.prayers-searching {
     display: flex;
