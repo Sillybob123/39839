@@ -2214,89 +2214,301 @@
     return verses;
   }
 
-  /* ── Build a single verse block (compact) ──────────────────── */
+  /* ── Hebrew → Latin transliteration ────────────────────────── */
+  function transliterateHebrew(text) {
+    if (!text || typeof text !== 'string') return '';
+
+    // Replace the Tetragrammaton (יהוה with any nikud/cantillation between letters)
+    // before any other processing — always rendered as "Adonai"
+    text = text.replace(
+      /\u05D9[\u0591-\u05C7]*\u05D4[\u0591-\u05C7]*\u05D5[\u0591-\u05C7]*\u05D4/g,
+      'Adonai'
+    );
+
+    // Base romanization per consonant (no dagesh)
+    var CONS = {
+      '\u05D0': '',    // alef – silent; show only vowel
+      '\u05D1': 'v',   // vet
+      '\u05D2': 'g',   // gimel
+      '\u05D3': 'd',   // dalet
+      '\u05D4': 'h',   // he
+      '\u05D5': 'v',   // vav (consonantal)
+      '\u05D6': 'z',   // zayin
+      '\u05D7': 'ch',  // chet
+      '\u05D8': 't',   // tet
+      '\u05D9': 'y',   // yod
+      '\u05DA': 'ch',  // final kaf
+      '\u05DB': 'ch',  // kaf
+      '\u05DC': 'l',   // lamed
+      '\u05DD': 'm',   // final mem
+      '\u05DE': 'm',   // mem
+      '\u05DF': 'n',   // final nun
+      '\u05E0': 'n',   // nun
+      '\u05E1': 's',   // samech
+      '\u05E2': '',    // ayin – silent; show only vowel
+      '\u05E3': 'f',   // final pe
+      '\u05E4': 'f',   // pe
+      '\u05E5': 'tz',  // final tsadi
+      '\u05E6': 'tz',  // tsadi
+      '\u05E7': 'k',   // qof
+      '\u05E8': 'r',   // resh
+      '\u05E9': 'sh',  // shin (default)
+      '\u05EA': 't'    // tav
+    };
+
+    // Overrides when dagesh is present
+    var CONS_DAG = {
+      '\u05D1': 'b',   // bet with dagesh
+      '\u05DA': 'k',   // final kaf with dagesh
+      '\u05DB': 'k',   // kaf with dagesh
+      '\u05E3': 'p',   // final pe with dagesh
+      '\u05E4': 'p'    // pe with dagesh
+    };
+
+    // Vowel pointing → vowel letter(s)
+    var VOWELS = {
+      '\u05B0': '',    // shva – silent in most positions
+      '\u05B1': 'e',   // hataf segol
+      '\u05B2': 'a',   // hataf patach
+      '\u05B3': 'o',   // hataf kamatz
+      '\u05B4': 'i',   // hiriq
+      '\u05B5': 'ei',  // tsere
+      '\u05B6': 'e',   // segol
+      '\u05B7': 'a',   // patach
+      '\u05B8': 'a',   // kamatz
+      '\u05B9': 'o',   // holam
+      '\u05BA': 'o',   // holam vav
+      '\u05BB': 'u',   // kubutz
+      '\u05C7': 'o'    // qamatz qatan
+    };
+
+    var DAGESH   = '\u05BC';
+    var SHIN_DOT = '\u05C1';
+    var SIN_DOT  = '\u05C2';
+    var MAQAF    = '\u05BE';
+
+    var chars  = Array.from(text);
+    var result = '';
+    var i      = 0;
+
+    while (i < chars.length) {
+      var ch  = chars[i];
+      var cp  = ch.codePointAt(0);
+
+      if (ch === ' ' || ch === '\n' || ch === '\r') { result += ' '; i++; continue; }
+      if (ch === MAQAF) { result += '-'; i++; continue; }
+
+      // Hebrew consonant
+      if (cp >= 0x05D0 && cp <= 0x05EA) {
+        var hasDag = false, hasShin = false, hasSin = false, vowel = '';
+        var j = i + 1;
+
+        while (j < chars.length) {
+          var nc = chars[j], ncp = nc.codePointAt(0);
+          if (nc === DAGESH)   { hasDag  = true; j++; }
+          else if (nc === SHIN_DOT) { hasShin = true; j++; }
+          else if (nc === SIN_DOT)  { hasSin  = true; j++; }
+          else if (VOWELS[nc] !== undefined) {
+            if (!vowel && VOWELS[nc]) vowel = VOWELS[nc];
+            j++;
+          } else if (ncp >= 0x0591 && ncp <= 0x05C7) { j++; } // other nikud / cantillation
+          else { break; }
+        }
+
+        var rom;
+        if (ch === '\u05E9') {
+          // shin vs. sin
+          rom = hasSin ? 's' : 'sh';
+        } else if (ch === '\u05D5' && hasDag) {
+          // vav + dagesh = shuruk (pure "u" vowel, no consonant sound)
+          result += 'u';
+          i = j;
+          continue;
+        } else if (hasDag && CONS_DAG[ch] !== undefined) {
+          rom = CONS_DAG[ch];
+        } else {
+          rom = CONS[ch] !== undefined ? CONS[ch] : '';
+        }
+
+        result += rom + vowel;
+        i = j;
+        continue;
+      }
+
+      // Skip standalone nikud / cantillation marks
+      if ((cp >= 0x0591 && cp <= 0x05C7) || ch === SHIN_DOT || ch === SIN_DOT) {
+        i++;
+        continue;
+      }
+
+      // Pass through Latin letters (e.g. "Adonai" substitutions) and hyphens
+      if ((cp >= 0x41 && cp <= 0x5A) || (cp >= 0x61 && cp <= 0x7A) || ch === '-') {
+        result += ch;
+        i++;
+        continue;
+      }
+
+      // Skip everything else (Hebrew punctuation, cantillation, symbols)
+      i++;
+    }
+
+    return result.replace(/\s+/g, ' ').trim();
+  }
+
+  /* ── Merge a reference range, e.g. "Exodus 30:16" + "Exodus 30:17" → "Exodus 30:16-17" ── */
+  function mergeRefs(refs) {
+    refs = refs.filter(Boolean);
+    if (!refs.length) return '';
+    if (refs.length === 1) return refs[0];
+    var first = refs[0], last = refs[refs.length - 1];
+    var m1 = first.match(/^(.*?)\s+(\d+):(\d+)$/);
+    var mN = last.match(/^(.*?)\s+(\d+):(\d+)$/);
+    if (m1 && mN && m1[1] === mN[1] && m1[2] === mN[2]) {
+      return m1[1] + ' ' + m1[2] + ':' + m1[3] + '\u2013' + mN[3];
+    }
+    return first + ' \u2013 ' + last;
+  }
+
+  /* ── Build a single verse block ────────────────────────────── */
   function buildVerseBlock(verse) {
+    var translit = verse.hebrew ? transliterateHebrew(verse.hebrew) : '';
     var block = '';
 
+    // Helper: escape then turn \n into <br> for multi-line text in HTML
+    function esc(str) {
+      return escapeForHTML(str).replace(/\n/g, '<br>');
+    }
+
+    // Hebrew — full-width row, right-to-left
     if (verse.hebrew) {
       block +=
-        '<p style="' +
-          'font-family:Georgia,\'Times New Roman\',serif;' +
-          'font-size:15px;line-height:1.7;direction:rtl;text-align:right;' +
-          'color:#1a202c;margin:0 0 6px 0;' +
-        '">' + escapeForHTML(verse.hebrew) + '</p>';
+        '<div style="' +
+          'padding:8px 12px 6px 12px;' +
+          'border-bottom:1px solid #e2e6f0;' +
+        '">' +
+          '<p style="' +
+            'font-family:Georgia,\'Times New Roman\',serif;' +
+            'font-size:14px;line-height:1.65;direction:rtl;text-align:right;' +
+            'color:#1a202c;margin:0;' +
+          '">' + esc(verse.hebrew) + '</p>' +
+        '</div>';
     }
 
+    // Transliteration — shaded middle band
+    if (translit) {
+      block +=
+        '<div style="' +
+          'padding:5px 12px;' +
+          'background:#eef0f9;' +
+          'border-bottom:1px solid #e2e6f0;' +
+        '">' +
+          '<p style="' +
+            'font-family:Georgia,\'Times New Roman\',serif;' +
+            'font-size:11px;line-height:1.55;color:#5a67a0;' +
+            'margin:0;font-style:italic;letter-spacing:0.02em;text-align:center;' +
+          '">' + esc(translit) + '</p>' +
+        '</div>';
+    }
+
+    // English translation
     if (verse.english) {
       block +=
-        '<p style="' +
-          'font-family:Georgia,\'Times New Roman\',serif;' +
-          'font-size:13px;line-height:1.65;color:#2d3748;' +
-          'margin:0 0 4px 0;font-style:italic;' +
-        '">' +
-          '&ldquo;' + escapeForHTML(verse.english) + '&rdquo;' +
-        '</p>';
+        '<div style="padding:6px 12px ' + (verse.ref ? '4px' : '8px') + ' 12px;">' +
+          '<p style="' +
+            'font-family:Georgia,\'Times New Roman\',serif;' +
+            'font-size:12px;line-height:1.55;color:#2d3748;' +
+            'margin:0;font-style:italic;text-align:left;' +
+          '">' +
+            '&ldquo;' + escapeForHTML(verse.english) + '&rdquo;' +
+          '</p>' +
+        '</div>';
     }
 
+    // Reference
     if (verse.ref) {
       block +=
-        '<p style="' +
-          'font-family:Georgia,\'Times New Roman\',serif;' +
-          'font-size:11px;color:#4a5568;margin:0;font-weight:bold;' +
-          'letter-spacing:0.03em;' +
-        '">' +
-          '\u2014 ' + escapeForHTML(verse.ref) +
-        '</p>';
+        '<div style="padding:0 12px 7px 12px;">' +
+          '<p style="' +
+            'font-family:Georgia,\'Times New Roman\',serif;' +
+            'font-size:10px;color:#8896a8;margin:0;font-weight:bold;' +
+            'letter-spacing:0.04em;text-align:right;' +
+          '">' +
+            '\u2014 ' + escapeForHTML(verse.ref) +
+          '</p>' +
+        '</div>';
     }
 
     return block;
   }
 
-  /* ── Build the full HTML clipboard payload (compact) ────────── */
+  /* ── Build the full HTML clipboard payload ───────────────────── */
   function buildClipboardHTML(verses) {
-    var versesHTML = '';
-
-    for (var i = 0; i < verses.length; i++) {
-      if (i > 0) {
-        versesHTML +=
-          '<div style="border-top:1px solid #d4dae8;margin:10px 0;"></div>';
-      }
-      versesHTML += buildVerseBlock(verses[i]);
+    // Merge all selected verses into one unified block:
+    //   Hebrew lines joined by \n (renders as <br> in the div)
+    //   English translations joined into one paragraph
+    //   Reference condensed to a range (e.g. Exodus 30:16–17)
+    var merged;
+    if (verses.length === 1) {
+      merged = verses[0];
+    } else {
+      merged = {
+        hebrew:  verses.map(function(v) { return v.hebrew;  }).filter(Boolean).join(' '),
+        english: verses.map(function(v) { return v.english; }).filter(Boolean).join(' '),
+        ref:     mergeRefs(verses.map(function(v) { return v.ref; }))
+      };
     }
 
-    return (
+    var versesHTML = buildVerseBlock(merged);
+
+    // Wrapped in a full-width centering table — the most reliable way to center
+    // a block in all email clients. Trailing <br> lets the user click below and type.
+    var card =
       '<div style="' +
-        'max-width:420px;margin:0 auto;padding:16px 20px 12px 20px;' +
-        'background:#f8f9fc;' +
-        'border-radius:10px;border:1px solid #d0d5e3;' +
+        'max-width:480px;' +
+        'background:#ffffff;' +
+        'border-radius:7px;' +
+        'border:1px solid #d0d5e8;' +
+        'border-top:3px solid #3b5bdb;' +
+        'overflow:hidden;' +
       '">' +
 
         versesHTML +
 
-        '<div style="border-top:1px solid #cbd5e0;margin:12px 0 10px 0;"></div>' +
+        '<div style="' +
+          'border-top:1px solid #e2e6f0;' +
+          'padding:5px 12px;' +
+          'background:#f7f8fc;' +
+        '">' +
+          '<table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">' +
+            '<tr>' +
+              '<td style="vertical-align:middle;padding-right:5px;">' +
+                '<a href="' + SITE_URL + '" target="_blank" style="text-decoration:none;">' +
+                  '<img src="' + LOGO_URL + '" alt="A Letter in the Scroll" ' +
+                    'width="14" height="14" style="' +
+                    'width:14px;height:14px;border-radius:3px;display:block;' +
+                  '" />' +
+                '</a>' +
+              '</td>' +
+              '<td style="vertical-align:middle;">' +
+                '<a href="' + SITE_URL + '" target="_blank" style="' +
+                  'font-family:Georgia,\'Times New Roman\',serif;' +
+                  'font-size:9px;color:#3b5bdb;text-decoration:none;font-weight:bold;' +
+                  'letter-spacing:0.04em;' +
+                '">A Letter in the Scroll</a>' +
+              '</td>' +
+            '</tr>' +
+          '</table>' +
+        '</div>' +
 
-        '<table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">' +
-          '<tr>' +
-            '<td style="vertical-align:middle;padding-right:7px;">' +
-              '<a href="' + SITE_URL + '" target="_blank" style="text-decoration:none;">' +
-                '<img src="' + LOGO_URL + '" alt="A Letter in the Scroll" ' +
-                  'width="22" height="22" style="' +
-                  'width:22px;height:22px;border-radius:4px;display:block;' +
-                '" />' +
-              '</a>' +
-            '</td>' +
-            '<td style="vertical-align:middle;">' +
-              '<a href="' + SITE_URL + '" target="_blank" style="' +
-                'font-family:Georgia,\'Times New Roman\',serif;' +
-                'font-size:11px;color:#2b6cb0;text-decoration:none;font-weight:bold;' +
-                'letter-spacing:0.03em;' +
-              '">A Letter in the Scroll</a>' +
-            '</td>' +
-          '</tr>' +
-        '</table>' +
+      '</div>';
 
-      '</div>' +
-      '<p style="margin:0;font-size:14px;line-height:1.5;"><br></p>'
+    return (
+      '<table width="100%" cellpadding="0" cellspacing="0" border="0">' +
+        '<tr><td align="center" style="padding:0;">' +
+          card +
+        '</td></tr>' +
+      '</table>' +
+      '<p style="margin:0;padding:0;font-size:inherit;line-height:inherit;"><br></p>'
     );
   }
 
@@ -2306,7 +2518,11 @@
     for (var i = 0; i < verses.length; i++) {
       var v = verses[i];
       var chunk = '';
-      if (v.hebrew)  chunk += v.hebrew + '\n';
+      if (v.hebrew) {
+        chunk += v.hebrew + '\n';
+        var tl = transliterateHebrew(v.hebrew);
+        if (tl) chunk += tl + '\n';
+      }
       if (v.english) chunk += '\u201C' + v.english + '\u201D\n';
       if (v.ref)     chunk += '\u2014 ' + v.ref;
       parts.push(chunk.trim());
